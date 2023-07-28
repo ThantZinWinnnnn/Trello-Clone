@@ -2,7 +2,9 @@ import React from 'react'
 
 const Boards = () => {
   return (
-    <div>Boards</div>
+    <main className='p-3 w-[calc(100vw-251px)]'>
+      
+    </main>
   )
 }
 

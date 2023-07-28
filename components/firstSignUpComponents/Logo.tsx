@@ -3,7 +3,7 @@ import React from "react";
 //utils
 import { cn } from "@/lib/utils"
 
-const Logo = ({className}:{className:any}) => {
+const Logo = ({className}:{className?:any}) => {
   return (
     <span className="">
       <svg

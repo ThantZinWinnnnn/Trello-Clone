@@ -3,11 +3,13 @@ import React from "react";
 //components
 import Logo from "../firstSignUpComponents/Logo";
 import { Input } from "../ui/input";
+import { AvatarDropdown } from "../IntroComponents/AvatarDropdown";
 
 //icon
 import { Search } from "lucide-react";
 import { BellIcon,Half2Icon } from "@radix-ui/react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import ThemeDropdown from "../IntroComponents/ThemeDropdown";
 
 const BoardNav = () => {
   return (
@@ -26,11 +28,8 @@ const BoardNav = () => {
           <p className="text-[0.45rem]  text-white text-center">10</p>
           </div>
         </div>
-        <Half2Icon className="w-5 h-5 cursor-pointer"/>
-        <Avatar className="w-8 h-8 cursor-pointer">
-            <AvatarImage src="https://github.com/shadcn.png" alt="profile" />
-            <AvatarFallback>TZ</AvatarFallback>
-        </Avatar>
+        <ThemeDropdown/>
+        <AvatarDropdown/>
       </div>
     </nav>
   );

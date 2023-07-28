@@ -1,3 +1,4 @@
+import BoardSidebarComponent from '@/components/BoardSidebarComponent/BoardSidebarComponent'
 import BoardNav from '@/components/BoardsComponents/BoardNav'
 import React from 'react'
 
@@ -7,9 +8,12 @@ const BoardLayout = ({
     children: React.ReactNode
   }) => {
   return (
-    <main>
+    <main className='overflow-hidden'>
         <BoardNav/>
-        {children}
+        <section className='flex  h-[calc(100vh-48px)] overflow-hidden'>
+          <BoardSidebarComponent/>
+          {children}
+        </section>
     </main>
   )
 }
