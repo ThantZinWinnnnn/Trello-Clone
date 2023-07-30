@@ -12,7 +12,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 //icon
-import { SettingsIcon ,LogOutIcon} from "lucide-react";
+import { SettingsIcon, LogOutIcon } from "lucide-react";
 import { PersonIcon } from "@radix-ui/react-icons";
 
 export function AvatarDropdown() {
@@ -28,32 +28,41 @@ export function AvatarDropdown() {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem className="flex gap-1 items-center">
-          <Avatar className="w-8 h-8 cursor-pointer">
-          <AvatarImage src="https://github.com/shadcn.png" alt="profile" />
-          <AvatarFallback>TZ</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col">
-            <p className="text-[0.75rem] font-medium font-rubik">thantzinwin</p>
-            <p className="text-[0.6rem] -mt-2 font-rubik">thant.zin.windev@gmail.com</p>
-        </div>
-            
+          <DropdownMenuItem className="flex gap-1 items-center cursor-pointer">
+            <Avatar className="w-8 h-8 cursor-pointer">
+              <AvatarImage src="https://github.com/shadcn.png" alt="profile" />
+              <AvatarFallback>TZ</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <p className="text-[0.75rem] font-medium font-rubik">
+                thantzinwin
+              </p>
+              <p className="text-[0.6rem] -mt-2 font-rubik">
+                thant.zin.windev@gmail.com
+              </p>
+            </div>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer">
             Profile
-            <DropdownMenuShortcut><PersonIcon className="w-4 h-4"/></DropdownMenuShortcut>
+            <DropdownMenuShortcut>
+              <PersonIcon className="w-4 h-4" />
+            </DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer">
             Settings
-            <DropdownMenuShortcut><SettingsIcon className="w-4 h-4"/></DropdownMenuShortcut>
+            <DropdownMenuShortcut>
+              <SettingsIcon className="w-4 h-4" />
+            </DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem disabled>API</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
           Log out
-          <DropdownMenuShortcut><LogOutIcon className="w-4 h-4"/></DropdownMenuShortcut>
+          <DropdownMenuShortcut>
+            <LogOutIcon className="w-4 h-4" />
+          </DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
