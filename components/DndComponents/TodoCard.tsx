@@ -1,39 +1,73 @@
-import React from 'react'
-import { Draggable, DraggableProvidedDragHandleProps, DraggableProvidedDraggableProps } from 'react-beautiful-dnd';
+import React from "react";
+import {
+  Draggable,
+  DraggableProvided,
+  DraggableProvidedDragHandleProps,
+  DraggableProvidedDraggableProps,
+  DraggableStateSnapshot,
+} from "react-beautiful-dnd";
 //icon
-import { CrossCircledIcon } from '@radix-ui/react-icons';
-import { Button } from '../ui/button';
+import {AlertCircle,CheckSquare,Bookmark} from "lucide-react"
+import {DoubleArrowDownIcon,DoubleArrowUpIcon,ArrowUpIcon,ArrowDownIcon} from "@radix-ui/react-icons"
+import { CrossCircledIcon } from "@radix-ui/react-icons";
+import { Button } from "../ui/button";
+import Image from "next/image";
+import CardMember from "../utils/CardMember";
 
-const TodoCard:React.FC<todoCardProps> = ({id,index,todo,innerRef,draggableProps,draggableHandleProps}) => {
+const TodoCard: React.FC<todoCardProps> = ({
+  id,
+  index,
+  todo,
+  innerRef,
+  draggableProps,
+  draggableHandleProps,
+}) => {
+
   return (
     <div
-    {...draggableProps}
-    {...draggableHandleProps}
-    ref={innerRef}
-    className='bg-white rounded-sm  drop-shadow-md p-3 space-y-3'
+      key={id}
+      {...draggableProps}
+      {...draggableHandleProps}
+      ref={innerRef}
+      className={`bg-white rounded-sm  drop-shadow-md space-y-3 overflow-hidden`}
     >
-        <div className='flex items-center justify-between'>
+      <section>
+        <section className="relative h-[150px] overflow-hidden">
+          <Image src={"/photos/board-bg.jpeg"} fill alt="todo bg" className="object-cover"/>
+        </section>
+        <section className="flex items-center justify-between px-2 py-3">
         <h2>{todo.desc}</h2>
-        <Button variant={'ghost'} className='w-6 h-6  flex items-center justify-between rounded-full p-1'>
-            <CrossCircledIcon className='text-red-500'/>
+        <Button
+          variant={"ghost"}
+          className="w-8 h-8  flex items-center justify-between rounded-full p-1"
+        >
+          <CrossCircledIcon className="text-red-500 w-full h-full" />
         </Button>
-        </div>
+        </section>
+        <section className="flex items-center justify-between p-2">
+          <div className="flex items-center gap-1">
+            <CheckSquare className="w-5 h-5 bg-[#0070f3] p-1 rounded-sm text-white"/>
+            <ArrowUpIcon className="w-4 h-4 text-red-500"/>
+          </div>
+          <CardMember/>
+        </section>
+      </section>
     </div>
-  )
-}
+  );
+};
 
 export default TodoCard;
 
-type todo ={
-    id:string,
-    desc:string
-}
+type todo = {
+  id: string;
+  desc: string;
+};
 
 type todoCardProps = {
-    id:string,
-    index:number,
-    todo:todo,
-    innerRef:(element: HTMLElement | null) => void
-    draggableProps:DraggableProvidedDraggableProps
-    draggableHandleProps:DraggableProvidedDragHandleProps | null | undefined
-}
+  id: string;
+  index: number;
+  todo: todo;
+  innerRef: (element: HTMLElement | null) => void;
+  draggableProps: DraggableProvidedDraggableProps;
+  draggableHandleProps: DraggableProvidedDragHandleProps | null | undefined;
+};

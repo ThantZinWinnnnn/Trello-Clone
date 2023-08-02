@@ -1,25 +1,56 @@
+import {AlertCircle,CheckSquare,Bookmark} from "lucide-react"
+import {DoubleArrowDownIcon,DoubleArrowUpIcon,ArrowUpIcon,ArrowDownIcon} from "@radix-ui/react-icons"
+
 export const imgArr = [
     {
         id:"1",
-        img:"/photos/av1.jpeg"
+        img:"/photos/av1.jpeg",
+        name:"Leo"
     },
     {
         id:"2",
-        img:"/photos/av2.jpeg"
+        img:"/photos/av2.jpeg",
+        name:"Thant Zin"
     },
     {
         id:"3",
-        img:"/photos/av3.jpeg"
+        img:"/photos/av3.jpeg",
+        name:"Aung Zaw"
     },
     {
         id:"4",
-        img:"/photos/av4.jpeg"
+        img:"/photos/av4.jpeg",
+        name:"Win Nandar"
     },
     {
         id:"5",
-        img:"/photos/av5.jpeg"
+        img:"/photos/av5.jpeg",
+        name:"Zin Win"
     },
 ];
+
+export const piorityArr = [
+    {
+        value:"Highest",
+        icon:DoubleArrowUpIcon,
+        color:'text-red-500'
+    },
+    {
+        value:"Medium",
+        icon:ArrowUpIcon,
+        color:'text-red-500'
+    },
+    {
+        value:"Low",
+        icon:ArrowDownIcon,
+        color:'text-green-500'
+    },
+    {
+        value:"Lowest",
+        icon:DoubleArrowDownIcon,
+        color:'text-green-500'
+    },
+]
 
 
 export const dndData = [
@@ -94,5 +125,23 @@ export const dndData = [
                 desc:"To change ui design "
             },  
         ]
+    },
+];
+
+export const issueType = [
+    {
+        text:"Task",
+        icon:CheckSquare,
+        color:'bg-[#0070f3]'
+    },
+    {
+        text:"Bug",
+        icon:AlertCircle,
+        color:'bg-[#f43f5e]'
+    },
+    {
+        text:"story",
+        icon:Bookmark,
+        color:'bg-[#58249c]'
     },
 ]
