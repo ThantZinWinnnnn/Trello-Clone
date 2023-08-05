@@ -9,14 +9,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "../ui/label";
+import { cn } from "@/lib/utils";
 
 //data
 import { piorityArr } from "../DummyData/data";
 
-const PiorityDrowdown = () => {
+const PiorityDrowdown: React.FC<PiorityDropdownProps> = ({ className }) => {
   return (
     <section>
-      <Label className="text-xs font-medium">Piority</Label>
       <Select>
         <SelectTrigger>
           <SelectValue placeholder="Please Select piority" />
@@ -40,3 +40,7 @@ const PiorityDrowdown = () => {
 };
 
 export default PiorityDrowdown;
+
+interface PiorityDropdownProps {
+  className?: string;
+}

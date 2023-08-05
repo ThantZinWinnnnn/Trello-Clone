@@ -1,18 +1,34 @@
-import React from "react";
+"use client"
+import React ,{memo}from "react";
+// to remove below import to button array components
+import { useRouter ,usePathname} from 'next/navigation'
 
 //icon
-import { HeartIcon, PlusIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
+import {
+  HeartIcon,
+  PlusIcon,
+  DotsHorizontalIcon,
+  LayoutIcon,
+} from "@radix-ui/react-icons";
 
 //components
 import { Separator } from "../ui/separator";
+import { Button } from "../ui/button";
+import BoardSortDropdown from "./BoardSortDropdown";
+import Link from "next/link";
 
 const BoardSidebarComponent = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const active = pathname.includes('trelloprojectboard')
+  //can be check pathname === /boards/...name
+  console.log('path',pathname.includes('trelloprojectboard'))
   return (
     <section className="w-[250px] border-r-[1px] border-gray-300 h-[calc(100vh-48px)] opacity-95 bg-[#F4F5F7] p-2">
       <h1 className="text-xl font-semibold text-center">Trello Workspace</h1>
       <Separator className="my-4" />
       <section className="pl-5 flex flex-col space-y-3">
-        <div className="flex items-center gap-7 text-base  w-[95%] text-black hover:bg-blue-600 hover:text-white py-2 px-2 rounded-sm cursor-pointer">
+        <Link href={"/boards"} className="flex items-center gap-7 text-base  w-[95%] text-black hover:bg-blue-600 hover:text-white py-2 px-2 rounded-sm cursor-pointer">
           <span>
             <svg
               className="w-5 h-5"
@@ -30,12 +46,12 @@ const BoardSidebarComponent = () => {
             </svg>
           </span>
           <p className="font-rubik text-left">Boards</p>
-        </div>
-        <div className="flex items-center gap-7 text-base  w-[95%] text-black hover:bg-blue-600 hover:text-white py-2 px-2 rounded-sm cursor-pointer">
+        </Link>
+        <Link href={"/highlights"} className="flex items-center gap-7 text-base  w-[95%] text-black hover:bg-blue-600 hover:text-white py-2 px-2 rounded-sm cursor-pointer">
           <HeartIcon className="w-5 h-5" />
           <p className="font-rubik">HighLights</p>
-        </div>
-        <div className="flex items-center gap-7 text-base  w-[95%] text-black hover:bg-blue-600 hover:text-white py-2 px-2 rounded-sm cursor-pointer">
+        </Link>
+        <Link href={'members'} className="flex items-center gap-7 text-base  w-[95%] text-black hover:bg-blue-600 hover:text-white py-2 px-2 rounded-sm cursor-pointer">
           <span>
             <svg
               className="w-5 h-5"
@@ -53,7 +69,7 @@ const BoardSidebarComponent = () => {
             </svg>
           </span>
           <p className="font-rubik">Members</p>
-        </div>
+        </Link>
       </section>
       <Separator className="my-6" />
       {/* to make boards array */}
@@ -61,14 +77,26 @@ const BoardSidebarComponent = () => {
       <section>
         <div className="w-full px-2 flex justify-between items-center">
           <p className="font-rubik">Your boards</p>
-          <div className="flex items-center gap-3 group">
-            <DotsHorizontalIcon className="w-4 h-4 hidden group-hover:block cursor-pointer" />
+          <div className="flex items-center gap-3 group relative">
+            <BoardSortDropdown>
+              <DotsHorizontalIcon className="w-4 h-4 cursor-pointer" />
+            </BoardSortDropdown>
             <PlusIcon className="w-5 h-5 cursor-pointer" />
           </div>
         </div>
+        <section className="pt-4">
+          <Button
+            variant={"ghost"}
+            onClick={()=>router.push("/boards/trelloprojectboard") }
+            className={`hover:bg-slate-300 hover:text-blue-700 w-full ${active && 'bg-slate-300 text-blue-700'}`}
+          >
+            <LayoutIcon className="w-5 h-5 mr-2" />
+            <span>Trello Project Board</span>
+          </Button>
+        </section>
       </section>
     </section>
   );
 };
 
-export default BoardSidebarComponent;
+export default memo(BoardSidebarComponent);

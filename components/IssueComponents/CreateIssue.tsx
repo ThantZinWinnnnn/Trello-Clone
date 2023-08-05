@@ -24,7 +24,7 @@ import Image from "next/image";
 import { Label } from "../ui/label";
 import InputTextEditor from "./InputTextEditor";
 import ReporterDropdown from "./ReporterDropdown";
-import PiorityDrowdown from "./PiorityDrowdown";
+import PiorityDrowdown from "./PiorityDropdown";
 
 const CreateIssue = () => {
   const imageRef = useRef<HTMLInputElement>(null);
@@ -98,7 +98,11 @@ const CreateIssue = () => {
             <Label className="text-xs font-medium">Assignee</Label>
             <ReporterDropdown/>
           </div>
+          <section>
+          <Label className="text-xs font-medium">Piority</Label>
           <PiorityDrowdown/>
+          </section>
+         
         </section>
         <DialogFooter>
            <DialogTrigger>

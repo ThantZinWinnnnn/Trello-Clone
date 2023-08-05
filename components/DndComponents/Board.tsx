@@ -45,7 +45,7 @@ const Board = () => {
         {(provided, snapshot) => (
           <div {...provided.droppableProps} ref={provided.innerRef}
             //temporary css later change flex
-            className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8"
+            className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8 overflow-x-scroll"
           >
             {dndData.map((column, index) => (
               <Column
