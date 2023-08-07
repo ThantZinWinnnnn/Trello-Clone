@@ -18,7 +18,8 @@ import {
   DoubleArrowUpIcon,
   ArrowUpIcon,
   ArrowDownIcon,
-  Cross1Icon
+  Cross1Icon,
+  TrashIcon
 } from "@radix-ui/react-icons";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -52,9 +53,15 @@ const IssueDetailComponent = ({ children }: { children: React.ReactNode }) => {
         </DialogHeader>
         <section>
           <section>
+            <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <CheckSquare className="w-5 h-5 bg-[#0070f3] p-1 rounded-sm text-white" />
               <span>TASK-1</span>
+            </div>
+            <Button variant={'ghost'} className="flex items-center gap-2 group bg-red-500 hover:bg-red-600 !py-1">
+              <TrashIcon className="w-4 h-4 text-white" />
+              <span className="text-[0.72rem] uppercase font-semibold  text-white">delete</span>
+            </Button>
             </div>
             <section className="flex gap-4">
               <section className="w-[65%]">

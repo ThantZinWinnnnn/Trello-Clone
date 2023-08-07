@@ -1,8 +1,13 @@
 import React from 'react'
 
+//components
+import ProjectBoard from '@/components/utils/ProjectBoard'
+
 const BoardsPage = () => {
   return (
-    <div>BoardsPage</div>
+    <main className='p-3'>
+      <ProjectBoard/>
+    </main>
   )
 }
 

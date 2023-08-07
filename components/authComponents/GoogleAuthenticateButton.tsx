@@ -1,10 +1,18 @@
-
+"use client"
 import React from 'react'
+import { useSearchParams } from 'next/navigation'
+import {signIn} from "next-auth/react"
+//components
 import { Button } from '../ui/button'
 
 const GoogleAuthenticateButton = () => {
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get('callbackUrl') as string | undefined;
+
   return (
-    <Button className='w-full' type='button'>
+    <Button className='w-full' type='button'
+      onClick={()=> signIn('google')}
+    >
         <svg
         aria-hidden='true'
         focusable='false'

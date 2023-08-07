@@ -50,13 +50,13 @@ const TodoCard: React.FC<todoCardProps> = ({
             />
           </section>
           <section className="flex items-center justify-between px-2 py-3">
-            <h2>{todo.desc}</h2>
-            <Button
+            <h2 className="text-xs font-medium">{todo.desc}</h2>
+            {/* <Button
               variant={"ghost"}
               className="w-8 h-8  flex items-center justify-between rounded-full p-1"
             >
               <CrossCircledIcon className="text-red-500 w-full h-full" />
-            </Button>
+            </Button> */}
           </section>
           <section className="flex items-center justify-between p-2">
             <div className="flex items-center gap-1">

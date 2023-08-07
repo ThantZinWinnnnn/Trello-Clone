@@ -9,15 +9,16 @@ import NotificationsDropdown from "../IntroComponents/NotificationsDropdown";
 
 //icon
 import { Search } from "lucide-react";
+import Link from "next/link";
 
 
 
 const BoardNav = () => {
   return (
     <nav className="flex justify-between items-center py-1 px-10 border-b-[1px]">
-      <div className="flex items-center">
+      <Link href={"/"} className="flex items-center">
         <Logo className={"!w-[90px] !h-[30px] !mb-0"}/>
-      </div>
+      </Link>
       <div className="flex items-center gap-6">
         <div className="relative w-[200px]">
           <Input type="text" placeholder="Search board..." className="pl-10" />
