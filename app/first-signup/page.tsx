@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter ,redirect} from "next/navigation";
 import { useSession } from "next-auth/react"
 
 import AltLogo from "@/components/firstSignUpComponents/AltLogo";
@@ -13,7 +13,12 @@ import leftLogo from "@/public/photos/left-logo.png"
 import rightLogo from "@/public/photos/right-logo.png"
 
 const FirstSignUpPage = () => {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession({
+    required:true,
+    onUnauthenticated(){
+      redirect("/login?callbackUrl=/first-signup")
+    }
+  });
   const router = useRouter();
   console.log("session",session,"status",status)
 

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+"use client"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,16 +11,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
+//next-auth/client
+import { useSession ,signOut} from "next-auth/react";
+
 //icon
 import { SettingsIcon, LogOutIcon } from "lucide-react";
 import { PersonIcon } from "@radix-ui/react-icons";
 
 export function AvatarDropdown() {
+  const {data:session} = useSession()
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="w-8 h-8 cursor-pointer">
-          <AvatarImage src="https://github.com/shadcn.png" alt="profile" />
+          <AvatarImage src={session?.user?.image!} alt="profile" />
           <AvatarFallback>TZ</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
@@ -30,15 +35,15 @@ export function AvatarDropdown() {
         <DropdownMenuGroup>
           <DropdownMenuItem className="flex gap-1 items-center cursor-pointer">
             <Avatar className="w-8 h-8 cursor-pointer">
-              <AvatarImage src="https://github.com/shadcn.png" alt="profile" />
+              <AvatarImage src={session?.user?.image!} alt="profile" />
               <AvatarFallback>TZ</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
               <p className="text-[0.75rem] font-medium font-rubik">
-                thantzinwin
+                {session?.user?.name}
               </p>
               <p className="text-[0.6rem] -mt-2 font-rubik">
-                thant.zin.windev@gmail.com
+              {session?.user?.email}
               </p>
             </div>
           </DropdownMenuItem>
@@ -58,7 +63,7 @@ export function AvatarDropdown() {
         <DropdownMenuSeparator />
         <DropdownMenuItem disabled>API</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer">
+        <DropdownMenuItem className="cursor-pointer" onClick={()=> signOut()}>
           Log out
           <DropdownMenuShortcut>
             <LogOutIcon className="w-4 h-4" />
