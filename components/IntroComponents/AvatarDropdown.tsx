@@ -40,10 +40,10 @@ export function AvatarDropdown() {
             </Avatar>
             <div className="flex flex-col">
               <p className="text-[0.75rem] font-medium font-rubik">
-                {session?.user?.name}
+                {session?.user?.name ?? "thantzinwin"}
               </p>
               <p className="text-[0.6rem] -mt-2 font-rubik">
-              {session?.user?.email}
+              {session?.user?.email ?? "thant.zin.winnnn@gmail.com"}
               </p>
             </div>
           </DropdownMenuItem>

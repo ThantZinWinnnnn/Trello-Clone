@@ -1,11 +1,13 @@
-
+"use client"
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 //components
 import IntroNavBar from '@/components/IntroComponents/IntroNavBar'
 import { Button } from '@/components/ui/button'
 import introLogo from "@/public/photos/intro-img.png"
 
 export default function Home() {
+  const router = useRouter();
   return (
     <main className="w-full h-screen">
      <IntroNavBar/>
@@ -16,7 +18,9 @@ export default function Home() {
         <p className='font-semibold text-sm text-slate-400 tracking-wide leading-7'>We are glad you made it.Let&apos;s star organizing your <br/>
           projects so you can get things done.
         </p>
-        <Button className='bg-blue-700 w-[200px] font-semibold hover:bg-blue-600'>
+        <Button className='bg-blue-700 w-[200px] font-semibold hover:bg-blue-600'
+        onClick={()=> router.push('/boards')}
+        >
           Build your first board
         </Button>
         </section>
