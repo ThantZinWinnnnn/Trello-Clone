@@ -11,6 +11,19 @@ export const options:NextAuthOptions ={
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
+  callbacks:{
+    async session({token,session}){ 
+      console.log("token",token,"session",session)
+      const user = await prisma.user.findUnique({ 
+        where:{
+          email:token?.email!
+        }
+      });
+      session.user = user!;
+      console.log("updatedSession",session)
+      return session;
+    }
+  },
   pages:{
     signIn:"login",
     verifyRequest:"/boards",

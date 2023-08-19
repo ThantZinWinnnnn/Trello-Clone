@@ -19,7 +19,7 @@ export default function Home() {
           projects so you can get things done.
         </p>
         <Button className='bg-blue-700 w-[200px] font-semibold hover:bg-blue-600'
-        onClick={()=> router.push('/boards')}
+        onClick={()=> router.push('/create-first-team')}
         >
           Build your first board
         </Button>

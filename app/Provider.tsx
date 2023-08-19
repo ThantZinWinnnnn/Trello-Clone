@@ -1,11 +1,17 @@
 "use client"
 import React from 'react'
 import { SessionProvider } from 'next-auth/react'
+import { Provider } from 'react-redux'
+import {store} from "@/redux/store/store"
 
-const Provider = ({children}:{children:React.ReactNode}) => {
+const Providers = ({children}:{children:React.ReactNode}) => {
   return (
-    <SessionProvider>{children}</SessionProvider>
+    <SessionProvider>
+      <Provider store={store}>
+        {children}
+      </Provider>
+    </SessionProvider>
   )
 }
 
-export default Provider
+export default Providers

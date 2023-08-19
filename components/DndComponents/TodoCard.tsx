@@ -41,7 +41,7 @@ const TodoCard: React.FC<todoCardProps> = ({
       <section className="hover:bg-slate-200/50">
         <IssueDetailComponent>
         <section>
-          <section className="relative h-[150px] overflow-hidden">
+          <section className="relative h-[100px] overflow-hidden">
             <Image
               src={"/photos/board-bg.jpeg"}
               fill

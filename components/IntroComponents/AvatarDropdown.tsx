@@ -17,6 +17,7 @@ import { useSession ,signOut} from "next-auth/react";
 //icon
 import { SettingsIcon, LogOutIcon } from "lucide-react";
 import { PersonIcon } from "@radix-ui/react-icons";
+import { redirect } from "next/navigation";
 
 export function AvatarDropdown() {
   const {data:session} = useSession()

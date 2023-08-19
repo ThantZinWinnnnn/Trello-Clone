@@ -16,13 +16,15 @@ import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import BoardSortDropdown from "./BoardSortDropdown";
 import Link from "next/link";
+import { useAppSelector } from "@/redux/store/hook";
 
 const BoardSidebarComponent = () => {
   const router = useRouter();
   const pathname = usePathname();
   const active = pathname.includes('trelloprojectboard')
-  //can be check pathname === /boards/...name
-  console.log('path',pathname.includes('trelloprojectboard'))
+  const boards = useAppSelector((state) => state.board.boards)
+  console.log("boardsss",boards)
+  // console.log('path',pathname.includes('trelloprojectboard'))
   return (
     <section className="w-[250px] border-r-[1px] border-gray-300 h-[calc(100vh-48px)] opacity-95 bg-[#F4F5F7] p-2">
       <h1 className="text-xl font-semibold text-center">Trello Workspace</h1>
@@ -84,15 +86,20 @@ const BoardSidebarComponent = () => {
             <PlusIcon className="w-5 h-5 cursor-pointer" />
           </div>
         </div>
-        <section className="pt-4">
-          <Button
+        <section className="pt-4 flex flex-col gap-2">
+          {
+            boards.map((board)=> (
+              <Button
+              key={board.id}
             variant={"ghost"}
             onClick={()=>router.push("/boards/trelloprojectboard") }
-            className={`hover:bg-slate-300 hover:text-blue-700 w-full ${active && 'bg-slate-300 text-blue-700'}`}
+            className={`hover:bg-slate-300 hover:text-blue-700 w-full ${active && 'bg-slate-300 text-blue-700'} flex justify-start`}
           >
             <LayoutIcon className="w-5 h-5 mr-2" />
-            <span>Trello Project Board</span>
+            <span>{board.name}</span>
           </Button>
+            ))
+          }
         </section>
       </section>
     </section>

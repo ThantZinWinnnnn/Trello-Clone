@@ -19,7 +19,7 @@ const Board = () => {
       if(source.index === destination?.index) return;
 
       const column = dndData.splice(source.index,1)[0];
-      return dndData.splice(destination.index,0,column)
+      return dndData.splice(destination?.index!,0,column)
     }
     
     //same column
@@ -27,14 +27,14 @@ const Board = () => {
     if(source.droppableId === destination?.droppableId) {
       const column = dndData.find((column,index)=> column.id === source.droppableId);
       const todo = column?.todos.splice(source.index,1)[0];
-      return column?.todos.splice(destination?.index,0,todo)
+      return column?.todos.splice(destination?.index,0,todo!)
     }
 
     if(source.droppableId !== destination?.droppableId){
       const sourceColumn = dndData.find((column)=> column.id === source.droppableId);
       const destinationColumn = dndData.find((column,index)=> column.id === destination?.droppableId);
       const removedTodo = sourceColumn?.todos.splice(source.index,1)[0];
-      return destinationColumn?.todos.splice(destination?.index,0,removedTodo)
+      return destinationColumn?.todos.splice(destination?.index!,0,removedTodo!)
     
     }
   };
@@ -45,7 +45,7 @@ const Board = () => {
         {(provided, snapshot) => (
           <div {...provided.droppableProps} ref={provided.innerRef}
             //temporary css later change flex
-            className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8 overflow-x-scroll"
+            className="grid grid-cols-1 md:grid-cols-6 gap-6 mt-8 overflow-x-scroll"
           >
             {dndData.map((column, index) => (
               <Column
