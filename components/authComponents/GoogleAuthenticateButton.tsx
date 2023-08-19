@@ -8,6 +8,7 @@ import { Button } from '../ui/button'
 const GoogleAuthenticateButton = () => {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') as string | undefined;
+  console.log("callbackUrl",callbackUrl)
 
   return (
     <Button className='w-full' type='button'

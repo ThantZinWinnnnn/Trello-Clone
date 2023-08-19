@@ -1,17 +1,20 @@
-'use client'
+
 import React from 'react'
-import { useSession } from 'next-auth/react'
+import { options } from '@/app/api/auth/[...nextauth]/route'
+import { getServerSession } from "next-auth/next"
 import {redirect} from "next/navigation"
-const ProtectedRoute = () => {
-    const {data:session} = useSession({
-        required:true,
-        onUnauthenticated(){
-            redirect('/login?callbackUrl=/')
-        }
-    })
+const ProtectedRoute = async(
+    {children} : {children: React.ReactNode}
+) => {
+  const session = await getServerSession(options)
+
+  if (!session) {
+      redirect('/login')
+  }
+
 
   return (
-    <div>ProtectedRoute</div>
+    <main>{children}</main>
   )
 }
 
