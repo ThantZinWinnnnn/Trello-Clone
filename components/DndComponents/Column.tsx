@@ -9,9 +9,15 @@ import { PlusIcon } from "@radix-ui/react-icons";
 //components
 import CreateIssue from "../IssueComponents/CreateIssue";
 
-const Column: React.FC<ColumnProps> = ({ id, column, index }) => {
+interface ColumnProps{
+  id:string,
+  index:number,
+  column:DndListsProps
+}
+
+const Column: React.FC<ColumnProps> = ({ id,index,column}) => {
   return (
-    <Draggable draggableId={id} index={index} key={id}>
+    <Draggable draggableId={id} index={index!} key={id}>
       {(provided) => (
         <div
           {...provided.draggableProps}
@@ -25,37 +31,39 @@ const Column: React.FC<ColumnProps> = ({ id, column, index }) => {
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className={`flex flex-col gap-2 p-2 rounded-md shadow-sm ${
+                className={`flex flex-col gap-2 p-2 rounded-md shadow-sm w-[300px] ${
                   snapshot.isDraggingOver ? "bg-gray-200" : "bg-[#F4F5F7]"
                 }`}
               >
                 <h1 className="flex justify-between items-center">
-                  {column.title}
+                  {column.name}
                   <span className="text-slate-500 font-normal px-2 py-1 rounded-full bg-slate-300 text-xs">
-                    {column.todos.length}
+                    {column?.issues?.length}
                   </span>
                 </h1>
                 <CreateIssue/>
                 <div className="space-y-3">
-                  {column.todos.map((todo, index) => (
-                    <Draggable
-                      draggableId={todo.id}
-                      index={index}
-                      key={todo.id}
-                    >
-                      {(provided) => (
-                        <TodoCard
-                          key={todo.id}
-                          draggableProps={provided.draggableProps}
-                          draggableHandleProps={provided.dragHandleProps}
-                          innerRef={provided.innerRef}
-                          todo={todo}
-                          index={index}
-                          id={todo.id}
-                        />
-                      )}
-                    </Draggable>
-                  ))}
+                  { column?.issues?.length > 0 ?
+                    column?.issues?.map((issue, index) => (
+                      <Draggable
+                        draggableId={issue.id}
+                        index={index}
+                        key={issue.id}
+                      >
+                        {(provided) => (
+                          <TodoCard
+                            key={issue.id}
+                            draggableProps={provided.draggableProps}
+                            draggableHandleProps={provided.dragHandleProps}
+                            innerRef={provided.innerRef}
+                            todo={issue}
+                            index={index}
+                            id={issue.id}
+                          />
+                        )}
+                      </Draggable>
+                    ))
+                   : null}
                   {provided.placeholder}
                 </div>
               </div>
@@ -69,19 +77,19 @@ const Column: React.FC<ColumnProps> = ({ id, column, index }) => {
 
 export default Column;
 
-type todo = {
-  id: string;
-  desc: string;
-};
+// type todo = {
+//   id: string;
+//   desc: string;
+// };
 
-type column = {
-  id: string;
-  title: string;
-  todos: todo[];
-};
+// type column = {
+//   id: string;
+//   title: string;
+//   todos: todo[];
+// };
 
-interface ColumnProps {
-  id: string;
-  column: column;
-  index: number;
-}
+// interface ColumnProps {
+//   id: string;
+//   column: column;
+//   index: number;
+// }

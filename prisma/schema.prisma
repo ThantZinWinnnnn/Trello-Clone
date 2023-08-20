@@ -61,8 +61,8 @@ model Issue {
   id         String     @id @default(cuid())
   image      String
   type       String
-  summary    String     @db.Char(100)
-  desc       String     @db.Char(500)
+  summary    String     
+  desc       String   
   priority   String
   reporterId String
   User       User?      @relation(fields: [reporterId], references: [id], onDelete: Cascade)

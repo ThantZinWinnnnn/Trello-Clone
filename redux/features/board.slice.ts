@@ -1,11 +1,13 @@
 import { createSlice,PayloadAction } from "@reduxjs/toolkit";
 
 interface InitialStateProps{
-    boards:BoardProps[]
+    boards:BoardProps[],
+    successBoardCreation:"success"|"failed" | ""
 }
 
 const initialState:InitialStateProps = {
-    boards:[]
+    boards:[],
+    successBoardCreation:""
 };
 
 const boardSlice = createSlice({
@@ -14,10 +16,13 @@ const boardSlice = createSlice({
     reducers:{
         addBoardsData:(state,action:PayloadAction<BoardProps[]>)=>{
             state.boards = action.payload;
+        },
+        changeCreationBoardStatus:(state,action:PayloadAction<"success"|"failed"| "">)=>{
+            state.successBoardCreation = action.payload;
         }
     }
 }   
 );
 
-export const {addBoardsData} = boardSlice.actions;
+export const {addBoardsData,changeCreationBoardStatus} = boardSlice.actions;
 export default boardSlice.reducer;

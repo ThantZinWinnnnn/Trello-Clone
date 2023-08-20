@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {
   Draggable,
   DraggableProvided,
@@ -63,7 +63,7 @@ const TodoCard: React.FC<todoCardProps> = ({
               <CheckSquare className="w-5 h-5 bg-[#0070f3] p-1 rounded-sm text-white" />
               <ArrowUpIcon className="w-4 h-4 text-red-500" />
             </div>
-            <CardMember />
+            <CardMember members={todo.assignees}/>
           </section>
         </section>
         </IssueDetailComponent>
@@ -73,7 +73,7 @@ const TodoCard: React.FC<todoCardProps> = ({
   );
 };
 
-export default TodoCard;
+export default memo(TodoCard);
 
 type todo = {
   id: string;
@@ -83,7 +83,7 @@ type todo = {
 type todoCardProps = {
   id: string;
   index: number;
-  todo: todo;
+  todo: DndIssueProps;
   innerRef: (element: HTMLElement | null) => void;
   draggableProps: DraggableProvidedDraggableProps;
   draggableHandleProps: DraggableProvidedDragHandleProps | null | undefined;

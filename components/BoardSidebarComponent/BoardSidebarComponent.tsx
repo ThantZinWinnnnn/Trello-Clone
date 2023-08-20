@@ -88,7 +88,7 @@ const BoardSidebarComponent = () => {
         </div>
         <section className="pt-4 flex flex-col gap-2">
           {
-            boards.map((board)=> (
+            boards?.map((board)=> (
               <Button
               key={board.id}
             variant={"ghost"}

@@ -12,7 +12,7 @@ export const GET = async (req:NextRequest)=>{
             id:userId!
          },
          select:{
-            boards:true
+            boards:true,
          }
       });
       console.log("boards",userBoards)
@@ -36,5 +36,19 @@ export const POST = async (req:NextRequest,res:NextResponse)=>{
    } catch (error) {   
     return badRequest("Creating board error",400)
    }
+};
 
+export const DELETE = async(req:NextRequest)=>{
+   try {
+      const url = new URL(req.url);
+      const boardId = url.searchParams.get("boardId");
+      const deletedBoard = await prisma.board.delete({
+         where:{
+            id:boardId!
+         }
+      })
+      return NextResponse.json(deletedBoard)
+   } catch (error) {
+      return badRequest("Error deleting board",400)
+   }
 }

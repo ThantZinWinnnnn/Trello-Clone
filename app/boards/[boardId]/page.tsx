@@ -2,15 +2,19 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import Breadcrumbs from "@/components/utils/Breadcrumbs";
 import MemberPhotos from "@/components/utils/MemberPhotos";
 import { Search } from "lucide-react";
-import { DividerVerticalIcon } from "@radix-ui/react-icons";
 import React, { useState } from "react";
 import Board from "@/components/DndComponents/Board";
+import { useSearchParams } from "next/navigation";
 
-const Boards = () => {
+type Params={
+  params:{
+    boardId : string
+  }
+}
+const Boards = ({params:{boardId}}:Params) => {
   const [active, setActive] = useState<string[]>([]);
 
   return (
@@ -67,7 +71,7 @@ const Boards = () => {
           <Search className="absolute top-3 left-3" size={15} />
         </div>
       </section>
-      <Board />
+      <Board id={`${boardId}`}/>
     </main>
   );
 };

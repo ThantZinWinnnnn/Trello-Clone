@@ -1,5 +1,6 @@
+"use client"
 import Link from "next/link";
-import React, { useMemo, memo } from "react";
+import React, { useMemo, memo, useState } from "react";
 import { Button } from "../ui/button";
 import CreateNewBoardModal from "../BoardsComponents/CreateNewBoardModal";
 
@@ -13,11 +14,11 @@ const ProjectBoard: React.FC<GetUserBoardsProps> = ({ boards }) => {
           Create Board
         </Button>
       </CreateNewBoardModal>
-      <section className="flex gap-3">
+      <section className="flex gap-3 flex-wrap">
         {memoizedBoards?.map((board) => (
           <Link
             key={board.id}
-            href={"/boards/trelloprojectboard"}
+            href={`/boards/${board.id}`}
             className="bg-[url('/photos/board-bg.jpeg')] bg-cover bg-center h-[150px] w-[250px] rounded-sm flex items-center justify-center"
           >
             <p className="text-white font-medium">{board.name}</p>

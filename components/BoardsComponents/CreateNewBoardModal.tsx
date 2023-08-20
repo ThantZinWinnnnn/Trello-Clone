@@ -9,10 +9,12 @@ import {
 } from "@/components/ui/dialog";
 import CreateNewBoard from "../utils/CreateNewBoard";
 import { useCreateBoardMutation } from "@/redux/apis/endpoints/create.board.endpoint";
-import { toast,Toaster } from "sonner";
+import { changeCreationBoardStatus } from "@/redux/features/board.slice";
+import { useAppDispatch } from "@/redux/store/hook";
 
-const CreateNewBoardModal = ({children}:{children:React.ReactNode}) => {
+const CreateNewBoardModal = ({ children }: { children: React.ReactNode }) => {
   const [newBoard, setNewBoard] = useState<string>("");
+  const dispatch = useAppDispatch();
   const [mutate, { isLoading, isSuccess, isError, error }] =
     useCreateBoardMutation();
   const createBoardHandler = (
@@ -22,16 +24,12 @@ const CreateNewBoardModal = ({children}:{children:React.ReactNode}) => {
     mutate({ name: inputName, userId });
   };
 
-  if(isSuccess) toast.success("Successfully Created a new board.")
-  if(isError) toast.error("Unsuccessfully while creating new board.")
+  if (isSuccess) dispatch(changeCreationBoardStatus("success"));
+  if (isError) dispatch(changeCreationBoardStatus("failed"));
 
   return (
-    <>
-    <Toaster richColors position="top-center"/>
     <Dialog>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="mb-6">New Board</DialogTitle>
@@ -41,11 +39,10 @@ const CreateNewBoardModal = ({children}:{children:React.ReactNode}) => {
           setName={setNewBoard}
           createBoardHandler={createBoardHandler}
           isLoading={isLoading}
-            ClassName="space-y-6"
+          ClassName="space-y-6"
         />
       </DialogContent>
     </Dialog>
-    </>
   );
 };
 
