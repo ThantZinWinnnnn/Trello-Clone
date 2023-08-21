@@ -1,13 +1,20 @@
 "use client"
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 //components
 import IntroNavBar from '@/components/IntroComponents/IntroNavBar'
 import { Button } from '@/components/ui/button'
 import introLogo from "@/public/photos/intro-img.png"
+import { useSession } from 'next-auth/react'
 
 export default function Home() {
   const router = useRouter();
+  const {data} = useSession({
+    required:true,
+    onUnauthenticated(){
+      redirect("/login")
+    }
+  })
   return (
     <main className="w-full h-screen">
      <IntroNavBar/>

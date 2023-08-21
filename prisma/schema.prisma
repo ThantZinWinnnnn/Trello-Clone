@@ -50,6 +50,7 @@ model Member {
 model List {
   id        String   @id @default(cuid())
   name      String   @default("unnamed list")
+  order     Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   boardId   String
@@ -59,10 +60,11 @@ model List {
 
 model Issue {
   id         String     @id @default(cuid())
+  order      Int
   image      String
   type       String
-  summary    String     
-  desc       String   
+  summary    String
+  desc       String
   priority   String
   reporterId String
   User       User?      @relation(fields: [reporterId], references: [id], onDelete: Cascade)

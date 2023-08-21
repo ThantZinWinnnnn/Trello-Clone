@@ -35,14 +35,16 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
   try {
     const body = await req.json();
     const { listName, boardId } = body;
+    const count = await prisma?.list.aggregate({where:{boardId},_count:true});
     const newList = await prisma?.list.create({
       data: {
         name: listName,
+        order: count?._count! + 1,
         boardId,
       },
     });
-    return NextResponse.json(newList);
+    return NextResponse.json({newList,count});
   } catch (error) {
-    return badRequest("Error creating in List Please try again", 400);
+    return badRequest(`${error}`, 400);
   }
 };

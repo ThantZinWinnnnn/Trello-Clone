@@ -27,8 +27,11 @@ export const POST = async(req:NextRequest)=>{
         const body =await req.json();
         const {image,type,summary,desc,priority,userId,listId,boardId} = body;
         console.log("bodydata",body)
+        const count = await prisma?.issue.aggregate({where:{listId},_count:true})
+
         const issue = await prisma?.issue.create({
             data:{
+                order:+count?._count!,
                 image,
                 type,
                 summary,
@@ -53,7 +56,7 @@ export const POST = async(req:NextRequest)=>{
                 boardId
             }
         });
-        return NextResponse.json({issue,assignee}) 
+        return NextResponse.json({issue,assignee,count}) 
     } catch (error) {
        return badRequest(`${error}`,400)
     }

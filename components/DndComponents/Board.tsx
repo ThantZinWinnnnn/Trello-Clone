@@ -26,9 +26,11 @@ const Board: React.FC<BoardProps> = ({ id }) => {
   } = useGetListsQuery(`${id}`);
   const lists = listsData?.lists;
   console.log("lists", lists, "boardId", id);
+
+
   const handleDrag = (result: DropResult) => {
     const { source, destination, type } = result;
-    console.log("des", destination, "res", source, "type", type);
+    console.log( "res", source, "des", destination,"type", type);
     if (type === "column") {
       if (source.index === destination?.index) return;
 
