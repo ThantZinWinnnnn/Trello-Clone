@@ -25,7 +25,7 @@ export const GET = async(req:NextRequest)=>{
 export const POST = async(req:NextRequest)=>{
     try {
         const body =await req.json();
-        const {image,type,summary,desc,priority,userId,listId,boardId} = body;
+        const {image,type,summary,desc,priority,userId,listId,boardId,assignees} = body;
         console.log("bodydata",body)
         const count = await prisma?.issue.aggregate({where:{listId},_count:true})
 
@@ -50,14 +50,17 @@ export const POST = async(req:NextRequest)=>{
             },
         });
         const assignee = await prisma?.assignee.create({
-            data:{
-                userId,
-                issueId:issue?.id,
-                boardId
-            }
+            data: assignees.map((userId:string)=>({userId:userId,issueId:issue?.id,boardId}))
         });
         return NextResponse.json({issue,assignee,count}) 
     } catch (error) {
        return badRequest(`${error}`,400)
     }
 }
+
+// function updatedAt(id:string) {
+//     return prisma?.issue.update({
+//       where: { id },
+//       data: 
+//     });
+//   }

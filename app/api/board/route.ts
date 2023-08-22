@@ -31,6 +31,13 @@ export const POST = async (req:NextRequest,res:NextResponse)=>{
          name,
          userId
       }
+    });
+    await prisma.member.create({
+      data:{
+         boardId:newBoard.id,
+         userId,
+         isAdmin:true
+      }
     })
     return NextResponse.json(newBoard)
    } catch (error) {   
