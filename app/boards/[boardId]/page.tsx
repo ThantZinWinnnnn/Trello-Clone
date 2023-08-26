@@ -22,6 +22,7 @@ const Boards = ({params:{boardId}}:Params) => {
       <Breadcrumbs />
       <h2 className=" font-semibold my-5 text-xl">Trello Project Board</h2>
       <section className="flex justify-end items-center gap-6">
+        
         {((active.includes("1") && active.includes("2")) ||
           active.includes("1") ||
           active.includes("2")) && (

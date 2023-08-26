@@ -53,7 +53,7 @@ const CreateNewList:React.FC<CreateNewListProps> = ({boardId}) => {
           className="bg-[#F4F5F7] text-xs text-black hover:bg-gray-200"
           onClick={handleOpenListInput}
         >
-          Create Another List
+          Create  List
         </Button>
       )}
     </section>

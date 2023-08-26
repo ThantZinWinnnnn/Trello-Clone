@@ -13,6 +13,9 @@ export const GET = async (req: NextRequest) => {
         lists: {
           include: {
             issues: {
+              orderBy:{
+                order:"asc"
+              },
               include: {
                 assignees: {
                   include: {
