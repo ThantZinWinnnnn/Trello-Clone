@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { Dispatch, memo, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   Select,
@@ -9,11 +9,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "../ui/input";
+import { I } from "../IssueComponents/CreateIssue";
 
 const DropdownUsers: React.FC<DropdownUserProps> = ({
   users,
   multiple,
   isLoading,
+  val,
+  dispatch
 }) => {
   const [filterUser, setFilterUser] = useState<string>("");
   const filteredUsers =
@@ -24,9 +27,9 @@ const DropdownUsers: React.FC<DropdownUserProps> = ({
       : users;
 
   return (
-    <Select>
+    <Select onValueChange={(val)=>dispatch({type:"reporter",value:val})}>
       <SelectTrigger>
-        <SelectValue placeholder="Select people" />
+        <SelectValue placeholder="Select user" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
@@ -44,7 +47,7 @@ const DropdownUsers: React.FC<DropdownUserProps> = ({
                 <SelectItem
                   className="flex items-center"
                   key={user?.id}
-                  value={user?.name}
+                  value={user?.id}
                 >
                   <div className="flex items-center gap-2">
                     <Avatar className="w-6 h-6">
@@ -69,4 +72,6 @@ interface DropdownUserProps {
   users: Array<UserProps> | undefined;
   multiple?: boolean;
   isLoading?: boolean;
+  val:string,
+  dispatch:Dispatch<I>
 }

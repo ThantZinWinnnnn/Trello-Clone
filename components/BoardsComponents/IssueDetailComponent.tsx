@@ -27,7 +27,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 //components
 import StatusDropdown from "../IssueComponents/StatusDropdown";
-import ReporterDropdown from "../IssueComponents/ReporterDropdown";
 import Member from "../utils/Member";
 
 //data
@@ -35,6 +34,7 @@ import { imgArr } from "../DummyData/data";
 import AddMemberButton from "../IssueComponents/AddMemberButton";
 import SearchMember from "../utils/SearchMember";
 import PiorityDrowdown from "../IssueComponents/PiorityDropdown";
+import Dropdown from "../IssueComponents/Dropdown";
 
 const IssueDetailComponent = ({ children }: { children: React.ReactNode }) => {
   const [openSearchInput, setOpenSearchInput] = useState<Boolean>(false);
@@ -115,7 +115,8 @@ const IssueDetailComponent = ({ children }: { children: React.ReactNode }) => {
                 </div>
                 <div className="w-[200px]">
                   <Label className="uppercase text-xs">reporter</Label>
-                  <ReporterDropdown/>
+                  {/* <Dropdown val="" dispatch={()=>void}/> */}
+
                 </div>
                 <div className="relative">
                   <Label className="uppercase text-xs">assignees</Label>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import {
   Select,
   SelectContent,
@@ -11,12 +11,14 @@ import {
 
 //data
 import { issueType } from "../DummyData/data";
+import { I } from "./CreateIssue";
 
-const IssueTypeDropdown = () => {
+const IssueTypeDropdown:React.FC<IssueTypeDropdownProps> = ({val,dispatch}) => {
+
   return (
-    <Select>
+    <Select onValueChange={(val)=> dispatch({type:"type",value:val})} >
       <SelectTrigger>
-        <SelectValue placeholder="Select issue type" />
+        <SelectValue  placeholder="Select issue type" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
@@ -41,3 +43,8 @@ const IssueTypeDropdown = () => {
 };
 
 export default IssueTypeDropdown;
+
+interface IssueTypeDropdownProps{
+  val:string,
+  dispatch:Dispatch<I>
+}

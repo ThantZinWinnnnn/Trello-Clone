@@ -1,7 +1,8 @@
 "use client"
-import React, { useState } from 'react'
+import React, { Dispatch, memo, useState } from 'react'
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { I } from './CreateIssue';
 
 const toolbarOptions = [
     ['bold', 'italic', 'underline',],        // toggled buttons
@@ -12,16 +13,21 @@ const toolbarOptions = [
   ];
  
 
-const InputTextEditor = () => {
-    const [descValue, setDescValue] = useState<string | undefined>();
+const InputTextEditor:React.FC<InputTextEditorProps> = ({val,dispatch}) => {
+    // const [descValue, setDescValue] = useState<string | undefined>();
     const modules = {
         toolbar: toolbarOptions
       }
   return (
    <div>
-     <ReactQuill theme="snow" modules={modules} value={descValue} onChange={setDescValue} className='w-full '/>
+     <ReactQuill theme="snow" modules={modules} value={val} onChange={(val)=> dispatch({type:"desc",value:val})} className='w-full '/>
    </div>
   )
 }
 
-export default InputTextEditor
+export default memo(InputTextEditor);
+
+interface InputTextEditorProps{
+  val:string,
+  dispatch:Dispatch<I>
+}

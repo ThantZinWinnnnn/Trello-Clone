@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, memo } from "react";
 import {
   Select,
   SelectContent,
@@ -13,11 +13,12 @@ import { cn } from "@/lib/utils";
 
 //data
 import { piorityArr } from "../DummyData/data";
+import { I } from "./CreateIssue";
 
-const PiorityDrowdown: React.FC<PiorityDropdownProps> = ({ className }) => {
+const PiorityDrowdown: React.FC<PiorityDropdownProps> = ({ className ,val,dispatch}) => {
   return (
     <section>
-      <Select>
+      <Select onValueChange={(val)=> dispatch({type:"priority",value:val})}>
         <SelectTrigger>
           <SelectValue placeholder="Please Select piority" />
         </SelectTrigger>
@@ -39,8 +40,10 @@ const PiorityDrowdown: React.FC<PiorityDropdownProps> = ({ className }) => {
   );
 };
 
-export default PiorityDrowdown;
+export default memo(PiorityDrowdown);
 
 interface PiorityDropdownProps {
   className?: string;
+  val?: string;
+  dispatch:Dispatch<I>
 }

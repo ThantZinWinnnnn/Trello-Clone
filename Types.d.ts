@@ -91,3 +91,19 @@ interface DndListsProps {
 interface ReturnDndListsProps {
   lists: Array<DndListsProps>;
 }
+
+interface IssueState{
+  image:string,
+  type:string,
+  summary:string,
+  desc:string,
+  priority:string,
+  reporterId:string,
+  assignees:Array<string>,
+}
+
+interface MultiSelectUsers{
+  users:Array<UserProps>,
+  ref:HTMLInputElement,
+  setUsers:React.Dispatch<React.SetStateAction<Array<UserProps>>>
+}
