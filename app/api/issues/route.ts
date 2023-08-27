@@ -1,3 +1,4 @@
+import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { badRequest } from "../utils/api.utils";
 
@@ -22,34 +23,16 @@ export const GET = async(req:NextRequest)=>{
     }
 };
 
-export const POST = async(req:NextRequest)=>{
+export const POST = async(req:NextRequest)=>{   
     try {
-        const body =await req.json();
-        const {image,type,summary,desc,priority,userId,listId,boardId,assignees} = body;
+        const body = await req.json();
+        const {listId,boardId,assignees,...data} = body;
         console.log("bodydata",body)
         const count = await prisma?.issue.aggregate({where:{listId},_count:true})
-
         const issue = await prisma?.issue.create({
-            data:{
-                order:+count?._count!,
-                image,
-                type,
-                summary,
-                desc,
-                priority,
-                List:{
-                    connect:{
-                        id:listId
-                    }
-                },
-                User:{
-                    connect:{
-                        id:userId
-                    }
-                }
-            },
-        });
-        const assignee = await prisma?.assignee.create({
+           data:{...data,order:count?._count! + 1,listId},
+        })
+        const assignee = await prisma?.assignee.createMany({
             data: assignees.map((userId:string)=>({userId:userId,issueId:issue?.id,boardId}))
         });
         return NextResponse.json({issue,assignee,count}) 
@@ -58,9 +41,3 @@ export const POST = async(req:NextRequest)=>{
     }
 }
 
-// function updatedAt(id:string) {
-//     return prisma?.issue.update({
-//       where: { id },
-//       data: 
-//     });
-//   }

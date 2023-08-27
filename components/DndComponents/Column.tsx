@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import TodoCard from "./TodoCard";
 import { Button } from "../ui/button";
@@ -16,6 +16,7 @@ interface ColumnProps{
 }
 
 const Column: React.FC<ColumnProps> = ({ id,index,column}) => {
+
   return (
     <Draggable draggableId={id} index={index!} key={id}>
       {(provided) => (
@@ -41,7 +42,7 @@ const Column: React.FC<ColumnProps> = ({ id,index,column}) => {
                     {column?.issues?.length}
                   </span>
                 </h1>
-                <CreateIssue/>
+                <CreateIssue listId={column.id}/>
                 <div className="space-y-3">
                   { column?.issues?.length > 0 ?
                     column?.issues?.map((issue, index) => (
@@ -75,7 +76,7 @@ const Column: React.FC<ColumnProps> = ({ id,index,column}) => {
   );
 };
 
-export default Column;
+export default memo(Column);
 
 // type todo = {
 //   id: string;

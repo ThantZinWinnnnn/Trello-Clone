@@ -69,6 +69,7 @@ interface AssigneeProps {
 
 interface DndIssueProps {
   id: string;
+  order:number,
   image: string;
   type: string;
   summary: string;
@@ -81,6 +82,7 @@ interface DndIssueProps {
 
 interface DndListsProps {
   id: string;
+  order:number;
   name: string;
   createdAt: string;
   updatedAt: string;
@@ -100,6 +102,8 @@ interface IssueState{
   priority:string,
   reporterId:string,
   assignees:Array<string>,
+  boardId?:string,
+  listId?:string
 }
 
 interface MultiSelectUsers{
@@ -107,3 +111,4 @@ interface MultiSelectUsers{
   ref:HTMLInputElement,
   setUsers:React.Dispatch<React.SetStateAction<Array<UserProps>>>
 }
+

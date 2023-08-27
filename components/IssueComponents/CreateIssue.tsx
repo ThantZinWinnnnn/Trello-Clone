@@ -1,5 +1,11 @@
 "use client";
 import React, { useRef, useState, useReducer } from "react";
+import { useParams } from "next/navigation";
+
+// You need to import our styles for the button to look right. Best to import in the root /layout.tsx but this is fine
+import "@uploadthing/react/styles.css";
+import { UploadButton } from "../utils/util";
+
 import {
   Dialog,
   DialogContent,
@@ -8,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { toast, Toaster } from "sonner";
 
 import { Button } from "../ui/button";
 
@@ -25,54 +32,97 @@ import InputTextEditor from "./InputTextEditor";
 import Dropdown from "./Dropdown";
 import PiorityDrowdown from "./PiorityDropdown";
 
-const CreateIssue = () => {
+//api
+import { useCreateIssueMutation } from "@/redux/apis/endpoints/issues.endpoint";
+
+const CreateIssue = ({ listId }: { listId: string }) => {
   const imageRef = useRef<HTMLInputElement>(null);
-  const [image, setImage] = useState<File | null>(null);
+  const [openModal, setOpenModal] = useState(false);
   const [form, dispatch] = useReducer(reducer, states);
-  console.log("form", form);
+  const [mutate, { isLoading, isError, isSuccess }] = useCreateIssueMutation();
+  const params = useParams();
+  const boardId = params.boardId as string;
+  console.log("form", form, "id", boardId);
+
+  
+  const createIssueHandler = async () => {
+    await mutate({ ...form, boardId: boardId, listId: listId });
+      toast.success("Issue Created");
+      setOpenModal(false);
+
+    // toast.error("Error Creating Issue");
+  };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <>
+      <Toaster richColors position="top-center" />
+      <Dialog open={openModal} onOpenChange={setOpenModal}>
         <Button
           variant={"ghost"}
+          onClick={() => setOpenModal(true)}
           className="w-6 h-6 bg-blue-500 rounded-full ml-auto p-1 flex items-center justify-center my-2 hover:bg-blue-600"
         >
           <PlusIcon className="text-white" />
         </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="text-base font-normal ">
-            Create Issue
-          </DialogTitle>
-        </DialogHeader>
-        <section className="flex flex-col space-y-6">
-          <div
-            className={`h-[100px] overflow-hidden w-full relative flex items-center justify-center  ${
-              image ? "border-none" : "border-dashed border-[1px] rounded-sm"
-            }`}
-          >
-            {form.image !== "" ? (
-              <Image
-                src={form.image !== "" ? form.image : "/photos/board-bg.jpeg"}
-                alt="issue photo"
-                fill
-                className="w-full h-full object-contain cursor-pointer"
-                onClick={() => imageRef.current?.click()}
-              />
-            ) : (
-              <Button
-                variant={"ghost"}
-                className="flex items-center justify-center gap-2 w-full h-full"
-                onClick={() => imageRef.current?.click()}
-              >
-                <span className="font-medium"> Click to select an image</span>
-                <ImageIcon />
-              </Button>
-            )}
-          </div>
-          <Input
+
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-base font-normal ">
+              Create Issue
+            </DialogTitle>
+          </DialogHeader>
+          <section className="flex flex-col space-y-6">
+            <div
+              className={`h-[100px] overflow-hidden w-full relative flex items-center justify-center  ${
+                form.image !== ""
+                  ? "border-none"
+                  : "border-dashed border-[1px] rounded-sm"
+              }`}
+            >
+              {form.image !== "" ? (
+                <Image
+                  src={form.image !== "" ? form.image : "/photos/board-bg.jpeg"}
+                  alt="issue photo"
+                  fill
+                  className="w-full h-full object-contain cursor-pointer"
+                  // onClick={() => imageRef.current?.click()}
+                  onClick={()=>dispatch({type:"image",value:""})}
+                />
+              ) : (
+                <UploadButton
+                className="flex items-center justify-center  w-full h-full"
+                content={{
+                  button({ready}){
+                    if(ready) return <p className="text-white text-sm">Upload Image</p>
+                    return "Getting ready..."
+                  },
+                  allowedContent({ ready, fileTypes, isUploading }) {
+                    if (!ready) return "Checking what you allow";
+                    if (isUploading) return "Seems like image is uploading";
+                    return `image max size (4MB)`;
+                  },
+                }}
+              endpoint="imageUploader"
+              onClientUploadComplete={(res) => {
+                // Do something with the response
+                dispatch({type:"image",value:res![0]?.url})
+              }}
+              onUploadError={(error: Error) => {
+                // Do something with the error.
+                alert(`ERROR! ${error.message}`);
+              }}
+            />
+                // <Button
+                //   variant={"ghost"}
+                //   className="flex items-center justify-center gap-2 w-full h-full"
+                //   onClick={() => imageRef.current?.click()}
+                // >
+                //   <span className="font-medium"> Click to select an image</span>
+                //   <ImageIcon />
+                // </Button>
+              )}
+            </div>
+            {/* <Input
             type="file"
             ref={imageRef}
             className="hidden"
@@ -86,57 +136,65 @@ const CreateIssue = () => {
               });
             }}
             placeholder="select file"
-          />
-          <IssueTypeDropdown val={form.type} dispatch={dispatch}/>
-          <div className="grid w-full  items-center gap-1.5">
-            <Label htmlFor="summary" className="text-xs">
-              Short Summary
-            </Label>
-            <Input
-              type="text"
-              id="summary"
-              value={form.summary}
-              placeholder="Enter short summary"
-              onChange={(e) => dispatch({ type: "summary", value: e.target.value })}
-            />
-          </div>
-         <div>
-            <Label className="text-xs font-medium">Description</Label>
-            <InputTextEditor dispatch={dispatch} val={form.desc}/>
-         </div>
-          <div>
-            <Label className="text-xs font-medium">Reporter</Label>
-            <Dropdown val={form.reporterId} dispatch={dispatch}/>
-          </div>
-          <div>
-            <Label className="text-xs font-medium">Assignee</Label>
-            <Dropdown arVal={form.assignees} dispatch={dispatch} multiple={true}/>
-          </div>
-          <section>
-            <Label className="text-xs font-medium">Piority</Label>
-            <PiorityDrowdown val={form.priority} dispatch={dispatch}/>
+          /> */}
+            <IssueTypeDropdown val={form.type} dispatch={dispatch} />
+            <div className="grid w-full  items-center gap-1.5">
+              <Label htmlFor="summary" className="text-xs">
+                Short Summary
+              </Label>
+              <Input
+                type="text"
+                id="summary"
+                value={form.summary}
+                placeholder="Enter short summary"
+                onChange={(e) =>
+                  dispatch({ type: "summary", value: e.target.value })
+                }
+              />
+            </div>
+            <div>
+              <Label className="text-xs font-medium">Description</Label>
+              <InputTextEditor dispatch={dispatch} val={form.desc} />
+            </div>
+            <div>
+              <Label className="text-xs font-medium">Reporter</Label>
+              <Dropdown val={form.reporterId} dispatch={dispatch} />
+            </div>
+            <div>
+              <Label className="text-xs font-medium">Assignee</Label>
+              <Dropdown
+                arVal={form.assignees}
+                dispatch={dispatch}
+                multiple={true}
+              />
+            </div>
+            <section>
+              <Label className="text-xs font-medium">Piority</Label>
+              <PiorityDrowdown val={form.priority} dispatch={dispatch} />
+            </section>
           </section>
-        </section>
-        <DialogFooter>
-          <DialogTrigger>
-            <Button
-              type="button"
-              className="px-5 bg-slate-400 hover:bg-slate-500"
-            >
-              Cancel
-            </Button>
-          </DialogTrigger>
-          <DialogTrigger>
+          <DialogFooter>
+            <DialogTrigger>
+              <Button
+                type="button"
+                className="px-5 bg-slate-400 hover:bg-slate-500"
+                onClick={() => setOpenModal(false)}
+              >
+                Cancel
+              </Button>
+            </DialogTrigger>
+
             <Button
               type="button"
               className="px-6 bg-blue-600 hover:bg-blue-700"
+              onClick={createIssueHandler}
             >
-              Create
+              {isLoading ? "Creating..." : "Create"}
             </Button>
-          </DialogTrigger>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
@@ -151,6 +209,7 @@ export type T =
   | "reporter"
   | "assignee";
 export type I = { type: T; value: string | string[] };
+
 const states: IssueState = {
   image: "",
   type: "",

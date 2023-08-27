@@ -1,4 +1,5 @@
-import React, { memo } from "react";
+"use client"
+import React, { memo, useState } from "react";
 import {
   Draggable,
   DraggableProvided,
@@ -30,6 +31,19 @@ const TodoCard: React.FC<todoCardProps> = ({
   draggableProps,
   draggableHandleProps,
 }) => {
+  const [image,setImage] = useState<string>('')
+  console.log("imgUrl",todo.image)
+  fetch(todo.image)
+            .then(response => response.blob())
+            .then(blob => {
+                // Convert the Blob to a Base64-encoded data URL
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const base64DataURL = reader.result;
+                    setImage(base64DataURL as string);
+                };
+                reader.readAsDataURL(blob);
+            })
   return (
     <div
       key={id}
@@ -43,10 +57,10 @@ const TodoCard: React.FC<todoCardProps> = ({
         <section>
           <section className="relative h-[100px] overflow-hidden">
             <Image
-              src={"/photos/board-bg.jpeg"}
+              src={`${todo.image}`}
               fill
               alt="todo bg"
-              className="object-cover"
+              className="object-contain"
             />
           </section>
           <section className="flex items-center justify-between px-2 py-3">

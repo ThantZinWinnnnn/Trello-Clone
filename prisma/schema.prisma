@@ -66,8 +66,8 @@ model Issue {
   summary    String
   desc       String
   priority   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
   reporterId String
   User       User?      @relation(fields: [reporterId], references: [id], onDelete: Cascade)
   List       List?      @relation(fields: [listId], references: [id])
