@@ -57,7 +57,7 @@ const TodoCard: React.FC<todoCardProps> = ({
         <section>
           <section className="relative h-[100px] overflow-hidden">
             <Image
-              src={`${todo.image}`}
+              src={todo.image ? `${todo.image}` : "/photos/board-bg.jpeg"}
               fill
               alt="todo bg"
               className="object-contain"
