@@ -29,39 +29,39 @@ const Board: React.FC<BoardProps> = ({ id }) => {
 
 
   const handleDrag = (result: DropResult) => {
-    const { source, destination, type } = result;
-    console.log( "res", source, "des", destination,"type", type);
+    const { source :s, destination:d, type } = result;
+    console.log( "res", s, "des", d,"type", type);
     if (type === "column") {
-      if (source.index === destination?.index) return;
+      if (s.index === d?.index) return;
 
-      const column = dndData.splice(source.index, 1)[0];
-      return dndData.splice(destination?.index!, 0, column);
+      const column = dndData.splice(s.index, 1)[0];
+      return dndData.splice(d?.index!, 0, column);
     }
 
     //same column
     if (
-      source.droppableId === destination?.droppableId &&
-      source.index === destination.index
+      s.droppableId === d?.droppableId &&
+      s.index === d.index
     )
       return;
-    if (source.droppableId === destination?.droppableId) {
+    if (s.droppableId === d?.droppableId) {
       const column = dndData.find(
-        (column, index) => column.id === source.droppableId
+        (column, index) => column.id === s.droppableId
       );
-      const todo = column?.todos.splice(source.index, 1)[0];
-      return column?.todos.splice(destination?.index, 0, todo!);
+      const todo = column?.todos.splice(s.index, 1)[0];
+      return column?.todos.splice(d?.index, 0, todo!);
     }
 
-    if (source.droppableId !== destination?.droppableId) {
+    if (s.droppableId !== d?.droppableId) {
       const sourceColumn = dndData.find(
-        (column) => column.id === source.droppableId
+        (column) => column.id === s.droppableId
       );
       const destinationColumn = dndData.find(
-        (column, index) => column.id === destination?.droppableId
+        (column, index) => column.id === d?.droppableId
       );
-      const removedTodo = sourceColumn?.todos.splice(source.index, 1)[0];
+      const removedTodo = sourceColumn?.todos.splice(s.index, 1)[0];
       return destinationColumn?.todos.splice(
-        destination?.index!,
+        d?.index!,
         0,
         removedTodo!
       );

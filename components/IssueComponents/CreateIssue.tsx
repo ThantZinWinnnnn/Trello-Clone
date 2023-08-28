@@ -89,40 +89,40 @@ const CreateIssue = ({ listId }: { listId: string }) => {
                   onClick={()=>dispatch({type:"image",value:""})}
                 />
               ) : (
-                <UploadButton
-                className="flex items-center justify-center  w-full h-full"
-                content={{
-                  button({ready}){
-                    if(ready) return <p className="text-white text-sm">Upload Image</p>
-                    return "Getting ready..."
-                  },
-                  allowedContent({ ready, fileTypes, isUploading }) {
-                    if (!ready) return "Checking what you allow";
-                    if (isUploading) return "Seems like image is uploading";
-                    return `image max size (4MB)`;
-                  },
-                }}
-              endpoint="imageUploader"
-              onClientUploadComplete={(res) => {
-                // Do something with the response
-                dispatch({type:"image",value:res![0]?.url})
-              }}
-              onUploadError={(error: Error) => {
-                // Do something with the error.
-                alert(`ERROR! ${error.message}`);
-              }}
-            />
-                // <Button
-                //   variant={"ghost"}
-                //   className="flex items-center justify-center gap-2 w-full h-full"
-                //   onClick={() => imageRef.current?.click()}
-                // >
-                //   <span className="font-medium"> Click to select an image</span>
-                //   <ImageIcon />
-                // </Button>
+            //     <UploadButton
+            //     className="flex items-center justify-center  w-full h-full"
+            //     content={{
+            //       button({ready}){
+            //         if(ready) return <p className="text-white text-sm">Upload Image</p>
+            //         return "Getting ready..."
+            //       },
+            //       allowedContent({ ready, fileTypes, isUploading }) {
+            //         if (!ready) return "Checking what you allow";
+            //         if (isUploading) return "Seems like image is uploading";
+            //         return `image max size (4MB)`;
+            //       },
+            //     }}
+            //   endpoint="imageUploader"
+            //   onClientUploadComplete={(res) => {
+            //     // Do something with the response
+            //     dispatch({type:"image",value:res![0]?.url})
+            //   }}
+            //   onUploadError={(error: Error) => {
+            //     // Do something with the error.
+            //     alert(`ERROR! ${error.message}`);
+            //   }}
+            // />
+                <Button
+                  variant={"ghost"}
+                  className="flex items-center justify-center gap-2 w-full h-full"
+                  onClick={() => imageRef.current?.click()}
+                >
+                  <span className="font-medium"> Click to select an image</span>
+                  <ImageIcon />
+                </Button>
               )}
             </div>
-            {/* <Input
+            <Input
             type="file"
             ref={imageRef}
             className="hidden"
@@ -136,7 +136,7 @@ const CreateIssue = ({ listId }: { listId: string }) => {
               });
             }}
             placeholder="select file"
-          /> */}
+          />
             <IssueTypeDropdown val={form.type} dispatch={dispatch} />
             <div className="grid w-full  items-center gap-1.5">
               <Label htmlFor="summary" className="text-xs">

@@ -112,3 +112,15 @@ interface MultiSelectUsers{
   setUsers:React.Dispatch<React.SetStateAction<Array<UserProps>>>
 }
 
+interface ReorderIssue{
+  id:string,
+  s:{
+    sId:string,
+    oIdx:number,
+  },
+  d:{
+    dId:string,
+    nIdx:number,
+  }
+}
+
