@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "../ui/input";
-import { I } from "../IssueComponents/CreateIssue";
+import { I } from "../Issue/CreateIssue";
 
 const DropdownUsers: React.FC<DropdownUserProps> = ({
   users,

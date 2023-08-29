@@ -5,8 +5,8 @@ import Image from "next/image";
 import { useRouter ,redirect} from "next/navigation";
 import { useSession } from "next-auth/react"
 
-import AltLogo from "@/components/firstSignUpComponents/AltLogo";
-import Logo from "@/components/firstSignUpComponents/Logo";
+import AltLogo from "@/components/firstSignUp/AltLogo";
+import Logo from "@/components/firstSignUp/Logo";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import leftLogo from "@/public/photos/left-logo.png"

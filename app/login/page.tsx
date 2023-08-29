@@ -1,7 +1,7 @@
 import React from "react";
 //components
-import Authenticate from "@/components/authComponents/Authenticate";
-import Logo from "@/components/authComponents/Logo";
+import Authenticate from "@/components/auth/Authenticate";
+import Logo from "@/components/auth/Logo";
 import leftLogo from "@/public/photos/left-logo.png";
 import rightLogo from "@/public/photos/right-logo.png";
 import Image from "next/image";

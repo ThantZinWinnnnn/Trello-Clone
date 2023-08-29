@@ -1,5 +1,5 @@
 import BoardSidebarComponent from '@/components/BoardSidebarComponent/BoardSidebarComponent'
-import BoardNav from '@/components/BoardsComponents/BoardNav'
+import BoardNav from '@/components/Board/BoardNav'
 import React from 'react'
 
 const BoardLayout = ({

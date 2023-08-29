@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import { redirect, useRouter } from 'next/navigation'
 //components
-import IntroNavBar from '@/components/IntroComponents/IntroNavBar'
+import IntroNavBar from '@/components/Intro/IntroNavBar'
 import { Button } from '@/components/ui/button'
 import introLogo from "@/public/photos/intro-img.png"
 import { useSession } from 'next-auth/react'

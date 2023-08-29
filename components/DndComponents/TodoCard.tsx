@@ -20,7 +20,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 
 //components
-import IssueDetailComponent from "../BoardsComponents/IssueDetailComponent";
+import IssueDetailComponent from "../Board/IssueDetailComponent";
 import CardMember from "../utils/CardMember";
 
 const TodoCard: React.FC<todoCardProps> = ({
@@ -33,17 +33,17 @@ const TodoCard: React.FC<todoCardProps> = ({
 }) => {
   const [image,setImage] = useState<string>('')
   console.log("imgUrl",todo.image)
-  fetch(todo.image)
-            .then(response => response.blob())
-            .then(blob => {
-                // Convert the Blob to a Base64-encoded data URL
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const base64DataURL = reader.result;
-                    setImage(base64DataURL as string);
-                };
-                reader.readAsDataURL(blob);
-            })
+  // fetch(todo.image)
+  //           .then(response => response.blob())
+  //           .then(blob => {
+  //               // Convert the Blob to a Base64-encoded data URL
+  //               const reader = new FileReader();
+  //               reader.onload = () => {
+  //                   const base64DataURL = reader.result;
+  //                   setImage(base64DataURL as string);
+  //               };
+  //               reader.readAsDataURL(blob);
+  //           })
   return (
     <div
       key={id}

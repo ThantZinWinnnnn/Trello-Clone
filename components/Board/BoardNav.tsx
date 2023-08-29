@@ -1,11 +1,11 @@
 import React from "react";
 
 //components
-import Logo from "../firstSignUpComponents/Logo";
+import Logo from "../firstSignUp/Logo";
 import { Input } from "../ui/input";
-import { AvatarDropdown } from "../IntroComponents/AvatarDropdown";
-import ThemeDropdown from "../IntroComponents/ThemeDropdown";
-import NotificationsDropdown from "../IntroComponents/NotificationsDropdown";
+import { AvatarDropdown } from "../Intro/AvatarDropdown";
+import ThemeDropdown from "../Intro/ThemeDropdown";
+import NotificationsDropdown from "../Intro/NotificationsDropdown";
 
 //icon
 import { Search } from "lucide-react";

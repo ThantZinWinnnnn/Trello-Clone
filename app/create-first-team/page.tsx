@@ -1,5 +1,5 @@
 "use client";
-import IntroNavBar from "@/components/IntroComponents/IntroNavBar";
+import IntroNavBar from "@/components/Intro/IntroNavBar";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";

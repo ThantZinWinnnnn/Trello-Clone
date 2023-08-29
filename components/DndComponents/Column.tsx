@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 import { PlusIcon } from "@radix-ui/react-icons";
 
 //components
-import CreateIssue from "../IssueComponents/CreateIssue";
+import CreateIssue from "../Issue/CreateIssue";
 
 interface ColumnProps{
   id:string,

@@ -15,7 +15,7 @@ import {
 
 import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
-import { I } from "../IssueComponents/CreateIssue";
+import { I } from "../Issue/CreateIssue";
 
 
 const MultiSelectUsers: React.FC<MultiSelectUsersProps> = function ({

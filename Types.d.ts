@@ -78,6 +78,8 @@ interface DndIssueProps {
   reporterId: string;
   listId: string;
   assignees: Array<AssigneeProps>;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface DndListsProps {
@@ -112,8 +114,9 @@ interface MultiSelectUsers{
   setUsers:React.Dispatch<React.SetStateAction<Array<UserProps>>>
 }
 
-interface ReorderIssue{
-  id:string,
+
+
+interface dndOrderProps{
   s:{
     sId:string,
     oIdx:number,
@@ -121,6 +124,10 @@ interface ReorderIssue{
   d:{
     dId:string,
     nIdx:number,
-  }
+  },
 }
-
+interface ReorderIssue extends dndOrderProps{
+  id:string,
+  projectId?:string
+  
+}

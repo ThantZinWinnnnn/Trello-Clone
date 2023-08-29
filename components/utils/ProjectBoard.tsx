@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, { useMemo, memo, useState } from "react";
 import { Button } from "../ui/button";
-import CreateNewBoardModal from "../BoardsComponents/CreateNewBoardModal";
+import CreateNewBoardModal from "../Board/CreateNewBoardModal";
 
 const ProjectBoard: React.FC<GetUserBoardsProps> = ({ boards }) => {
   const memoizedBoards = useMemo(() => boards, [boards]);
