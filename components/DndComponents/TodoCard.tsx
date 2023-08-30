@@ -1,5 +1,5 @@
 "use client"
-import React, { memo, useState } from "react";
+import React, { memo, useMemo, useState } from "react";
 import {
   Draggable,
   DraggableProvided,
@@ -19,6 +19,9 @@ import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
 import Image from "next/image";
 
+//data
+import { piorityArr ,issueType} from "../DummyData/data";
+
 //components
 import IssueDetailComponent from "../Board/IssueDetailComponent";
 import CardMember from "../utils/CardMember";
@@ -31,19 +34,11 @@ const TodoCard: React.FC<todoCardProps> = ({
   draggableProps,
   draggableHandleProps,
 }) => {
-  const [image,setImage] = useState<string>('')
   console.log("imgUrl",todo.image)
-  // fetch(todo.image)
-  //           .then(response => response.blob())
-  //           .then(blob => {
-  //               // Convert the Blob to a Base64-encoded data URL
-  //               const reader = new FileReader();
-  //               reader.onload = () => {
-  //                   const base64DataURL = reader.result;
-  //                   setImage(base64DataURL as string);
-  //               };
-  //               reader.readAsDataURL(blob);
-  //           })
+  const priority = useMemo(()=>piorityArr.find((pr) => pr.value === todo.priority),[todo.priority]);
+  const issueCat = useMemo(()=> issueType.find((cat) => cat.text === todo.type),[todo.type]);
+  const Icon = issueCat?.icon!;
+  const PiorityIcon  = priority?.icon!
   return (
     <div
       key={id}
@@ -75,8 +70,8 @@ const TodoCard: React.FC<todoCardProps> = ({
           </section>
           <section className="flex items-center justify-between p-2">
             <div className="flex items-center gap-1">
-              <CheckSquare className="w-5 h-5 bg-[#0070f3] p-1 rounded-sm text-white" />
-              <ArrowUpIcon className="w-4 h-4 text-red-500" />
+              <Icon className={` w-5 h-5 p-1 rounded-sm text-white ${issueCat?.color}`} />
+              <PiorityIcon className={`w-4 h-4 ${priority?.color}`} />
             </div>
             <CardMember members={todo.assignees}/>
           </section>

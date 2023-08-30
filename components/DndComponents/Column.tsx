@@ -1,6 +1,7 @@
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import TodoCard from "./TodoCard";
+import { useAppSelector } from "@/redux/store/hook";
 import { Button } from "../ui/button";
 
 //icon
@@ -16,6 +17,10 @@ interface ColumnProps{
 }
 
 const Column: React.FC<ColumnProps> = ({ id,index,column}) => {
+  const filterUsrId = useAppSelector((state) => state.board.filterUsrId);
+  const filterIssues = useMemo(()=>column?.issues.filter((issue) => issue?.assignees.some((assignee) => assignee.userId === filterUsrId)),[column?.issues,filterUsrId]);
+
+  const issues = filterUsrId.length > 0?  filterIssues: column?.issues;
 
   return (
     <Draggable draggableId={id} index={index!} key={id}>
@@ -44,8 +49,8 @@ const Column: React.FC<ColumnProps> = ({ id,index,column}) => {
                 </h1>
                 <CreateIssue listId={column.id}/>
                 <div className="space-y-3">
-                  { column?.issues?.length > 0 ?
-                    column?.issues?.map((issue, index) => (
+                  { issues?.length > 0 ?
+                    issues?.map((issue, index) => (
                       <Draggable
                         draggableId={issue.id}
                         index={index}

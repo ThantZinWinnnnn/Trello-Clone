@@ -69,7 +69,7 @@ interface AssigneeProps {
 
 interface DndIssueProps {
   id: string;
-  order:number,
+  order: number;
   image: string;
   type: string;
   summary: string;
@@ -84,7 +84,7 @@ interface DndIssueProps {
 
 interface DndListsProps {
   id: string;
-  order:number;
+  order: number;
   name: string;
   createdAt: string;
   updatedAt: string;
@@ -96,38 +96,44 @@ interface ReturnDndListsProps {
   lists: Array<DndListsProps>;
 }
 
-interface IssueState{
-  image:string,
-  type:string,
-  summary:string,
-  desc:string,
-  priority:string,
-  reporterId:string,
-  assignees:Array<string>,
-  boardId?:string,
-  listId?:string
+interface IssueState {
+  image: string;
+  type: string;
+  summary: string;
+  desc: string;
+  priority: string;
+  reporterId: string;
+  assignees: Array<string>;
+  boardId?: string;
+  listId?: string;
 }
 
-interface MultiSelectUsers{
-  users:Array<UserProps>,
-  ref:HTMLInputElement,
-  setUsers:React.Dispatch<React.SetStateAction<Array<UserProps>>>
+interface MultiSelectUsers {
+  users: Array<UserProps>;
+  ref: HTMLInputElement;
+  setUsers: React.Dispatch<React.SetStateAction<Array<UserProps>>>;
 }
 
-
-
-interface dndOrderProps{
-  s:{
-    sId:string,
-    oIdx:number,
-  },
-  d:{
-    dId:string,
-    nIdx:number,
-  },
+interface dndOrderProps {
+  s: {
+    sId: string;
+    oIdx: number;
+  };
+  d: {
+    dId: string;
+    nIdx: number;
+  };
 }
-interface ReorderIssue extends dndOrderProps{
-  id:string,
-  projectId?:string
-  
+interface ReorderIssue extends dndOrderProps {
+  id: string;
+  projectId?: string;
+}
+
+interface List {
+  id: string;
+  name: string;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+  boardId: string;
 }

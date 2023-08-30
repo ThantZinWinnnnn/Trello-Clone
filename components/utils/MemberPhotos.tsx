@@ -4,9 +4,12 @@ import React, { useState } from "react";
 //profileArr
 import { imgArr } from "../DummyData/data";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useAppDispatch } from "@/redux/store/hook";
+import { addFilterUsrId } from "@/redux/features/board.slice";
 
 const MemberPhotos = () => {
   const [selectedMember, setSelectedMember] = useState<string[]>([]);
+  const diapatch = useAppDispatch()
 
   return (
     <section className="flex -space-x-2">
@@ -19,9 +22,12 @@ const MemberPhotos = () => {
           `}
           onClick={()=> {
             if(selectedMember.includes(img.id)){
-              setSelectedMember(selectedMember.filter(id => id !== img.id))
+              setSelectedMember(selectedMember.filter(id => id !== img.id));
+              diapatch(addFilterUsrId(""))
+              
             }else{
                 setSelectedMember([...selectedMember, img.id])
+                diapatch(addFilterUsrId("cllxyzr4o0003pseubaej17mo"))
             }
           }}
         >
