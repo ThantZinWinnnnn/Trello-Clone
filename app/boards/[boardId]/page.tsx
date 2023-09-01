@@ -1,12 +1,23 @@
 "use client";
 
 import Breadcrumbs from "@/components/utils/Breadcrumbs";
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import IssueFilterByMem from "@/components/Board/IssueFilterByMem";
-import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  DraggableLocation,
+  DropResult,
+  Droppable,
+} from "react-beautiful-dnd";
 import Column from "@/components/DndComponents/Column";
 import CreateNewList from "@/components/Board/CreateNewList";
-import { useGetListsQuery } from "@/redux/apis/endpoints/lists.endpoint";
+import {
+  useGetListsQuery,
+
+} from "@/redux/apis/endpoints/lists.endpoint";
+import { useAppSelector,useAppDispatch} from "@/redux/store/hook";
+import { useGetIssuesQuery, useReorderIssueMutation } from "@/redux/apis/endpoints/issues.endpoint";
+import { addIssueData,addListsData } from "@/redux/features/board.slice";
 
 type Params = {
   params: {
@@ -14,19 +25,38 @@ type Params = {
   };
 };
 const Boards = ({ params: { boardId } }: Params) => {
+  const filterUsrId = useAppSelector((state) => state.board.filterUsrId);
   const {
     data: listsData,
     isLoading,
     isError,
     error,
   } = useGetListsQuery(`${boardId}`);
-  const lists = listsData?.lists;
-  console.log("lists", lists, "boardId", boardId);
+  const {data:issuesData} = useGetIssuesQuery({boardId,userId:filterUsrId},{refetchOnMountOrArgChange:true});
+  // console.log("lists", lists, "boardId", boardId);
+
+  const [reorderIssue] = useReorderIssueMutation();
+
+  
+  
 
   const handleDrag = (result: DropResult) => {
     const { source: s, destination: d, type } = result;
     console.log("res", s, "des", d, "type", type);
-    
+
+  
+    // reorderLists({
+    //   id: listId!,
+    //   s: { sId: s.droppableId, oIdx: s.index + 1 },
+    //   d: { dId: d?.droppableId, nIdx: d?.index! + 1 },
+    //   projectId: boardId,
+    // });
+    reorderIssue({
+      s: { sId: s.droppableId, oIdx: s.index + 1 },
+      d: { dId: d?.droppableId, nIdx: d?.index! + 1 },
+      boardId: boardId,
+      id: issuesData![s.droppableId][s.index].id,
+    });
   };
 
   return (
@@ -42,13 +72,14 @@ const Boards = ({ params: { boardId } }: Params) => {
               ref={provided.innerRef}
               className="flex gap-4 mt-8 overflow-x-scroll"
             >
-              {lists?.length! > 0 &&
-                lists?.map((list, index) => (
+              {listsData?.length! > 0 &&
+                listsData?.map((list, index) => (
                   <Column
                     key={list.id}
                     id={list.id}
                     column={list}
                     index={index}
+                    issues={issuesData}
                   />
                 ))}
               <CreateNewList boardId={boardId} />
@@ -62,3 +93,16 @@ const Boards = ({ params: { boardId } }: Params) => {
 };
 
 export default Boards;
+
+interface filteredIssueId {
+  lists: DndListsProps[] | undefined;
+  s: DraggableLocation;
+}
+
+const reorderListsLocal = (oldLists: ReturnDndListsProps, { s, d }: dndOrderProps) => {
+  const source = oldLists?.lists.slice(0)
+  const draggedList = source.splice(s.oIdx, 1)[0];
+  const destinationList = source.splice(d.nIdx, 0, draggedList);
+  console.log("deeeee",destinationList)
+  return oldLists.lists = destinationList;
+}

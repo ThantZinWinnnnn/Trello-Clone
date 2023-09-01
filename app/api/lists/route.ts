@@ -1,34 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
-import { badRequest } from "../utils/api.utils";
+import { badRequest, sameColumnReorder } from "../utils/api.utils";
 
 export const GET = async (req: NextRequest) => {
   try {
     const url = new URL(req.url);
     const boardId = url.searchParams.get("boardId");
-    const board = await prisma?.board.findUnique({
+    const lists = await prisma?.list.findMany({
       where: {
-        id: boardId!,
+        boardId: boardId!,
       },
-      select: {
-        lists: {
-          include: {
-            issues: {
-              orderBy:{
-                order:"asc"
-              },
-              include: {
-                assignees: {
-                  include: {
-                    User: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
+        orderBy:{order:"asc"},
+          // include: {
+          //   issues: {
+          //     orderBy:{
+          //       order:"asc"
+          //     },
+          //     include: {
+          //       assignees: {
+          //         include: {
+          //           User: true,
+          //         },
+          //       },
+          //     },
+          //   },
+          // },
+        
     });
-    return NextResponse.json(board);
+    return NextResponse.json(lists);
   } catch (error) {
     return badRequest("Error Found in searching Boards", 400);
   }
@@ -51,3 +49,14 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     return badRequest(`${error}`, 400);
   }
 };
+
+export const PUT = async (req:NextRequest)=>{
+  try {
+    const body:ReorderIssue = await req.json();
+    const {s,d,boardId,id} = body;
+    console.log("liiiiiii",body)
+    return sameColumnReorder({id,oIdx:s.oIdx,nIdx:d.nIdx},{boardId:boardId},prisma?.list)
+  } catch (error) {
+    badRequest(`${error}`,400)
+  }
+}

@@ -3,7 +3,7 @@ import { createSlice,PayloadAction } from "@reduxjs/toolkit";
 interface InitialStateProps{
     boards:BoardProps[],
     successBoardCreation:"success"|"failed" | "",
-    lists:Array<List>,
+    lists:Array<DndListsProps>,
     issues:Array<DndIssueProps>,
     filterUsrId:string,
 }
@@ -26,7 +26,7 @@ const boardSlice = createSlice({
         changeCreationBoardStatus:(state,action:PayloadAction<"success"|"failed"| "">)=>{
             state.successBoardCreation = action.payload;
         },
-        addListsData:(state,action:PayloadAction<List[]>)=>{
+        addListsData:(state,action:PayloadAction<DndListsProps[]>)=>{
             state.lists = action.payload;
         },
         addIssueData :(state,action:PayloadAction<DndIssueProps[]>)=>{

@@ -40,6 +40,7 @@ interface CreateListProps {
 
 interface ListProps {
   id: string;
+  order: number;
   name: string;
   createdAt: string;
   updatedAt: string;
@@ -56,6 +57,10 @@ interface UserProps {
   email: string;
   emailVerified?: null | undefined;
   image: string;
+}
+
+interface MembersProps{
+  User:UserProps
 }
 
 interface AssigneeProps {
@@ -77,7 +82,7 @@ interface DndIssueProps {
   priority: string;
   reporterId: string;
   listId: string;
-  assignees: Array<AssigneeProps>;
+  assignees: Array<MembersProps>;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -90,6 +95,10 @@ interface DndListsProps {
   updatedAt: string;
   boardId: string;
   issues: Array<DndIssueProps>;
+}
+
+interface Issues{
+  [key:string] : Array<DndIssueProps>;
 }
 
 interface ReturnDndListsProps {
@@ -120,13 +129,13 @@ interface dndOrderProps {
     oIdx: number;
   };
   d: {
-    dId: string;
+    dId: string | undefined;
     nIdx: number;
   };
 }
 interface ReorderIssue extends dndOrderProps {
   id: string;
-  projectId?: string;
+  boardId?: string;
 }
 
 interface List {
@@ -136,4 +145,16 @@ interface List {
   createdAt: string;
   updatedAt: string;
   boardId: string;
+}
+
+interface DraggedIssueId{
+  lists:Array<DndListsProps>;
+  s:DraggableRubric.source,
+  d:DraggableLocation | null | undefined
+}
+
+
+interface IssueProps{
+  boardId: string;
+  userId?:string
 }

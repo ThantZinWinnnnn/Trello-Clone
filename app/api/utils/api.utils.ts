@@ -27,12 +27,14 @@ export const sameColumnReorder = async (
     },
     data: { order: { [stl ? "decrement" : "increment"]: 1 } },
   });
+  console.log("first",tobeReordered)
 
   const draggedItem = await prismaModal.update({
     where: { id },
     data: { order: nIdx },
   });
-  return Promise.all([tobeReordered, draggedItem]);
+  await Promise.all([tobeReordered, draggedItem]);
+  return NextResponse.json("success")
 };
 
 export const diffColumnReorder = async (
@@ -40,7 +42,7 @@ export const diffColumnReorder = async (
   prismaModal: PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>
 ) => {
   const tobeReorderedSource = updateIndexOrder({ id: sId, idx: oIdx, type: "source", modal: prismaModal });
-  const tobeReorderedDestination = updateIndexOrder({ id: dId, idx: nIdx, type: "destination", modal: prismaModal });
+  const tobeReorderedDestination = updateIndexOrder({ id: dId!, idx: nIdx, type: "destination", modal: prismaModal });
 
   const [leftAssignees, leftComments] = await Promise.all([
     prismaModal.assignee.findMany({ where: { issueId: id } }),
@@ -75,7 +77,7 @@ interface orderProps {
 }
 interface ConfigProps {
   listId?: string;
-  projectId?: string
+  boardId?: string
 }
 interface updateIndexOrderProps {
   id: string;

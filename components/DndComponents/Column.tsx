@@ -9,18 +9,30 @@ import { PlusIcon } from "@radix-ui/react-icons";
 
 //components
 import CreateIssue from "../Issue/CreateIssue";
+import { useGetIssuesQuery } from "@/redux/apis/endpoints/issues.endpoint";
 
-interface ColumnProps{
-  id:string,
-  index:number,
-  column:DndListsProps
+interface ColumnProps {
+  id: string;
+  index: number;
+  column: ListProps;
+  issues:Issues | undefined
 }
 
-const Column: React.FC<ColumnProps> = ({ id,index,column}) => {
-  const filterUsrId = useAppSelector((state) => state.board.filterUsrId);
-  const filterIssues = useMemo(()=>column?.issues.filter((issue) => issue?.assignees.some((assignee) => assignee.userId === filterUsrId)),[column?.issues,filterUsrId]);
+const Column: React.FC<ColumnProps> = ({ id, index, column,issues}) => {
 
-  const issues = filterUsrId.length > 0?  filterIssues: column?.issues;
+  // const filterIssues = useMemo(
+  //   () =>
+  //     column?.issues.filter((issue) =>
+  //       issue?.assignees.some((assignee) => assignee.userId === filterUsrId)
+  //     ),
+  //   [column?.issues, filterUsrId]
+  // );
+
+  // const issues = filterUsrId.length > 0 ? filterIssues : column?.issues;
+  // console.log("aallissues",AllIssues)
+
+  const issuesData = issues?.[column.id];
+  console.log("isssssss",issuesData)
 
   return (
     <Draggable draggableId={id} index={index!} key={id}>
@@ -44,32 +56,32 @@ const Column: React.FC<ColumnProps> = ({ id,index,column}) => {
                 <h1 className="flex justify-between items-center">
                   {column.name}
                   <span className="text-slate-500 font-normal px-2 py-1 rounded-full bg-slate-300 text-xs">
-                    {column?.issues?.length}
+                    {issuesData?.length}
                   </span>
                 </h1>
-                <CreateIssue listId={column.id}/>
+                <CreateIssue listId={column.id} />
                 <div className="space-y-3">
-                  { issues?.length > 0 ?
-                    issues?.map((issue, index) => (
-                      <Draggable
-                        draggableId={issue.id}
-                        index={index}
-                        key={issue.id}
-                      >
-                        {(provided) => (
-                          <TodoCard
-                            key={issue.id}
-                            draggableProps={provided.draggableProps}
-                            draggableHandleProps={provided.dragHandleProps}
-                            innerRef={provided.innerRef}
-                            todo={issue}
-                            index={index}
-                            id={issue.id}
-                          />
-                        )}
-                      </Draggable>
-                    ))
-                   : null}
+                  {issuesData!?.length > 0
+                    ? issuesData?.map((issue, index) => (
+                        <Draggable
+                          draggableId={issue.id}
+                          index={index}
+                          key={issue.id}
+                        >
+                          {(provided) => (
+                            <TodoCard
+                              key={issue.id}
+                              draggableProps={provided.draggableProps}
+                              draggableHandleProps={provided.dragHandleProps}
+                              innerRef={provided.innerRef}
+                              todo={issue}
+                              index={index}
+                              id={issue.id}
+                            />
+                          )}
+                        </Draggable>
+                      ))
+                    : null}
                   {provided.placeholder}
                 </div>
               </div>

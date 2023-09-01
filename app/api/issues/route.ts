@@ -1,27 +1,64 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { badRequest, diffColumnReorder, sameColumnReorder } from "../utils/api.utils";
+import PreviousMap from "postcss/lib/previous-map";
+
+// export const GET = async (req: NextRequest) => {
+//     try {
+//         const url = new URL(req.url);
+//         const issueId = url.searchParams.get("issueId");
+//         const issueDetail = await prisma?.issue.findUnique({
+//             where: {
+//                 id: issueId!
+//             },
+//             include: {
+//                 User: true,
+//                 assignees: true,
+//                 comments: true
+//             }
+//         });
+
+//         return NextResponse.json(issueDetail)
+//     } catch (error) {
+//         return badRequest("Invalid request for getting Issue", 400)
+//     }
+// };
 
 export const GET = async (req: NextRequest) => {
     try {
         const url = new URL(req.url);
-        const issueId = url.searchParams.get("issueId");
-        const issueDetail = await prisma?.issue.findUnique({
-            where: {
-                id: issueId!
+        const bId = url.searchParams.get("boardId");
+        const uId = url.searchParams.get("userId")
+        const issues = await prisma?.list.findMany({
+            where: { boardId: bId! },
+            orderBy: { order: 'asc' },
+      include: {
+        issues: {
+          ...(uId && { where: { assignees: { some: { userId: uId } } } }),
+          orderBy: { order: 'asc' },
+          include: {
+            assignees: {
+                orderBy: { createdAt: 'asc' },
+              select:{
+               
+                User:true
+              }
             },
-            include: {
-                User: true,
-                assignees: true,
-                comments: true
-            }
+          },
+        },
+      },
         });
 
-        return NextResponse.json(issueDetail)
+        const issuesByList = issues?.reduce((prev, { id, issues }) => ({
+            ...prev,
+            [id]: issues
+        }), {})
+
+        return NextResponse.json(issuesByList)
     } catch (error) {
         return badRequest("Invalid request for getting Issue", 400)
     }
-};
+}
 
 export const POST = async (req: NextRequest) => {
     try {
@@ -45,13 +82,14 @@ export const PUT = async (req: NextRequest) => {
     try {
         const body: ReorderIssue = await req.json();
         const { id, s: { sId, oIdx }, d: { dId, nIdx } } = body;
+        console.log("body",body)
 
         await (sId === dId ?
             sameColumnReorder({ id, oIdx, nIdx }, { listId: sId }, prisma.issue) :
             diffColumnReorder(body, prisma))
 
     } catch (error) {
-        badRequest("Invalid request for updating Issue Order", 400)
+        badRequest(`${error}`, 400)
     }
 }
 
