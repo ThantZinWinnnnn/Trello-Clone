@@ -5,23 +5,38 @@ import { badRequest, diffColumnReorder, sameColumnReorder } from "../utils/api.u
 export const GET = async (req: NextRequest) => {
     try {
         const url = new URL(req.url);
-        const issueId = url.searchParams.get("issueId");
-        const issueDetail = await prisma?.issue.findUnique({
-            where: {
-                id: issueId!
+        const bId = url.searchParams.get("boardId");
+        const uId = url.searchParams.get("userId")
+        const issues = await prisma?.list.findMany({
+            where: { boardId: bId! },
+            orderBy: { order: 'asc' },
+      include: {
+        issues: {
+          ...(uId && { where: { assignees: { some: { userId: uId } } } }),
+          orderBy: { order: 'asc' },
+          include: {
+            assignees: {
+                orderBy: { createdAt: 'asc' },
+              select:{
+               
+                User:true
+              }
             },
-            include: {
-                User: true,
-                assignees: true,
-                comments: true
-            }
+          },
+        },
+      },
         });
 
-        return NextResponse.json(issueDetail)
+        const issuesByList = issues?.reduce((prev, { id, issues }) => ({
+            ...prev,
+            [id]: issues
+        }), {})
+
+        return NextResponse.json(issuesByList)
     } catch (error) {
         return badRequest("Invalid request for getting Issue", 400)
     }
-};
+}
 
 export const POST = async (req: NextRequest) => {
     try {
@@ -47,7 +62,7 @@ export const PUT = async (req: NextRequest) => {
         const { id, s: { sId, oIdx }, d: { dId, nIdx } } = body;
 
         await (sId === dId ?
-            sameColumnReorder({ id, oIdx, nIdx }, { listId: sId }, prisma.issue) :
+            sameColumnReorder({ id, oIdx, nIdx }, { listId: sId }, prisma) :
             diffColumnReorder(body, prisma))
 
     } catch (error) {

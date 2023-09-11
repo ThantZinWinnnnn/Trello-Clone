@@ -14,10 +14,11 @@ export const updatedDate = (id: string, prismaModal: any) =>
 export const sameColumnReorder = async (
   { id, oIdx, nIdx }: orderProps,
   config: ConfigProps,
-  prismaModal: any
+  prismaModal: PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>
 ) => {
+  //to abstract the obj to reuse
   const stl = nIdx > oIdx; //check new index > oldIndex
-  const tobeReordered = await prismaModal.updateMany({
+  const tobeReordered = await prismaModal.issue.updateMany({
     where: {
       ...config,
       AND: [
@@ -28,7 +29,7 @@ export const sameColumnReorder = async (
     data: { order: { [stl ? "decrement" : "increment"]: 1 } },
   });
 
-  const draggedItem = await prismaModal.update({
+  const draggedItem = await prismaModal.issue.update({
     where: { id },
     data: { order: nIdx },
   });

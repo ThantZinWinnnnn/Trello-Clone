@@ -5,30 +5,13 @@ export const GET = async (req: NextRequest) => {
   try {
     const url = new URL(req.url);
     const boardId = url.searchParams.get("boardId");
-    const board = await prisma?.board.findUnique({
+    const lists = await prisma?.list.findMany({
       where: {
-        id: boardId!,
+        boardId: boardId!,
       },
-      select: {
-        lists: {
-          include: {
-            issues: {
-              orderBy:{
-                order:"asc"
-              },
-              include: {
-                assignees: {
-                  include: {
-                    User: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
+        orderBy:{order:"asc"}  
     });
-    return NextResponse.json(board);
+    return NextResponse.json(lists);
   } catch (error) {
     return badRequest("Error Found in searching Boards", 400);
   }

@@ -25,10 +25,10 @@ export const GET = async (req:NextRequest)=>{
 export const POST = async (req:NextRequest,res:NextResponse)=>{
    try {
     const body = await req.json();
-    const {name,userId}  = body;
+    const {boardName,userId}  = body;
     const newBoard = await prisma.board.create({
       data:{
-         name,
+         name:boardName,
          userId
       }
     });

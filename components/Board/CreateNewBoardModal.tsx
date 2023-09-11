@@ -8,24 +8,33 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import CreateNewBoard from "../utils/CreateNewBoard";
-import { useCreateBoardMutation } from "@/redux/apis/endpoints/create.board.endpoint";
 import { changeCreationBoardStatus } from "@/redux/features/board.slice";
 import { useAppDispatch } from "@/redux/store/hook";
+import { useMutation,useQueryClient  } from "@tanstack/react-query";
+import axios from "axios";
+
+
 
 const CreateNewBoardModal = ({ children }: { children: React.ReactNode }) => {
   const [newBoard, setNewBoard] = useState<string>("");
   const dispatch = useAppDispatch();
-  const [mutate, { isLoading, isSuccess, isError, error }] =
-    useCreateBoardMutation();
+  const queryClient = useQueryClient()
+  const {mutate:createBoard,isLoading} = useMutation({mutationFn:async({inputName,userId}:inputProps)=>{
+    const response = await axios.post('/api/board',{boardName:inputName,userId});
+    return response.data;
+  }})
   const createBoardHandler = (
-    inputName: string,
-    userId: string | undefined | null
+  data:inputProps
   ) => {
-    mutate({ name: inputName, userId });
+    createBoard(data,{
+      onError:(err)=> dispatch(changeCreationBoardStatus("failed")),
+      onSuccess:()=>{
+        queryClient.invalidateQueries(["boards"])
+        dispatch(changeCreationBoardStatus("success"))
+      },
+    })
   };
 
-  if (isSuccess) dispatch(changeCreationBoardStatus("success"));
-  if (isError) dispatch(changeCreationBoardStatus("failed"));
 
   return (
     <Dialog>

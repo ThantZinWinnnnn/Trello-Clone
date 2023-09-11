@@ -1,3 +1,4 @@
+"use client"
 import React, { memo, useMemo } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import TodoCard from "./TodoCard";
@@ -13,14 +14,17 @@ import CreateIssue from "../Issue/CreateIssue";
 interface ColumnProps{
   id:string,
   index:number,
-  column:DndListsProps
+  column:ListProps,
+  issues:Array<DndIssueProps>
 }
 
-const Column: React.FC<ColumnProps> = ({ id,index,column}) => {
-  const filterUsrId = useAppSelector((state) => state.board.filterUsrId);
-  const filterIssues = useMemo(()=>column?.issues.filter((issue) => issue?.assignees.some((assignee) => assignee.userId === filterUsrId)),[column?.issues,filterUsrId]);
+const Column: React.FC<ColumnProps> = ({ id,index,column,issues}) => {
+  // const filterUsrId = useAppSelector((state) => state.board.filterUsrId);
+  // const filterIssues = useMemo(()=>column?.issues.filter((issue) => issue?.assignees.some((assignee) => assignee.userId === filterUsrId)),[column?.issues,filterUsrId]);
 
-  const issues = filterUsrId.length > 0?  filterIssues: column?.issues;
+  // const issues = filterUsrId.length > 0?  filterIssues: column?.issues;
+
+
 
   return (
     <Draggable draggableId={id} index={index!} key={id}>
@@ -44,7 +48,7 @@ const Column: React.FC<ColumnProps> = ({ id,index,column}) => {
                 <h1 className="flex justify-between items-center">
                   {column.name}
                   <span className="text-slate-500 font-normal px-2 py-1 rounded-full bg-slate-300 text-xs">
-                    {column?.issues?.length}
+                    {issues?.length}
                   </span>
                 </h1>
                 <CreateIssue listId={column.id}/>

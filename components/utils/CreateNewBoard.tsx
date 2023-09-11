@@ -33,7 +33,7 @@ const CreateNewBoard: React.FC<CreateBoardProps> = ({
           isLoading && "cursor-not-allowed gap-6"
         }`}
         disabled={isLoading}
-        onClick={() => createBoardHandler(name, session?.user.id)}
+        onClick={() => createBoardHandler({inputName:name,userId:session?.user?.id})}
       >
         {isLoading && <Loader className="animate-spin" />}
         {isLoading ? "Creating..." : "Create a board"}

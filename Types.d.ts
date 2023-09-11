@@ -21,13 +21,15 @@ interface BoardProps {
 interface GetUserBoardsProps {
   boards: BoardProps[];
 }
-
+type inputProps = {
+  inputName:string,
+  userId:string | undefined | null
+}
 interface CreateBoardProps {
   name: string;
   setName: (name: string) => void;
   createBoardHandler: (
-    inputName: string,
-    userId: string | undefined | null
+    data:inputProps
   ) => void;
   isLoading: boolean;
   ClassName?: string;
@@ -41,6 +43,7 @@ interface CreateListProps {
 interface ListProps {
   id: string;
   name: string;
+  order: number;
   createdAt: string;
   updatedAt: string;
   boardId: string;
@@ -80,6 +83,9 @@ interface DndIssueProps {
   assignees: Array<AssigneeProps>;
   createdAt?: string;
   updatedAt?: string;
+}
+interface Issues{
+  [key:string] : Array<DndIssueProps>;
 }
 
 interface DndListsProps {
@@ -126,7 +132,7 @@ interface dndOrderProps {
 }
 interface ReorderIssue extends dndOrderProps {
   id: string;
-  projectId?: string;
+  boardId?: string;
 }
 
 interface List {
@@ -136,4 +142,10 @@ interface List {
   createdAt: string;
   updatedAt: string;
   boardId: string;
+}
+
+interface GetDataProps{
+  boardId:string,
+  queryKey:string,
+  T : typeof Array<ListProps> | Issues
 }
