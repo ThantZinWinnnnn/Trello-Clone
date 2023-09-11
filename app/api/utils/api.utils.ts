@@ -11,14 +11,17 @@ export const updatedDate = (id: string, prismaModal: any) =>
     data: { updatedAt: new Date(Date.now()).toISOString() },
   });
 
+
 export const sameColumnReorder = async (
   { id, oIdx, nIdx }: orderProps,
   config: ConfigProps,
-  prismaModal: PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>
+  prismaModal: PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,
+  modal: string
 ) => {
   //to abstract the obj to reuse
   const stl = nIdx > oIdx; //check new index > oldIndex
-  const tobeReordered = await prismaModal.issue.updateMany({
+
+  const whereConfig = {
     where: {
       ...config,
       AND: [
@@ -27,12 +30,15 @@ export const sameColumnReorder = async (
       ],
     },
     data: { order: { [stl ? "decrement" : "increment"]: 1 } },
-  });
+  };
+  const tobeReordered = await (modal === "issue" ? prismaModal.issue.updateMany(whereConfig) : prismaModal.list.updateMany(whereConfig));
 
-  const draggedItem = await prismaModal.issue.update({
+  const draggedConfig = {
     where: { id },
     data: { order: nIdx },
-  });
+  }
+
+  const draggedItem = await (modal === "issue" ? prismaModal.issue.update(draggedConfig) : prismaModal.list.update(draggedConfig));
   return Promise.all([tobeReordered, draggedItem]);
 };
 
@@ -69,14 +75,10 @@ const updateIndexOrder = async ({
   });
 };
 
-interface orderProps {
-  id: string;
-  oIdx: number;
-  nIdx: number;
-}
+
 interface ConfigProps {
   listId?: string;
-  projectId?: string
+  boardId?: string
 }
 interface updateIndexOrderProps {
   id: string;

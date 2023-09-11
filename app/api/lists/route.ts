@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { badRequest } from "../utils/api.utils";
+import { badRequest, sameColumnReorder } from "../utils/api.utils";
+import prisma from "@/lib/prisma";
 
 export const GET = async (req: NextRequest) => {
   try {
@@ -34,3 +35,15 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     return badRequest(`${error}`, 400);
   }
 };
+
+export const PUT = async (req: NextRequest) => {
+  try {
+    const body :orderProps = await req.json();
+
+    const {id,oIdx,nIdx,boardId}  = body;
+
+    await sameColumnReorder({id,oIdx,nIdx},{boardId},prisma,"list")
+  } catch (error) {
+    badRequest("Error Found in updating Lists", 400);
+  }
+}

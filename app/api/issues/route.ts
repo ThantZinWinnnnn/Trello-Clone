@@ -62,7 +62,7 @@ export const PUT = async (req: NextRequest) => {
         const { id, s: { sId, oIdx }, d: { dId, nIdx } } = body;
 
         await (sId === dId ?
-            sameColumnReorder({ id, oIdx, nIdx }, { listId: sId }, prisma) :
+            sameColumnReorder({ id, oIdx, nIdx }, { listId: sId }, prisma,"issue") :
             diffColumnReorder(body, prisma))
 
     } catch (error) {

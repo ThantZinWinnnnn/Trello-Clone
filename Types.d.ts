@@ -149,3 +149,10 @@ interface GetDataProps{
   queryKey:string,
   T : typeof Array<ListProps> | Issues
 }
+
+interface orderProps {
+  id: string;
+  oIdx: number;
+  nIdx: number;
+  boardId?:string
+}
