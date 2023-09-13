@@ -8,14 +8,14 @@ import { useAppSelector } from '@/redux/store/hook';
 
 
 const CardMember:React.FC<CardMemberProps> = ({members}) => {
-    const filterUsrId = useAppSelector((state)=>state.board.filterUsrId)
-    const filterAssignee = useMemo(()=> members?.filter((member)=> member.userId === filterUsrId),[members,filterUsrId])
+    // const filterUsrId = useAppSelector((state)=>state.board.filterUsrId)
+    // const filterAssignee = useMemo(()=> members?.filter((member)=> member.userId === filterUsrId),[members,filterUsrId])
     const foldMem = members.length > 3;
-    const assignees = filterUsrId === "" ? members : filterAssignee;
+    // const assignees = filterUsrId === "" ? members : filterAssignee;
   return (
     <section className='flex -space-x-2'>
         {
-            assignees.map((mem)=> (
+            members?.map((mem)=> (
                 <Avatar key={mem.id}
                     className='w-6 h-6'
                 >

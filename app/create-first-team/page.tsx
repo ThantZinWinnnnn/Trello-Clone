@@ -8,27 +8,31 @@ import { Button } from "@/components/ui/button";
 import workspacePhoto from "@/public/photos/board.png";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { useCreateBoardMutation } from "@/redux/apis/endpoints/create.board.endpoint";
 import { Loader } from "lucide-react";
 import { Toaster, toast } from 'sonner'
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 const CreateFirstTeamPage = () => {
   const [boardName, setBoardName] = useState<string>("");
   const { data: session } = useSession();
   const router = useRouter();
 
-  const [mutate, { isLoading, isSuccess,isError,error }] = useCreateBoardMutation();
+  const {mutate:createBoard,isLoading} = useMutation({mutationFn:async({inputName,userId}:inputProps)=>{
+    const response = await axios.post('/api/board',{boardName:inputName,userId});
+    return response.data;
+  }})
   const createBoardHandler =  (inputName: string, userId: string | undefined | null) => {
-     mutate({ name : inputName, userId });
+    createBoard({ inputName, userId },{
+      onError:(err)=> toast.error('Unfortunately, unsuccessful request for board.Please try again'),
+      onSuccess:()=>{
+        toast.success("Board created successfully")
+        setTimeout(()=> router.push("/boards"),500)
+      },
+    });
   };
 
-  if(isSuccess) {
-    toast.success("Board created successfully")
-    setTimeout(()=> router.push("/boards"),2000)
-    // router.push("/boards")
-  }
 
-  if(isError) toast.error('Unfortunately, unsuccessful request for board.Please try again')
 
   return (
     <>

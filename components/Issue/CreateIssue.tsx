@@ -33,22 +33,31 @@ import Dropdown from "./Dropdown";
 import PiorityDrowdown from "./PiorityDropdown";
 
 //api
-import { useCreateIssueMutation } from "@/redux/apis/endpoints/issues.endpoint";
+import { useCreateIssue } from "@/lib/hooks/useCreateIssue";
+import { useQueryClient } from "@tanstack/react-query";
 
 const CreateIssue = ({ listId }: { listId: string }) => {
+  const queryClient = useQueryClient();
   const imageRef = useRef<HTMLInputElement>(null);
   const [openModal, setOpenModal] = useState(false);
   const [form, dispatch] = useReducer(reducer, states);
-  const [mutate, { isLoading, isError, isSuccess }] = useCreateIssueMutation();
+  const { mutate: createIssue, isLoading } = useCreateIssue();
   const params = useParams();
   const boardId = params.boardId as string;
   console.log("form", form, "id", boardId);
 
-  
-  const createIssueHandler = async () => {
-    await mutate({ ...form, boardId: boardId, listId: listId });
-      toast.success("Issue Created");
-      setOpenModal(false);
+  const createIssueHandler = () => {
+    createIssue(
+      { ...form, boardId: boardId, listId: listId },
+      {
+        onError: () => toast.error("Error Creating Issue"),
+        onSuccess: () => {
+          queryClient.invalidateQueries(["issues",boardId]);
+          toast.success("Issue Created");
+          setOpenModal(false);
+        },
+      }
+    );
 
     // toast.error("Error Creating Issue");
   };
@@ -86,32 +95,32 @@ const CreateIssue = ({ listId }: { listId: string }) => {
                   fill
                   className="w-full h-full object-contain cursor-pointer"
                   // onClick={() => imageRef.current?.click()}
-                  onClick={()=>dispatch({type:"image",value:""})}
+                  onClick={() => dispatch({ type: "image", value: "" })}
                 />
               ) : (
-            //     <UploadButton
-            //     className="flex items-center justify-center  w-full h-full"
-            //     content={{
-            //       button({ready}){
-            //         if(ready) return <p className="text-white text-sm">Upload Image</p>
-            //         return "Getting ready..."
-            //       },
-            //       allowedContent({ ready, fileTypes, isUploading }) {
-            //         if (!ready) return "Checking what you allow";
-            //         if (isUploading) return "Seems like image is uploading";
-            //         return `image max size (4MB)`;
-            //       },
-            //     }}
-            //   endpoint="imageUploader"
-            //   onClientUploadComplete={(res) => {
-            //     // Do something with the response
-            //     dispatch({type:"image",value:res![0]?.url})
-            //   }}
-            //   onUploadError={(error: Error) => {
-            //     // Do something with the error.
-            //     alert(`ERROR! ${error.message}`);
-            //   }}
-            // />
+                //     <UploadButton
+                //     className="flex items-center justify-center  w-full h-full"
+                //     content={{
+                //       button({ready}){
+                //         if(ready) return <p className="text-white text-sm">Upload Image</p>
+                //         return "Getting ready..."
+                //       },
+                //       allowedContent({ ready, fileTypes, isUploading }) {
+                //         if (!ready) return "Checking what you allow";
+                //         if (isUploading) return "Seems like image is uploading";
+                //         return `image max size (4MB)`;
+                //       },
+                //     }}
+                //   endpoint="imageUploader"
+                //   onClientUploadComplete={(res) => {
+                //     // Do something with the response
+                //     dispatch({type:"image",value:res![0]?.url})
+                //   }}
+                //   onUploadError={(error: Error) => {
+                //     // Do something with the error.
+                //     alert(`ERROR! ${error.message}`);
+                //   }}
+                // />
                 <Button
                   variant={"ghost"}
                   className="flex items-center justify-center gap-2 w-full h-full"
@@ -123,20 +132,20 @@ const CreateIssue = ({ listId }: { listId: string }) => {
               )}
             </div>
             <Input
-            type="file"
-            ref={imageRef}
-            className="hidden"
-            onChange={(e) => {
-              //check e is an image
-              if (!e.target.files![0]!.type.startsWith("image/")) return;
-              // setImage(e.target.files![0]);
-              dispatch({
-                type: "image",
-                value: URL.createObjectURL(e.target.files![0]),
-              });
-            }}
-            placeholder="select file"
-          />
+              type="file"
+              ref={imageRef}
+              className="hidden"
+              onChange={(e) => {
+                //check e is an image
+                if (!e.target.files![0]!.type.startsWith("image/")) return;
+                // setImage(e.target.files![0]);
+                dispatch({
+                  type: "image",
+                  value: URL.createObjectURL(e.target.files![0]),
+                });
+              }}
+              placeholder="select file"
+            />
             <IssueTypeDropdown val={form.type} dispatch={dispatch} />
             <div className="grid w-full  items-center gap-1.5">
               <Label htmlFor="summary" className="text-xs">

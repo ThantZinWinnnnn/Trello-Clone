@@ -3,8 +3,8 @@ import React, { memo, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "@/components/ui/input";
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { useCreateListMutation } from "@/redux/apis/endpoints/lists.endpoint";
 import { toast,Toaster } from "sonner";
+import { useCreateList } from "@/lib/hooks/useCreateList";
 
 const CreateNewList:React.FC<CreateNewListProps> = ({boardId}) => {
   const [openListInput, setOpenListInput] = useState(false);
@@ -15,12 +15,11 @@ const CreateNewList:React.FC<CreateNewListProps> = ({boardId}) => {
     boardId
    
   }
-    const [mutate,{isLoading,isError,isSuccess}] = useCreateListMutation();
-
+    const {mutate:createList,isLoading:creating}  = useCreateList(boardId)
     // if(isSuccess) {
     //     handleOpenListInput()
     // }
-    if(isError) toast.error("Error creating list please try again")
+    // if(isError) toast.error("Error creating list please try again")
 
   return (
     <section>
@@ -35,13 +34,14 @@ const CreateNewList:React.FC<CreateNewListProps> = ({boardId}) => {
           />
           <div className="flex justify-between items-center">
             <Button className="text-xs bg-blue-600 hover:bg-blue-700 px-6"
-                onClick={async()=>{
-                    await mutate(body)
-                    setOpenListInput(false)
+                onClick={()=>{
+                    createList(body)
+                    setNewList("");
+                    setOpenListInput(false);
                 }}
-                disabled={isLoading}
+                disabled={creating}
             >
-              {isLoading ? "Creating..." : "Add list"}
+              {"Add list"}
             </Button>
             <Button variant={"outline"} onClick={handleOpenListInput}>
               <Cross1Icon className="w-4 h-4" />

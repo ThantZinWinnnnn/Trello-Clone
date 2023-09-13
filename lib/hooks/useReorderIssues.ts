@@ -17,9 +17,9 @@ export const useReorderIssues =(boardId:string) => {
                 previouseIssues
             }
         },  
-        onError:(error,data,context)=>{
-            queryClient.setQueryData(["issues",boardId],context?.previouseIssues);
-        },
+        // onError:(error,data,context)=>{
+        //     queryClient.setQueryData(["issues",boardId],context?.previouseIssues);
+        // },
         onSettled:()=>queryClient.invalidateQueries(["issues",boardId])
     })
 };

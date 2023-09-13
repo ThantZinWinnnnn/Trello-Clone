@@ -6,12 +6,13 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model User {
-  id            String     @id @default(cuid())
+  id            String     @id @default(uuid())
   name          String?
   email         String?    @unique
   emailVerified DateTime?
@@ -26,7 +27,7 @@ model User {
 }
 
 model Board {
-  id        String     @id @default(cuid())
+  id        String     @id @default(uuid())
   name      String
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -35,20 +36,25 @@ model Board {
   members   Member[]
   lists     List[]
   assignees Assignee[]
+
+  @@index([userId])
 }
 
 model Member {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   isAdmin   Boolean  @default(false)
   createdAt DateTime @default(now())
   boardId   String
   Board     Board?   @relation(fields: [boardId], references: [id], onDelete: Cascade)
   userId    String
   User      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([boardId])
+  @@index([userId])
 }
 
 model List {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   name      String   @default("unnamed list")
   order     Int
   createdAt DateTime @default(now())
@@ -56,10 +62,12 @@ model List {
   boardId   String
   Board     Board?   @relation(fields: [boardId], references: [id], onDelete: Cascade)
   issues    Issue[]
+
+  @@index([boardId])
 }
 
 model Issue {
-  id         String     @id @default(cuid())
+  id         String     @id @default(uuid())
   order      Int
   image      String
   type       String
@@ -74,10 +82,13 @@ model Issue {
   listId     String?
   assignees  Assignee[]
   comments   Comment[]
+
+  @@index([reporterId])
+  @@index([listId])
 }
 
 model Assignee {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   userId    String
   User      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -85,20 +96,27 @@ model Assignee {
   Issue     Issue?   @relation(fields: [issueId], references: [id], onDelete: Cascade)
   boardId   String
   Board     Board?   @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([issueId])
+  @@index([boardId])
 }
 
 model Comment {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   desc      String   @db.Char(200)
   createdAt DateTime @default(now())
   issueId   String
   Issue     Issue?   @relation(fields: [issueId], references: [id], onDelete: Cascade)
   userId    String
   User      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([issueId])
+  @@index([userId])
 }
 
 model Account {
-  id                String  @id @default(cuid())
+  id                String  @id @default(uuid())
   userId            String
   type              String
   provider          String
@@ -114,14 +132,17 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model VerificationToken {

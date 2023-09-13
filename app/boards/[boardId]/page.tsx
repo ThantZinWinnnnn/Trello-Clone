@@ -67,7 +67,7 @@ const Boards = ({ params: { boardId } }: Params) => {
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
-              className="flex gap-4 mt-8 overflow-x-scroll"
+              className="flex gap-4 mt-8 overflow-x-auto h-full"
             >
               {lists?.length! > 0 &&
                 issues !== undefined &&

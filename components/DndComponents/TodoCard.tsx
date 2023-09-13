@@ -61,16 +61,10 @@ const TodoCard: React.FC<todoCardProps> = ({
           </section>
           <section className="flex items-center justify-between px-2 py-3">
             <h2 className="text-xs font-medium">{todo.desc}</h2>
-            {/* <Button
-              variant={"ghost"}
-              className="w-8 h-8  flex items-center justify-between rounded-full p-1"
-            >
-              <CrossCircledIcon className="text-red-500 w-full h-full" />
-            </Button> */}
           </section>
           <section className="flex items-center justify-between p-2">
             <div className="flex items-center gap-1">
-              <Icon className={` w-5 h-5 p-1 rounded-sm text-white ${issueCat?.color}`} />
+              <Icon className={`w-5 h-5 p-1 rounded-sm text-white ${issueCat?.color}`} />
               <PiorityIcon className={`w-4 h-4 ${priority?.color}`} />
             </div>
             <CardMember members={todo.assignees}/>
