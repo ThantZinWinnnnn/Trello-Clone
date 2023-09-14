@@ -16,14 +16,24 @@ export const GET = async (req: NextRequest) => {
 export const POST = async (req: NextRequest) => {
     try {
         const body = await req.json();
-        console.log("body", body)
-        const { email } = body;
-        const user = await prisma.user.findUnique({
+        const { boardId } = body;
+        const user = await prisma.assignee.findMany({
             where: {
-                email
+                boardId
+            },
+            select: {
+                User: true,
             }
+
         });
-        return NextResponse.json(user);
+
+        const users = user.reduce((usrArr, { User }) => {
+            if (!usrArr.find(usr => usr.id === User?.id!)) {
+                usrArr.push(User!)
+            }
+            return usrArr
+        }, [] as Array<UserProps>)
+        return NextResponse.json(users);
     } catch (error) {
 
         return badRequest("Getting User Errors", 500)

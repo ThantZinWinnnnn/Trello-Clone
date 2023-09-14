@@ -7,31 +7,35 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useAppDispatch } from "@/redux/store/hook";
 import { addFilterUsrId } from "@/redux/features/board.slice";
 
-const MemberPhotos = () => {
+type MemberPhotosProps = {
+  members : Array<UserProps>
+}
+
+const MemberPhotos:React.FC<MemberPhotosProps> = ({members}) => {
   const [selectedMember, setSelectedMember] = useState<string[]>([]);
   const diapatch = useAppDispatch()
 
   return (
     <section className="flex -space-x-2">
-      {imgArr.map((img) => (
+      {members?.map((usr) => (
         <Avatar
-          key={`${img.id}`}
+          key={`${usr?.id}`}
           className={`
           w-9 h-9 hover:-translate-y-2 ring-2 ring-white cursor-pointer transition-all duration-100 hover:ring-blue-600
-          ${selectedMember.includes(img.id) ? "ring-blue-600 -translate-y-2" : ""}
+          ${selectedMember.includes(usr?.id) ? "ring-blue-600 -translate-y-2" : ""}
           `}
           onClick={()=> {
-            if(selectedMember.includes(img.id)){
-              setSelectedMember(selectedMember.filter(id => id !== img.id));
+            if(selectedMember.includes(usr.id)){
+              setSelectedMember(selectedMember.filter(id => id !== usr?.id));
               diapatch(addFilterUsrId(""))
               
             }else{
-                setSelectedMember([...selectedMember, img.id])
-                diapatch(addFilterUsrId("cllxyzr4o0003pseubaej17mo"))
+                setSelectedMember([...selectedMember, usr?.id])
+                diapatch(addFilterUsrId(`${usr?.id}`))
             }
           }}
         >
-          <AvatarImage src={img.img} alt={` profile ${img.id}`} />
+          <AvatarImage src={usr?.image!} alt={` profile ${usr?.name}`} />
           <AvatarFallback>Profile</AvatarFallback>
         </Avatar>
       ))}

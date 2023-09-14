@@ -80,3 +80,7 @@
 *::-webkit-scrollbar {
   width: 0px;
 }
+
+*:focus-visible{
+  outline: none;
+}

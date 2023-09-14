@@ -54,12 +54,14 @@ interface GetListsProps {
 }
 
 interface UserProps {
-  id: string;
-  name: string;
-  email: string;
-  emailVerified?: null | undefined;
-  image: string;
+  id: string |null;
+  name: string | null;
+  email: string | null;
+  emailVerified?: null | undefined | Date;
+  image: string | null;
 }
+
+type OptimisticUser = Partial<UserProps>
 
 interface AssigneeProps {
   id: string;
@@ -155,4 +157,39 @@ interface orderProps {
   oIdx: number;
   nIdx: number;
   boardId?:string
+}
+
+interface PiorityArrProps{
+  value:string,
+  icon:ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>,
+  color:string
+}
+
+interface CreateComment{
+  desc:string ,
+  issueId:string,
+  userId:string ,
+  id?:string ,
+  createdAt?:string 
+  User?:OptimisticUser
+}
+
+type UpdateComment = {
+  desc:string,
+  commentId:string
+};
+
+type DeleteComment = {
+  commentId:string
+}
+
+type OptimisticCreateComment = Partial<CreateComment>
+
+interface CommentProps{
+  id:string | undefined,
+  desc:string | undefined,
+  issueId:string | undefined,
+  userId:string | undefined,
+  createdAt:string | undefined,
+  User:OptimisticUser 
 }

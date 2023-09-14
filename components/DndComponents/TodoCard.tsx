@@ -8,7 +8,7 @@ import {
   DraggableStateSnapshot,
 } from "react-beautiful-dnd";
 //icon
-import { AlertCircle, CheckSquare, Bookmark } from "lucide-react";
+import { AlertCircle, CheckSquare, Bookmark, LucideIcon } from "lucide-react";
 import {
   DoubleArrowDownIcon,
   DoubleArrowUpIcon,
@@ -20,7 +20,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 
 //data
-import { piorityArr ,issueType} from "../DummyData/data";
+import { piorityArr , issueType} from "../DummyData/data";
 
 //components
 import IssueDetailComponent from "../Board/IssueDetailComponent";
@@ -35,10 +35,7 @@ const TodoCard: React.FC<todoCardProps> = ({
   draggableHandleProps,
 }) => {
   console.log("imgUrl",todo.image)
-  const priority = useMemo(()=>piorityArr.find((pr) => pr.value === todo.priority),[todo.priority]);
-  const issueCat = useMemo(()=> issueType.find((cat) => cat.text === todo.type),[todo.type]);
-  const Icon = issueCat?.icon!;
-  const PiorityIcon  = priority?.icon!
+  const issue = issueTypeAndPriorityFun(piorityArr,issueType,todo)
   return (
     <div
       key={id}
@@ -48,7 +45,7 @@ const TodoCard: React.FC<todoCardProps> = ({
       className={`bg-white rounded-sm  drop-shadow-md space-y-3 overflow-hidden`}
     >
       <section className="hover:bg-slate-200/50">
-        <IssueDetailComponent>
+        <IssueDetailComponent issue={todo}>
         <section>
           <section className="relative h-[100px] overflow-hidden">
             <Image
@@ -64,8 +61,8 @@ const TodoCard: React.FC<todoCardProps> = ({
           </section>
           <section className="flex items-center justify-between p-2">
             <div className="flex items-center gap-1">
-              <Icon className={`w-5 h-5 p-1 rounded-sm text-white ${issueCat?.color}`} />
-              <PiorityIcon className={`w-4 h-4 ${priority?.color}`} />
+              <issue.Icon className={`w-5 h-5 p-1 rounded-sm text-white ${issue.issueCat?.color}`} />
+              <issue.PiorityIcon className={`w-4 h-4 ${issue.priority?.color}`} />
             </div>
             <CardMember members={todo.assignees}/>
           </section>
@@ -92,3 +89,23 @@ type todoCardProps = {
   draggableProps: DraggableProvidedDraggableProps;
   draggableHandleProps: DraggableProvidedDragHandleProps | null | undefined;
 };
+
+export interface IssueTypeProps{
+  text:string,
+  icon:LucideIcon,
+  color:string
+}
+
+
+export const issueTypeAndPriorityFun = (piorityArr:Array<PiorityArrProps>,issueType:Array<IssueTypeProps>,todo:DndIssueProps)=> {
+  const priority = useMemo(()=>piorityArr.find((pr) => pr.value === todo.priority),[todo.priority]);
+  const issueCat = useMemo(()=> issueType.find((cat) => cat.text === todo.type),[todo.type]);
+  const Icon = issueCat?.icon!;
+  const PiorityIcon  = priority?.icon!
+  return {
+    Icon,
+    PiorityIcon,
+    priority,
+    issueCat
+  }
+}

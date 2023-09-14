@@ -1,11 +1,25 @@
+"use client"
 import React, { memo, useState } from "react";
 import { Button } from "../ui/button";
 import MemberPhotos from "../utils/MemberPhotos";
 import { Input } from "../ui/input";
 import { Search } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
-const IssueFilterByMem = () => {
+const IssueFilterByMem = (
+  {boardId}:{boardId:string}
+) => {
   const [active, setActive] = useState<string[]>([]);
+
+  const {data:users,isLoading} = useQuery({
+    queryKey:["users",boardId],
+    queryFn:async() => {
+      const response = await axios.post('/api/user',{boardId});
+      return response.data;
+    }
+  })
+
   return (
     <section className="flex justify-end items-center gap-6">
       {((active.includes("1") && active.includes("2")) ||
@@ -46,7 +60,7 @@ const IssueFilterByMem = () => {
       >
         Only My Issues
       </Button>
-      <MemberPhotos />
+      <MemberPhotos members={users}/>
       <div className="relative w-[200px]">
         <Input type="text" placeholder="Search..." className="pl-10" />
         <Search className="absolute top-3 left-3" size={15} />

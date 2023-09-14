@@ -39,7 +39,8 @@ export const sameColumnReorder = async (
   }
 
   const draggedItem = await (modal === "issue" ? prismaModal.issue.update(draggedConfig) : prismaModal.list.update(draggedConfig));
-  return Promise.all([tobeReordered, draggedItem]);
+  const result = Promise.all([tobeReordered, draggedItem]);
+  return NextResponse.json({message:result},{status:200});
 };
 
 export const diffColumnReorder = async (
@@ -59,7 +60,8 @@ export const diffColumnReorder = async (
   const rematchedAssignees = await prismaModal.assignee.createMany({ data: leftAssignees });
   const rematchedComments = await prismaModal.comment.createMany({ data: leftComments });
 
-  return Promise.all([tobeReorderedSource, tobeReorderedDestination, rematchedAssignees, rematchedComments])
+  const result = Promise.all([tobeReorderedSource, tobeReorderedDestination, rematchedAssignees, rematchedComments]);
+  return NextResponse.json({message:result},{status:200});
 };
 
 const updateIndexOrder = async ({

@@ -30,24 +30,31 @@ import StatusDropdown from "../Issue/StatusDropdown";
 import Member from "../utils/Member";
 
 //data
-import { imgArr } from "../DummyData/data";
+import { imgArr, issueType, piorityArr } from "../DummyData/data";
 import AddMemberButton from "../Issue/AddMemberButton";
 import SearchMember from "../utils/SearchMember";
 import PiorityDrowdown from "../Issue/PiorityDropdown";
 import Dropdown from "../Issue/Dropdown";
+import { issueTypeAndPriorityFun } from "../DndComponents/TodoCard";
+import { useSession } from "next-auth/react";
+import CreateComment from "../comment/CreateComment";
+import Comments from "../comment/Comments";
 
-const IssueDetailComponent = ({ children }: { children: React.ReactNode }) => {
+
+const IssueDetailComponent = ({ children,issue }: { children: React.ReactNode ,issue:DndIssueProps}) => {
+  const { data: session } = useSession();
   const [openSearchInput, setOpenSearchInput] = useState<Boolean>(false);
   const [assignedMembers, setAssignedMembers] = useState(imgArr);
   const openSearchInputHandler = () => setOpenSearchInput((prev) => !prev);
   console.log("oop", openSearchInput);
+  const issueCategory = issueTypeAndPriorityFun(piorityArr,issueType,issue)
 
   return (
     <Dialog>
       <DialogTrigger className="w-full" asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-[1050px]">
+      <DialogContent className="max-w-[1050px] focus-visible:border-none">
         <DialogHeader>
           <DialogTitle className="text-center">Issue Detail</DialogTitle>
         </DialogHeader>
@@ -55,8 +62,8 @@ const IssueDetailComponent = ({ children }: { children: React.ReactNode }) => {
           <section>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <CheckSquare className="w-5 h-5 bg-[#0070f3] p-1 rounded-sm text-white" />
-                <span>TASK-1</span>
+                <issueCategory.Icon className={`w-5 h-5 p-1 rounded-sm text-white ${issueCategory.issueCat?.color}`} />
+                <span>{issueCategory.issueCat?.text}</span>
               </div>
               <Button
                 variant={"ghost"}
@@ -71,7 +78,7 @@ const IssueDetailComponent = ({ children }: { children: React.ReactNode }) => {
             <section className="flex gap-4">
               <section className="w-[65%]">
                 <h2 className="text-lg font-semibold mt-4">
-                  Learn React Native
+                  {issue?.summary}
                 </h2>
 
                 {/* desc */}
@@ -83,30 +90,16 @@ const IssueDetailComponent = ({ children }: { children: React.ReactNode }) => {
                     id="desc"
                     className="text-sm font-medium font-rubik tracking-wide leading-6"
                   >
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Quibusdam et natus, dignissimos officiis cupiditate numquam
+                    {issue?.desc}
                   </p>
                 </div>
 
                 <section className="flex flex-col gap-6">
                   <section>
                     <h2 className="text-xs font-medium mt-9 mb-4">Comments</h2>
-                    <div className="flex items-center gap-2">
-                      <Avatar className="w-6 h-6">
-                        <AvatarImage
-                          className="w-full h-full"
-                          src="/photos/av1.jpeg"
-                          alt="user profile photo"
-                        />
-                        <AvatarFallback>TZ</AvatarFallback>
-                      </Avatar>
-                      <Input
-                        placeholder="Add a comment..."
-                        className="w-full h-[35px]"
-                      />
-                    </div>
+                    <CreateComment session={session!} issueId={issue?.id}/>
                   </section>
-                  <section className="flex gap-2">
+                  {/* <section className="flex gap-2">
                     <Avatar className="w-6 h-6">
                       <AvatarImage
                         className="w-full h-full"
@@ -142,7 +135,8 @@ const IssueDetailComponent = ({ children }: { children: React.ReactNode }) => {
                         </Button>
                       </div>
                     </div>
-                  </section>
+                  </section> */}
+                  <Comments issueId={issue.id}/>
                 </section>
               </section>
               <section className="w-[35%] flex flex-col gap-6">
