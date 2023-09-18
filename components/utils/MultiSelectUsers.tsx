@@ -78,7 +78,7 @@ const MultiSelectUsers: React.FC<MultiSelectUsersProps> = function ({
               <Badge key={usr.id} variant="secondary">
                 <div className="flex items-center gap-2">
                   <Avatar className="w-6 h-6">
-                    <AvatarImage src={usr?.image} alt={usr.name} />
+                    <AvatarImage src={usr?.image!} alt={usr.name!} />
                     <AvatarFallback>{usr?.name}</AvatarFallback>
                   </Avatar>
                   <span className="text-xs font-medium">{usr?.name}</span>
@@ -137,7 +137,7 @@ const MultiSelectUsers: React.FC<MultiSelectUsersProps> = function ({
                     >
                       <div className="flex items-center gap-2">
                         <Avatar className="w-6 h-6">
-                          <AvatarImage src={user?.image} alt={user.name} />
+                          <AvatarImage src={user?.image!} alt={user.name!} />
                           <AvatarFallback>{user?.name}</AvatarFallback>
                         </Avatar>
                         <span className="text-xs font-medium">

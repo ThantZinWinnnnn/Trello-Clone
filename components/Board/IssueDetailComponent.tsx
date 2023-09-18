@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -39,15 +39,20 @@ import { issueTypeAndPriorityFun } from "../DndComponents/TodoCard";
 import { useSession } from "next-auth/react";
 import CreateComment from "../comment/CreateComment";
 import Comments from "../comment/Comments";
+import { useGetLists } from "@/lib/hooks/list.hooks";
+import { useParams } from "next/navigation";
 
 
-const IssueDetailComponent = ({ children,issue }: { children: React.ReactNode ,issue:DndIssueProps}) => {
+const IssueDetailComponent = ({ children,issue,listId }: { children: React.ReactNode ,issue:DndIssueProps,listId:string}) => {
   const { data: session } = useSession();
+  const param = useParams();
+  const {data: lists} = useGetLists(param.boardId as string);
   const [openSearchInput, setOpenSearchInput] = useState<Boolean>(false);
   const [assignedMembers, setAssignedMembers] = useState(imgArr);
   const openSearchInputHandler = () => setOpenSearchInput((prev) => !prev);
   console.log("oop", openSearchInput);
   const issueCategory = issueTypeAndPriorityFun(piorityArr,issueType,issue)
+  const status = filterStatusType(listId,lists!)
 
   return (
     <Dialog>
@@ -142,7 +147,7 @@ const IssueDetailComponent = ({ children,issue }: { children: React.ReactNode ,i
               <section className="w-[35%] flex flex-col gap-6">
                 <div>
                   <Label className="uppercase text-xs">status</Label>
-                  <StatusDropdown />
+                  <StatusDropdown lists={lists!} status={status} issue={issue}/>
                 </div>
                 <div className="w-[200px]">
                   <Label className="uppercase text-xs">reporter</Label>
@@ -180,3 +185,9 @@ const IssueDetailComponent = ({ children,issue }: { children: React.ReactNode ,i
 };
 
 export default IssueDetailComponent;
+
+
+const filterStatusType = (type:string,lists:Array<ListProps>)=>{
+  const status = useMemo(()=>lists.find((li)=> li.id === type),[type]);
+  return status?.name!;
+}

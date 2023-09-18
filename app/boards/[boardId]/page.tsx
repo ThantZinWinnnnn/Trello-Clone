@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useReorderIssues } from "@/lib/hooks/custom.borad.hooks";
 import { useReorderLists } from "@/lib/hooks/useReorderLists";
+import { useGetLists } from "@/lib/hooks/list.hooks";
 
 type Params = {
   params: {
@@ -18,13 +19,7 @@ type Params = {
 };
 const Boards = ({ params: { boardId } }: Params) => {
 
-  const { data: lists } = useQuery<Array<ListProps>>({
-    queryKey: ["lists", boardId],
-    queryFn: async () => {
-      const response = await axios.get(`/api/lists?boardId=${boardId}`);
-      return response.data;
-    },
-  });
+  const {data :lists} = useGetLists(boardId);
 
   const { data: issues, isLoading } = useQuery<Issues>({
     queryKey: ["issues", boardId],

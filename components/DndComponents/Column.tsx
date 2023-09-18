@@ -51,29 +51,30 @@ const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
                 }`}
               >
                 <h1 className="flex justify-between items-center">
-                  {column.name}
+                  {column?.name}
                   <span className="text-slate-500 font-normal px-2 py-1 rounded-full bg-slate-300 text-xs">
                     {userIssues?.length ?? 0}
                   </span>
                 </h1>
-                <CreateIssue listId={column.id} />
+                <CreateIssue listId={column?.id} />
                 <div className="space-y-3">
                   {userIssues?.length > 0
                     ? userIssues?.map((issue, index) => (
                         <Draggable
-                          draggableId={issue.id}
+                          draggableId={issue?.id}
                           index={index}
-                          key={issue.id}
+                          key={issue?.id}
                         >
                           {(provided) => (
                             <TodoCard
-                              key={issue.id}
-                              draggableProps={provided.draggableProps}
-                              draggableHandleProps={provided.dragHandleProps}
-                              innerRef={provided.innerRef}
+                              key={issue?.id}
+                              draggableProps={provided?.draggableProps}
+                              draggableHandleProps={provided?.dragHandleProps}
+                              innerRef={provided?.innerRef}
                               todo={issue}
                               index={index}
-                              id={issue.id}
+                              id={issue?.id}
+                              listId={column?.id}
                             />
                           )}
                         </Draggable>

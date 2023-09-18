@@ -6,6 +6,7 @@ export const useCreateIssue = () => {
         mutationFn:async(data:IssueState)=>{
             const response = await axios.post("/api/issues",data);
             return response.data;
-        }
+        },
+        
     })
 }

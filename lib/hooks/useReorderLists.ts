@@ -17,9 +17,9 @@ export const useReorderLists =(boardId:string) => {
                 previouseLists
             }
         },  
-        // onError:(error,data,context)=>{
-        //     queryClient.setQueryData(["lists"],context?.previouseLists);
-        // },
+        onError:(error,data,context)=>{
+            queryClient.setQueryData(["lists"],context?.previouseLists);
+        },
         onSettled:()=>queryClient.invalidateQueries(["lists",boardId])
     });
 

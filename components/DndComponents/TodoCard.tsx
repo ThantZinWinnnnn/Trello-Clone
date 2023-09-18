@@ -33,8 +33,9 @@ const TodoCard: React.FC<todoCardProps> = ({
   innerRef,
   draggableProps,
   draggableHandleProps,
+  listId
 }) => {
-  console.log("imgUrl",todo.image)
+  console.log("imgUrl",listId)
   const issue = issueTypeAndPriorityFun(piorityArr,issueType,todo)
   return (
     <div
@@ -45,7 +46,7 @@ const TodoCard: React.FC<todoCardProps> = ({
       className={`bg-white rounded-sm  drop-shadow-md space-y-3 overflow-hidden`}
     >
       <section className="hover:bg-slate-200/50">
-        <IssueDetailComponent issue={todo}>
+        <IssueDetailComponent issue={todo} listId={listId}>
         <section>
           <section className="relative h-[100px] overflow-hidden">
             <Image
@@ -88,6 +89,7 @@ type todoCardProps = {
   innerRef: (element: HTMLElement | null) => void;
   draggableProps: DraggableProvidedDraggableProps;
   draggableHandleProps: DraggableProvidedDragHandleProps | null | undefined;
+  listId: string;
 };
 
 export interface IssueTypeProps{
@@ -96,10 +98,10 @@ export interface IssueTypeProps{
   color:string
 }
 
-
+//use Callback
 export const issueTypeAndPriorityFun = (piorityArr:Array<PiorityArrProps>,issueType:Array<IssueTypeProps>,todo:DndIssueProps)=> {
-  const priority = useMemo(()=>piorityArr.find((pr) => pr.value === todo.priority),[todo.priority]);
-  const issueCat = useMemo(()=> issueType.find((cat) => cat.text === todo.type),[todo.type]);
+  const priority = useMemo(()=>piorityArr.find((pr) => pr.value === todo?.priority),[todo?.priority]);
+  const issueCat = useMemo(()=> issueType.find((cat) => cat.text === todo?.type),[todo?.type]);
   const Icon = issueCat?.icon!;
   const PiorityIcon  = priority?.icon!
   return {
