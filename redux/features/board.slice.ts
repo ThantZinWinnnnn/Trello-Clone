@@ -6,6 +6,7 @@ interface InitialStateProps{
     lists:Array<List>,
     issues:Array<DndIssueProps>,
     filterUsrId:string,
+    changedListId:string
 }
 
 const initialState:InitialStateProps = {
@@ -13,7 +14,8 @@ const initialState:InitialStateProps = {
     successBoardCreation:"",
     lists:[],
     issues:[],
-    filterUsrId:""
+    filterUsrId:"",
+    changedListId:""
 };
 
 const boardSlice = createSlice({

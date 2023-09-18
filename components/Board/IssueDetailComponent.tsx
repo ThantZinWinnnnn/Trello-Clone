@@ -41,18 +41,27 @@ import CreateComment from "../comment/CreateComment";
 import Comments from "../comment/Comments";
 import { useGetLists } from "@/lib/hooks/list.hooks";
 import { useParams } from "next/navigation";
+import { useGetUsersQuery } from "@/redux/apis/endpoints/users.endpoint";
+import { formatDate } from "../utils/util";
 
 
 const IssueDetailComponent = ({ children,issue,listId }: { children: React.ReactNode ,issue:DndIssueProps,listId:string}) => {
   const { data: session } = useSession();
   const param = useParams();
   const {data: lists} = useGetLists(param.boardId as string);
+  const { data: users, isLoading, isError, error } = useGetUsersQuery();
   const [openSearchInput, setOpenSearchInput] = useState<Boolean>(false);
   const [assignedMembers, setAssignedMembers] = useState(imgArr);
+  const [liStatus, setLiStatus] = useState<string>(filterStatusType(listId,lists!));
+  const [nListId, setNListId] = useState("");
   const openSearchInputHandler = () => setOpenSearchInput((prev) => !prev);
-  console.log("oop", openSearchInput);
   const issueCategory = issueTypeAndPriorityFun(piorityArr,issueType,issue)
   const status = filterStatusType(listId,lists!)
+
+  const newListIdd = lists?.find((li) => li.name === liStatus)?.id!;
+  const reporter = useMemo(()=>users?.find((usr)=>usr?.id === issue?.reporterId),[issue?.reporterId,users]);
+  const assignees = useMemo(()=>issue?.assignees,[issue])
+  console.log("LisNewwwww",nListId)
 
   return (
     <Dialog>
@@ -104,63 +113,37 @@ const IssueDetailComponent = ({ children,issue,listId }: { children: React.React
                     <h2 className="text-xs font-medium mt-9 mb-4">Comments</h2>
                     <CreateComment session={session!} issueId={issue?.id}/>
                   </section>
-                  {/* <section className="flex gap-2">
-                    <Avatar className="w-6 h-6">
-                      <AvatarImage
-                        className="w-full h-full"
-                        src="/photos/av1.jpeg"
-                        alt="user profile photo"
-                      />
-                      <AvatarFallback>TZ</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col gap-1">
-                      <h3 className="text-xs font-medium flex gap-3 items-center">
-                        <span className="text-gray-500 font-medium">
-                          Kyle Tomi
-                        </span>
-                        <span className="text-slate-400 text-[0.68rem]">
-                          10days ago
-                        </span>
-                      </h3>
-                      <p className="text-xs font-rubik font-medium">
-                        Please fix this bug bro please.
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant={"link"}
-                          className="text-xs px-0 hover:text-blue-700"
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant={"link"}
-                          className="text-xs px-0 hover:text-blue-700"
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </div>
-                  </section> */}
                   <Comments issueId={issue.id}/>
                 </section>
               </section>
               <section className="w-[35%] flex flex-col gap-6">
                 <div>
                   <Label className="uppercase text-xs">status</Label>
-                  <StatusDropdown lists={lists!} status={status} issue={issue}/>
+                  <StatusDropdown lists={lists!} status={status} issue={issue}
+                  nListId={nListId} setNListId={setNListId}
+                  liStatus={liStatus} setLiStatus={setLiStatus}
+                  newListId={newListIdd}
+                  />
                 </div>
-                <div className="w-[200px]">
+                <div className="w-[140px]">
                   <Label className="uppercase text-xs">reporter</Label>
+                  <Member img={reporter?.image!} name={reporter?.name!}/>
                   {/* <Dropdown val="" dispatch={()=>void}/> */}
                 </div>
                 <div className="relative">
                   <Label className="uppercase text-xs">assignees</Label>
                   <div className="flex items-center flex-wrap gap-2">
-                    <Member img={imgArr[0].img} name="Kyle Tomi" />
+                    {/* <Member img={imgArr[0].img} name="Kyle Tomi" /> */}
+                    {
+                      assignees.map((usr)=>(
+                        <Member key={usr?.id} img={usr?.User?.image!} name={usr?.User?.name!}/>
+                      ))
+                    }
                     <AddMemberButton handler={openSearchInputHandler} />
                     {openSearchInput && (
                       <SearchMember
                         closeSearchHandler={openSearchInputHandler}
+                        assingees={assignees}
                       />
                     )}
                   </div>
@@ -170,10 +153,10 @@ const IssueDetailComponent = ({ children,issue,listId }: { children: React.React
                   {/* <PiorityDrowdown/> */}
                 </div>
                 <p className="text-xs font-rubik text-slate-400">
-                  Created - <span>7 days ago</span>
+                  Created - <span>{formatDate(issue?.createdAt!)}</span>
                 </p>
                 <p className="text-xs font-rubik text-slate-400">
-                  Updated - a few minutes ago
+                  Updated - {formatDate(issue?.updatedAt!)}
                 </p>
               </section>
             </section>
@@ -188,6 +171,6 @@ export default IssueDetailComponent;
 
 
 const filterStatusType = (type:string,lists:Array<ListProps>)=>{
-  const status = useMemo(()=>lists.find((li)=> li.id === type),[type]);
+  const status = lists.find((li)=> li.id === type);
   return status?.name!;
 }
