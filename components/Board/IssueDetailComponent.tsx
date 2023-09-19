@@ -43,25 +43,41 @@ import { useGetLists } from "@/lib/hooks/list.hooks";
 import { useParams } from "next/navigation";
 import { useGetUsersQuery } from "@/redux/apis/endpoints/users.endpoint";
 import { formatDate } from "../utils/util";
+import { useAppSelector } from "@/redux/store/hook";
 
-
-const IssueDetailComponent = ({ children,issue,listId }: { children: React.ReactNode ,issue:DndIssueProps,listId:string}) => {
+const IssueDetailComponent = ({
+  children,
+  issue,
+  listId,
+  indx
+}: {
+  children: React.ReactNode;
+  issue: DndIssueProps;
+  listId: string;
+  indx:number
+}) => {
   const { data: session } = useSession();
   const param = useParams();
-  const {data: lists} = useGetLists(param.boardId as string);
+
+  const { data: lists } = useGetLists(param.boardId as string);
   const { data: users, isLoading, isError, error } = useGetUsersQuery();
   const [openSearchInput, setOpenSearchInput] = useState<Boolean>(false);
   const [assignedMembers, setAssignedMembers] = useState(imgArr);
-  const [liStatus, setLiStatus] = useState<string>(filterStatusType(listId,lists!));
+  const [liStatus, setLiStatus] = useState<string>(
+    filterStatusType(listId, lists!)
+  );
   const [nListId, setNListId] = useState("");
-  const openSearchInputHandler = () => setOpenSearchInput((prev) => !prev);
-  const issueCategory = issueTypeAndPriorityFun(piorityArr,issueType,issue)
-  const status = filterStatusType(listId,lists!)
+  const changedListId = useAppSelector((state) => state.board.changedListId);
+  const newListLength = lists?.find;
 
-  const newListIdd = lists?.find((li) => li.name === liStatus)?.id!;
-  const reporter = useMemo(()=>users?.find((usr)=>usr?.id === issue?.reporterId),[issue?.reporterId,users]);
-  const assignees = useMemo(()=>issue?.assignees,[issue])
-  console.log("LisNewwwww",nListId)
+  const openSearchInputHandler = () => setOpenSearchInput((prev) => !prev);
+  const issueCategory = issueTypeAndPriorityFun(piorityArr, issueType, issue);
+  const status = filterStatusType(listId, lists!);
+  const reporter = useMemo(
+    () => users?.find((usr) => usr?.id === issue?.reporterId),
+    [issue?.reporterId, users]
+  );
+  const assignees = useMemo(() => issue?.assignees, [issue]);
 
   return (
     <Dialog>
@@ -76,7 +92,9 @@ const IssueDetailComponent = ({ children,issue,listId }: { children: React.React
           <section>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <issueCategory.Icon className={`w-5 h-5 p-1 rounded-sm text-white ${issueCategory.issueCat?.color}`} />
+                <issueCategory.Icon
+                  className={`w-5 h-5 p-1 rounded-sm text-white ${issueCategory?.issueCat?.color}`}
+                />
                 <span>{issueCategory.issueCat?.text}</span>
               </div>
               <Button
@@ -91,9 +109,7 @@ const IssueDetailComponent = ({ children,issue,listId }: { children: React.React
             </div>
             <section className="flex gap-4">
               <section className="w-[65%]">
-                <h2 className="text-lg font-semibold mt-4">
-                  {issue?.summary}
-                </h2>
+                <h2 className="text-lg font-semibold mt-4">{issue?.summary}</h2>
 
                 {/* desc */}
                 <div className="flex flex-col gap-2 mt-6">
@@ -111,34 +127,41 @@ const IssueDetailComponent = ({ children,issue,listId }: { children: React.React
                 <section className="flex flex-col gap-6">
                   <section>
                     <h2 className="text-xs font-medium mt-9 mb-4">Comments</h2>
-                    <CreateComment session={session!} issueId={issue?.id}/>
+                    <CreateComment session={session!} issueId={issue?.id} />
                   </section>
-                  <Comments issueId={issue.id}/>
+                  <Comments issueId={issue?.id} />
                 </section>
               </section>
               <section className="w-[35%] flex flex-col gap-6">
                 <div>
                   <Label className="uppercase text-xs">status</Label>
-                  <StatusDropdown lists={lists!} status={status} issue={issue}
-                  nListId={nListId} setNListId={setNListId}
-                  liStatus={liStatus} setLiStatus={setLiStatus}
-                  newListId={newListIdd}
+                  <StatusDropdown
+                    lists={lists!}
+                    status={status}
+                    issue={issue}
+                    oIndx={indx}
+                    setNListId={setNListId}
+                    liStatus={liStatus}
+                    setLiStatus={setLiStatus}
+                    newListId={changedListId}
                   />
                 </div>
                 <div className="w-[140px]">
                   <Label className="uppercase text-xs">reporter</Label>
-                  <Member img={reporter?.image!} name={reporter?.name!}/>
+                  <Member img={reporter?.image!} name={reporter?.name!} />
                   {/* <Dropdown val="" dispatch={()=>void}/> */}
                 </div>
                 <div className="relative">
                   <Label className="uppercase text-xs">assignees</Label>
                   <div className="flex items-center flex-wrap gap-2">
                     {/* <Member img={imgArr[0].img} name="Kyle Tomi" /> */}
-                    {
-                      assignees.map((usr)=>(
-                        <Member key={usr?.id} img={usr?.User?.image!} name={usr?.User?.name!}/>
-                      ))
-                    }
+                    {assignees?.map((usr) => (
+                      <Member
+                        key={usr?.id}
+                        img={usr?.User?.image!}
+                        name={usr?.User?.name!}
+                      />
+                    ))}
                     <AddMemberButton handler={openSearchInputHandler} />
                     {openSearchInput && (
                       <SearchMember
@@ -169,8 +192,7 @@ const IssueDetailComponent = ({ children,issue,listId }: { children: React.React
 
 export default IssueDetailComponent;
 
-
-const filterStatusType = (type:string,lists:Array<ListProps>)=>{
-  const status = lists.find((li)=> li.id === type);
+const filterStatusType = (type: string, lists: Array<ListProps>) => {
+  const status = lists.find((li) => li.id === type);
   return status?.name!;
-}
+};

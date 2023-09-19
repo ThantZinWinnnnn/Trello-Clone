@@ -19,7 +19,7 @@ const CardMember:React.FC<CardMemberProps> = ({members}) => {
                 <Avatar key={mem.id}
                     className='w-6 h-6'
                 >
-                    <AvatarImage src={mem?.User?.image} alt={` profile pic of ${mem?.User?.name}`}/>
+                    <AvatarImage src={mem?.User?.image!} alt={` profile pic of ${mem?.User?.name}`}/>
                     <AvatarFallback>{mem?.User?.name}</AvatarFallback>
                 </Avatar>
             ))

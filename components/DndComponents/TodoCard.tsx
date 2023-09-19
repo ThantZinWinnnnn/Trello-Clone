@@ -46,7 +46,7 @@ const TodoCard: React.FC<todoCardProps> = ({
       className={`bg-white rounded-sm  drop-shadow-md space-y-3 overflow-hidden`}
     >
       <section className="hover:bg-slate-200/50">
-        <IssueDetailComponent issue={todo} listId={listId}>
+        <IssueDetailComponent issue={todo} listId={listId} indx={index}>
         <section>
           <section className="relative h-[100px] overflow-hidden">
             <Image
@@ -58,14 +58,14 @@ const TodoCard: React.FC<todoCardProps> = ({
             />
           </section>
           <section className="flex items-center justify-between px-2 py-3">
-            <h2 className="text-xs font-medium">{todo.desc}</h2>
+            <h2 className="text-xs font-medium">{todo?.desc}</h2>
           </section>
           <section className="flex items-center justify-between p-2">
             <div className="flex items-center gap-1">
-              <issue.Icon className={`w-5 h-5 p-1 rounded-sm text-white ${issue.issueCat?.color}`} />
-              <issue.PiorityIcon className={`w-4 h-4 ${issue.priority?.color}`} />
+              <issue.Icon className={`w-5 h-5 p-1 rounded-sm text-white ${issue?.issueCat?.color}`} />
+              <issue.PiorityIcon className={`w-4 h-4 ${issue?.priority?.color}`} />
             </div>
-            <CardMember members={todo.assignees}/>
+            <CardMember members={todo?.assignees}/>
           </section>
         </section>
         </IssueDetailComponent>

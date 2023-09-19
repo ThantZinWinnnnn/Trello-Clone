@@ -1,23 +1,24 @@
 "use client"
-import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo,  useMemo} from "react";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { useParams } from "next/navigation";
-import { useReorderLists } from "@/lib/hooks/useReorderLists";
 import { useChangeListStatus } from "@/lib/hooks/issue.hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/store/hook";
+import { changeListId } from "@/redux/features/board.slice";
+import { useReorderIssues } from "@/lib/hooks/custom.borad.hooks";
 
 const StatusDropdown = ({
   lists,
   status,
   issue,
-  nListId,
+  oIndx,
   setNListId,
   liStatus,
   setLiStatus,
@@ -26,15 +27,15 @@ const StatusDropdown = ({
   lists: Array<ListProps>;
   status: string;
   issue: DndIssueProps;
-  nListId:string,
+  oIndx:number,
   setNListId:React.Dispatch<React.SetStateAction<string>>,
   liStatus:string,
   setLiStatus:React.Dispatch<React.SetStateAction<string>>,
   newListId:string
 }) => {
   const param = useParams();
-  // const [liStatus, setLiStatus] = useState<string>(status);
-  // const [nListId, setNListId] = useState("");
+  const dispatch = useAppDispatch();
+  const issueLength = useAppSelector(state=>state.board.issueLength);
   const oIdx = useMemo(
     () => lists.findIndex((li) => li.name === status),
     [lists, status]
@@ -48,12 +49,8 @@ const StatusDropdown = ({
     [status, lists]
   );
   const boardId = param.boardId as string;
-  const newListIds = useMemo(
-    () => lists.find((li) => li.name === liStatus)?.id!,
-    [liStatus, lists]
-  );
-  // const newListId = lists.find((li) => li.name === liStatus)?.id! as string;
   const issueId = issue?.id;
+  const oldIdx = issue?.order - 1;
   const assigneessArr = issue?.assignees.map((assignee) => assignee.User?.id!);
   const data: IssueState = {
     image: issue?.image,
@@ -66,44 +63,25 @@ const StatusDropdown = ({
     boardId,
     listId: "",
   };
-  const { mutate: changeIssueStatus } = useChangeListStatus(
-    boardId,
-    oldListId,
-    nListId,
-    issueId
-  );
-
-  
-
-  // const optimisticListChange=useCallback(()=>{
-  //   console.log("liiiiiiiiiiiiiiiiiiii",{...data,listId:newListId})
-  // },[newListId])
-  console.log(
-    "statatat",
-    status,
-    "oldI",
-    oIdx,
-    "nI",
-    nIdx,
-    "listId",
-    oldListId,
-    "newListId",
-    newListId,
-    "issueId",
-    issueId,
-    "issueBody",
-    data
-  );
-
-
-
+  const {mutate:changedIssueStatus} = useReorderIssues(boardId)
+  // const { mutate: changeIssueStatus } = useChangeListStatus(
+  //   boardId,
+  //   oldListId,
+  //   newListId,
+  //   issueId
+  // );
   const changeStatusFun = (val: string) => {
     const newListIdd = lists.find((li) => li.name === val)?.id!;
     setNListId(newListIdd);
+    dispatch(changeListId(newListIdd))
     // changeIssueStatus({ ...data, listId: newListIdd });
+    changedIssueStatus({
+      s:{sId:oldListId,oIdx:oIndx},
+      d:{dId:newListIdd,nIdx:issueLength},
+      boardId,
+      id:issueId
+    })
     setLiStatus(val);
-    
-    // optimisticListChange()
   };
 
   return (

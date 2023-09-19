@@ -22,15 +22,15 @@ const MemberPhotos:React.FC<MemberPhotosProps> = ({members}) => {
           key={`${usr?.id}`}
           className={`
           w-9 h-9 hover:-translate-y-2 ring-2 ring-white cursor-pointer transition-all duration-100 hover:ring-blue-600
-          ${selectedMember.includes(usr?.id) ? "ring-blue-600 -translate-y-2" : ""}
+          ${selectedMember.includes(usr?.id!) ? "ring-blue-600 -translate-y-2" : ""}
           `}
           onClick={()=> {
-            if(selectedMember.includes(usr.id)){
+            if(selectedMember.includes(usr.id!)){
               setSelectedMember(selectedMember.filter(id => id !== usr?.id));
               diapatch(addFilterUsrId(""))
               
             }else{
-                setSelectedMember([...selectedMember, usr?.id])
+                setSelectedMember([...selectedMember, usr?.id!])
                 diapatch(addFilterUsrId(`${usr?.id}`))
             }
           }}

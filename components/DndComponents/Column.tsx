@@ -2,7 +2,7 @@
 import React, { memo, useMemo } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import TodoCard from "./TodoCard";
-import { useAppSelector } from "@/redux/store/hook";
+import { useAppDispatch, useAppSelector } from "@/redux/store/hook";
 import { Button } from "../ui/button";
 
 //icon
@@ -10,6 +10,7 @@ import { PlusIcon } from "@radix-ui/react-icons";
 
 //components
 import CreateIssue from "../Issue/CreateIssue";
+import { addIssueLength } from "@/redux/features/board.slice";
 
 interface ColumnProps {
   id: string;
@@ -20,6 +21,7 @@ interface ColumnProps {
 
 const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
   const filterUsrId = useAppSelector((state) => state.board.filterUsrId);
+  const dispatch = useAppDispatch();
   const filterIssues = useMemo(
     () =>
       issues?.filter((issue) =>
@@ -27,6 +29,8 @@ const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
       ),
     [issues, filterUsrId]
   );
+
+  dispatch(addIssueLength(filterIssues?.length ?? 0))
 
   const userIssues = filterUsrId.length > 0 ? filterIssues : issues;
   console.log("userId",filterUsrId,"userIssues",filterIssues)
