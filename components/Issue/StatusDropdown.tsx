@@ -63,24 +63,24 @@ const StatusDropdown = ({
     boardId,
     listId: "",
   };
-  const {mutate:changedIssueStatus} = useReorderIssues(boardId)
-  // const { mutate: changeIssueStatus } = useChangeListStatus(
-  //   boardId,
-  //   oldListId,
-  //   newListId,
-  //   issueId
-  // );
+  // const {mutate:changedIssueStatus} = useReorderIssues(boardId)
+  const { mutate: changeIssueStatus } = useChangeListStatus(
+    boardId,
+    oldListId,
+    newListId,
+    issueId
+  );
   const changeStatusFun = (val: string) => {
     const newListIdd = lists.find((li) => li.name === val)?.id!;
     setNListId(newListIdd);
     dispatch(changeListId(newListIdd))
-    // changeIssueStatus({ ...data, listId: newListIdd });
-    changedIssueStatus({
-      s:{sId:oldListId,oIdx:oIndx},
-      d:{dId:newListIdd,nIdx:issueLength},
-      boardId,
-      id:issueId
-    })
+    changeIssueStatus({type:"listId",value:newListIdd,boardId});
+    // changedIssueStatus({
+    //   s:{sId:oldListId,oIdx:oIndx},
+    //   d:{dId:newListIdd,nIdx:issueLength},
+    //   boardId,
+    //   id:issueId
+    // })
     setLiStatus(val);
   };
 

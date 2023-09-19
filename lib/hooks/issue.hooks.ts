@@ -10,8 +10,8 @@ export const useChangeListStatus = (
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (data: IssueState) => {
-      const response = await axios.post(`/api/issues/${issueId}`, data);
+    mutationFn: async (data: IssueUpdateProps) => {
+      const response = await axios.put(`/api/issues/${issueId}`, data);
       return response.data;
     },
     onMutate: async (data) => {

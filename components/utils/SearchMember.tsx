@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 //icon
 import { Cross1Icon } from '@radix-ui/react-icons';
 
-const SearchMember:React.FC<SearchMemberProps> = ({closeSearchHandler,assingees}) => {
+const SearchMember:React.FC<SearchMemberProps> = ({closeSearchHandler,users}) => {
     const [input, setInput] = useState('');
   return (
     <section className='shadow-md rounded-sm absolute z-10 top-[100%] bg-white left-0'>
@@ -26,13 +26,13 @@ const SearchMember:React.FC<SearchMemberProps> = ({closeSearchHandler,assingees}
         
         <div className='flex flex-col '>
             {
-                assingees?.map((user)=> (
-                    <div key={user?.User?.id} className='flex items-center gap-2 cursor-pointer hover:bg-slate-300 py-2 pl-3'>
+                users?.map((user)=> (
+                    <div key={user?.id} className='flex items-center gap-2 cursor-pointer hover:bg-slate-300 py-2 pl-3'>
                         <Avatar className='w-4 h-4'>
-                            <AvatarImage src={user?.User?.image!} alt={user?.User?.name!}/>
-                            <AvatarFallback>{user?.User?.name}</AvatarFallback>
+                            <AvatarImage src={user?.image!} alt={user?.name!}/>
+                            <AvatarFallback>{user?.name}</AvatarFallback>
                         </Avatar>
-                        <span className='text-xs font-medium'>{user?.User?.name}</span>
+                        <span className='text-xs font-medium'>{user?.name}</span>
                     </div>
                 ))
             }
@@ -45,5 +45,5 @@ export default SearchMember;
 
 interface SearchMemberProps{
     closeSearchHandler:()=>void;
-    assingees:AssigneeProps[]
+    users:UserProps[]
 }

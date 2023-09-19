@@ -72,6 +72,12 @@ interface AssigneeProps {
   User: UserProps;
 }
 
+interface IssueUpdateProps{
+  type:string,
+  value:string,
+  boardId:string,
+}
+
 interface DndIssueProps {
   id: string;
   order: number;

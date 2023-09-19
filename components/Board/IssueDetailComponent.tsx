@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { memo, useCallback, useMemo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -35,7 +35,7 @@ import AddMemberButton from "../Issue/AddMemberButton";
 import SearchMember from "../utils/SearchMember";
 import PiorityDrowdown from "../Issue/PiorityDropdown";
 import Dropdown from "../Issue/Dropdown";
-import { issueTypeAndPriorityFun } from "../DndComponents/TodoCard";
+import { useIssueTypeAndPriorityFun } from "../DndComponents/TodoCard";
 import { useSession } from "next-auth/react";
 import CreateComment from "../comment/CreateComment";
 import Comments from "../comment/Comments";
@@ -62,7 +62,7 @@ const IssueDetailComponent = ({
   const { data: lists } = useGetLists(param.boardId as string);
   const { data: users, isLoading, isError, error } = useGetUsersQuery();
   const [openSearchInput, setOpenSearchInput] = useState<Boolean>(false);
-  const [assignedMembers, setAssignedMembers] = useState(imgArr);
+  const [assignedMembers, setAssignedMembers] = useState(useMemo(() => issue?.assignees, [issue]));
   const [liStatus, setLiStatus] = useState<string>(
     filterStatusType(listId, lists!)
   );
@@ -71,7 +71,7 @@ const IssueDetailComponent = ({
   const newListLength = lists?.find;
 
   const openSearchInputHandler = () => setOpenSearchInput((prev) => !prev);
-  const issueCategory = issueTypeAndPriorityFun(piorityArr, issueType, issue);
+  const issueCategory = useIssueTypeAndPriorityFun(piorityArr, issueType, issue);
   const status = filterStatusType(listId, lists!);
   const reporter = useMemo(
     () => users?.find((usr) => usr?.id === issue?.reporterId),
@@ -155,7 +155,7 @@ const IssueDetailComponent = ({
                   <Label className="uppercase text-xs">assignees</Label>
                   <div className="flex items-center flex-wrap gap-2">
                     {/* <Member img={imgArr[0].img} name="Kyle Tomi" /> */}
-                    {assignees?.map((usr) => (
+                    {assignedMembers?.map((usr) => (
                       <Member
                         key={usr?.id}
                         img={usr?.User?.image!}
@@ -166,7 +166,7 @@ const IssueDetailComponent = ({
                     {openSearchInput && (
                       <SearchMember
                         closeSearchHandler={openSearchInputHandler}
-                        assingees={assignees}
+                        users={users!}
                       />
                     )}
                   </div>
@@ -190,7 +190,7 @@ const IssueDetailComponent = ({
   );
 };
 
-export default IssueDetailComponent;
+export default memo(IssueDetailComponent);
 
 const filterStatusType = (type: string, lists: Array<ListProps>) => {
   const status = lists.find((li) => li.id === type);

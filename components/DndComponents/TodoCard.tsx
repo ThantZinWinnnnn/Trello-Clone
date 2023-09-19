@@ -1,5 +1,5 @@
 "use client"
-import React, { memo, useMemo, useState } from "react";
+import React, { memo, useMemo } from "react";
 import {
   Draggable,
   DraggableProvided,
@@ -8,15 +8,8 @@ import {
   DraggableStateSnapshot,
 } from "react-beautiful-dnd";
 //icon
-import { AlertCircle, CheckSquare, Bookmark, LucideIcon } from "lucide-react";
-import {
-  DoubleArrowDownIcon,
-  DoubleArrowUpIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
-} from "@radix-ui/react-icons";
-import { CrossCircledIcon } from "@radix-ui/react-icons";
-import { Button } from "../ui/button";
+import {  LucideIcon } from "lucide-react";
+
 import Image from "next/image";
 
 //data
@@ -36,7 +29,7 @@ const TodoCard: React.FC<todoCardProps> = ({
   listId
 }) => {
   console.log("imgUrl",listId)
-  const issue = issueTypeAndPriorityFun(piorityArr,issueType,todo)
+  const issue = useIssueTypeAndPriorityFun(piorityArr,issueType,todo)
   return (
     <div
       key={id}
@@ -99,9 +92,9 @@ export interface IssueTypeProps{
 }
 
 //use Callback
-export const issueTypeAndPriorityFun = (piorityArr:Array<PiorityArrProps>,issueType:Array<IssueTypeProps>,todo:DndIssueProps)=> {
-  const priority = useMemo(()=>piorityArr.find((pr) => pr.value === todo?.priority),[todo?.priority]);
-  const issueCat = useMemo(()=> issueType.find((cat) => cat.text === todo?.type),[todo?.type]);
+export const useIssueTypeAndPriorityFun = (piorityArr:Array<PiorityArrProps>,issueType:Array<IssueTypeProps>,todo:DndIssueProps)=> {
+  const priority = useMemo(()=>piorityArr.find((pr) => pr.value === todo?.priority),[todo?.priority,piorityArr]);
+  const issueCat = useMemo(()=> issueType.find((cat) => cat.text === todo?.type),[issueType,todo]);
   const Icon = issueCat?.icon!;
   const PiorityIcon  = priority?.icon!
   return {
