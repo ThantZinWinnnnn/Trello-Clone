@@ -1,3 +1,4 @@
+"use client"
 import React,{memo} from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Cross1Icon } from '@radix-ui/react-icons'
@@ -6,7 +7,7 @@ import { Button } from '../ui/button'
 import { useAppDispatch } from '@/redux/store/hook'
 import { addIssueUpdateType, addTobeUpdatedUsr } from '@/redux/features/board.slice'
 
-const Member:React.FC<MemberProps> = ({updateAssignee,boardId,user,reporter}) => {
+const Member:React.FC<MemberProps> = ({updateAssignee,boardId,user,reporter,setAssigneeMember}) => {
   const dispatch = useAppDispatch()
   const removeAssigneeFun = (usr:UserProps)=>{
    if(!reporter){
@@ -38,5 +39,6 @@ interface MemberProps{
   }>,
   boardId:string,
   user:UserProps,
-  reporter:boolean
+  reporter:boolean,
+  setAssigneeMember?:(ass:AssigneeProps)=>void
 }

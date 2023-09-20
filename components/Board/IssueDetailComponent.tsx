@@ -45,6 +45,7 @@ import { useGetUsersQuery } from "@/redux/apis/endpoints/users.endpoint";
 import { formatDate } from "../utils/util";
 import { useAppSelector } from "@/redux/store/hook";
 import { useAddAssignee } from "@/lib/hooks/issue.hooks";
+import IssueDetailPiority from "../Issue/IssueDetailPiority";
 
 const IssueDetailComponent = ({
   children,
@@ -67,7 +68,8 @@ const IssueDetailComponent = ({
   const [liStatus, setLiStatus] = useState<string>(
     filterStatusType(listId, lists!)
   );
-  const [assignedMembers, setAssignedMembers] = useState(useMemo(() => issue?.assignees, [issue]));
+  const [priority,setPriority] = useState(issue?.priority);
+  // const [assignedMembers, setAssignedMembers] = useState(issue?.assignees);
   const [nListId, setNListId] = useState("");
   const changedListId = useAppSelector((state) => state.board.changedListId);
   const openSearchInputHandler = () => setOpenSearchInput((prev) => !prev);
@@ -78,6 +80,7 @@ const IssueDetailComponent = ({
     [issue?.reporterId, users]
   );
   const assignees = useMemo(() => issue?.assignees, [issue]);
+  const issuePiority = useIssueTypeAndPriorityFun(piorityArr,issueType,issue)
 
   return (
     <Dialog>
@@ -155,7 +158,7 @@ const IssueDetailComponent = ({
                   <Label className="uppercase text-xs">assignees</Label>
                   <div className="flex items-center flex-wrap gap-2 w-full">
                     {/* <Member img={imgArr[0].img} name="Kyle Tomi" /> */}
-                    {assignedMembers?.map((usr) => (
+                    {issue?.assignees?.map((usr) => (
                       <Member
                         key={usr?.id}
                         user={usr?.User}
@@ -178,6 +181,10 @@ const IssueDetailComponent = ({
                 <div className="w-[200px]">
                   <Label className="uppercase text-xs">priority</Label>
                   {/* <PiorityDrowdown/> */}
+                  <IssueDetailPiority val={priority} setPriority={setPriority}
+                    updatePriority={updateAssignee}
+                    boardId={param?.boardId as string}
+                  />
                 </div>
                 <p className="text-xs font-rubik text-slate-400">
                   Created - <span>{formatDate(issue?.createdAt!)}</span>

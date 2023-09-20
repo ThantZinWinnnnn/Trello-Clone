@@ -9,7 +9,7 @@ interface InitialStateProps {
   changedListId: string;
   issueLength: number;
   user: UserProps | null;
-  updateIssueType:"add" | "remove" | ""
+  updateIssueType:"add" | "remove" | "priority" | ""
 }
 
 const initialState: InitialStateProps = {
@@ -55,7 +55,7 @@ const boardSlice = createSlice({
     addTobeUpdatedUsr: (state, action: PayloadAction<UserProps>) => {
       state.user = action.payload;
     },
-    addIssueUpdateType:(state,action:PayloadAction<"add"|"remove">)=>{
+    addIssueUpdateType:(state,action:PayloadAction<"add"|"remove"|"priority">)=>{
       state.updateIssueType = action.payload
     }
   },

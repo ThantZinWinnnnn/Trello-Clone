@@ -1,4 +1,8 @@
-import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import axios from "axios";
 import exp from "constants";
 
@@ -54,7 +58,13 @@ const updateListStatusLocally = (
   return { ...issues, [oldListId]: source, [newListId]: target } as Issues;
 };
 
-export const useAddAssignee = (issueId: string, listId: string, user: UserProps,boardId:string,updateType:string) => {
+export const useAddAssignee = (
+  issueId: string,
+  listId: string,
+  user: UserProps,
+  boardId: string,
+  updateType: string
+) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: IssueUpdateProps) => {
@@ -78,50 +88,60 @@ export const useAddAssignee = (issueId: string, listId: string, user: UserProps,
             user,
             value,
             boardId,
-            updateType
+            updateType,
           )
       );
       return {
-        previousIssues
-      }
+        previousIssues,
+      };
     },
-    onError:(error,data,context)=>{
-      queryClient.setQueriesData(["issues",boardId],context?.previousIssues);
+    onError: (error, data, context) => {
+      queryClient.setQueriesData(["issues", boardId], context?.previousIssues);
     },
     onSettled: () => {
-      queryClient.invalidateQueries(["issues", boardId]);
-    }
+      Promise.all([
+        queryClient.invalidateQueries(["issues", boardId]),
+        queryClient.invalidateQueries(["users", boardId]),
+      ]);
+    },
   });
 };
-
 
 const updateAssigneeLocally = (
   issues: Issues,
   issueId: string,
   listId: string,
   user: UserProps,
-  id: string,
+  value: string,
   boardId: string,
-  type:string
+  type: string,
 ) => {
   const source = issues[listId]?.slice(0);
+  const issue = source?.find((issue)=>issue?.id === issueId);
   const sourceIssueIdx =
     source?.find((issue) => issue?.id === issueId)?.order! - 1;
   const tobeUpdatedIssue = source?.splice(sourceIssueIdx, 1)[0];
+
+  const removeAssignIndx = tobeUpdatedIssue?.assignees?.findIndex(
+    (assignee) => assignee?.User?.id === user?.id
+  );
   const indx = tobeUpdatedIssue?.assignees?.length;
-  if(type === "add"){
-    tobeUpdatedIssue?.assignees?.splice(indx!, 0, {
-      id,
-      createdAt: "",
-      userId: user?.id!,
-      issueId,
-      boardId,
-      User: user,
-    });
-  };
-  tobeUpdatedIssue?.assignees?.filter((assignee)=>assignee?.User?.id !== user?.id)
-  
-  return { ...issues, [listId]: [...source,tobeUpdatedIssue]} as Issues;
+
+  type == "add"
+    ? tobeUpdatedIssue?.assignees?.splice(indx!, 0, {
+        id:value,
+        createdAt: "",
+        userId: user?.id!,
+        issueId,
+        boardId,
+        User: user,
+      })
+    :  type == "remove" 
+    ? tobeUpdatedIssue?.assignees?.splice(removeAssignIndx!, 1)
+    : null;
+
+
+  return { ...issues, [listId]: [...source, tobeUpdatedIssue] } as Issues;
 };
 
 // const issueUpdateFun = async(data:IssueUpdateProps,issueId:string)=>{
@@ -129,7 +149,6 @@ const updateAssigneeLocally = (
 //   return response.data;
 // }
 
-
-const issueSuccessFun =  (queryClient:QueryClient,boardId:string) => {
+const issueSuccessFun = (queryClient: QueryClient, boardId: string) => {
   queryClient.invalidateQueries(["issues", boardId]);
-}
+};
