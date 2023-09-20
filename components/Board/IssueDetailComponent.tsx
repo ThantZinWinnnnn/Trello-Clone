@@ -44,6 +44,7 @@ import { useParams } from "next/navigation";
 import { useGetUsersQuery } from "@/redux/apis/endpoints/users.endpoint";
 import { formatDate } from "../utils/util";
 import { useAppSelector } from "@/redux/store/hook";
+import { useAddAssignee } from "@/lib/hooks/issue.hooks";
 
 const IssueDetailComponent = ({
   children,
@@ -57,19 +58,18 @@ const IssueDetailComponent = ({
   indx:number
 }) => {
   const { data: session } = useSession();
+  const {user,updateIssueType} = useAppSelector(state=>state.board)
   const param = useParams();
-
   const { data: lists } = useGetLists(param.boardId as string);
+  const {mutate:updateAssignee} = useAddAssignee(issue?.id as string,listId,user!,param.boardId as string,updateIssueType);
   const { data: users, isLoading, isError, error } = useGetUsersQuery();
   const [openSearchInput, setOpenSearchInput] = useState<Boolean>(false);
-  const [assignedMembers, setAssignedMembers] = useState(useMemo(() => issue?.assignees, [issue]));
   const [liStatus, setLiStatus] = useState<string>(
     filterStatusType(listId, lists!)
   );
+  const [assignedMembers, setAssignedMembers] = useState(useMemo(() => issue?.assignees, [issue]));
   const [nListId, setNListId] = useState("");
   const changedListId = useAppSelector((state) => state.board.changedListId);
-  const newListLength = lists?.find;
-
   const openSearchInputHandler = () => setOpenSearchInput((prev) => !prev);
   const issueCategory = useIssueTypeAndPriorityFun(piorityArr, issueType, issue);
   const status = filterStatusType(listId, lists!);
@@ -148,18 +148,20 @@ const IssueDetailComponent = ({
                 </div>
                 <div className="w-[140px]">
                   <Label className="uppercase text-xs">reporter</Label>
-                  <Member img={reporter?.image!} name={reporter?.name!} />
+                  <Member user={reporter!} updateAssignee={updateAssignee} boardId={param?.boardId as string} reporter={true}/>
                   {/* <Dropdown val="" dispatch={()=>void}/> */}
                 </div>
-                <div className="relative">
+                <div className="relative w-full">
                   <Label className="uppercase text-xs">assignees</Label>
-                  <div className="flex items-center flex-wrap gap-2">
+                  <div className="flex items-center flex-wrap gap-2 w-full">
                     {/* <Member img={imgArr[0].img} name="Kyle Tomi" /> */}
                     {assignedMembers?.map((usr) => (
                       <Member
                         key={usr?.id}
-                        img={usr?.User?.image!}
-                        name={usr?.User?.name!}
+                        user={usr?.User}
+                        updateAssignee={updateAssignee}
+                        boardId={param.boardId as string}
+                        reporter={false}
                       />
                     ))}
                     <AddMemberButton handler={openSearchInputHandler} />
@@ -167,6 +169,8 @@ const IssueDetailComponent = ({
                       <SearchMember
                         closeSearchHandler={openSearchInputHandler}
                         users={users!}
+                        updateAssignee={updateAssignee}
+                        boardId={param.boardId as string}
                       />
                     )}
                   </div>

@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { Input } from '../ui/input';
 
@@ -9,9 +9,22 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 //icon
 import { Cross1Icon } from '@radix-ui/react-icons';
+import { Button } from '../ui/button';
+import { UseMutateFunction } from '@tanstack/react-query';
+import { useAppDispatch } from '@/redux/store/hook';
+import { addIssueUpdateType, addTobeUpdatedUsr } from '@/redux/features/board.slice';
 
-const SearchMember:React.FC<SearchMemberProps> = ({closeSearchHandler,users}) => {
+const SearchMember:React.FC<SearchMemberProps> = ({closeSearchHandler,users,updateAssignee,boardId}) => {    
     const [input, setInput] = useState('');
+    const filteredUsrs = useMemo(()=>users?.filter((usr)=>usr?.name?.toLowerCase().includes(input)),[users,input]);
+    const updatedUsrs = input === "" ? users : filteredUsrs;
+    const dispatch = useAppDispatch()
+
+    const updateAssigneeHandler = (usr:UserProps)=>{
+        dispatch(addTobeUpdatedUsr(usr));
+        dispatch(addIssueUpdateType("add"))
+        updateAssignee({type:"addAssignes",value:usr?.id!,boardId})
+    }
   return (
     <section className='shadow-md rounded-sm absolute z-10 top-[100%] bg-white left-0'>
          
@@ -20,20 +33,25 @@ const SearchMember:React.FC<SearchMemberProps> = ({closeSearchHandler,users}) =>
             type='text'
             placeholder='Search...'
             className='w-full border-none' 
+            value={input}
+            onChange={(e)=>setInput(e.target.value)}
+
         />
         <Cross1Icon className='absolute top-3 right-4  w-4 h-4 text-gray-400 cursor-pointer ' onClick={closeSearchHandler}/>
         </div>
         
         <div className='flex flex-col '>
             {
-                users?.map((user)=> (
-                    <div key={user?.id} className='flex items-center gap-2 cursor-pointer hover:bg-slate-300 py-2 pl-3'>
+                updatedUsrs?.map((user)=> (
+                    <Button variant={'ghost'} key={user?.id}
+                    onClick={()=>updateAssigneeHandler(user)}
+                    className='flex justify-start items-center gap-2 cursor-pointer hover:bg-slate-300 py-2 pl-3'>
                         <Avatar className='w-4 h-4'>
                             <AvatarImage src={user?.image!} alt={user?.name!}/>
                             <AvatarFallback>{user?.name}</AvatarFallback>
                         </Avatar>
                         <span className='text-xs font-medium'>{user?.name}</span>
-                    </div>
+                    </Button>
                 ))
             }
         </div>
@@ -45,5 +63,9 @@ export default SearchMember;
 
 interface SearchMemberProps{
     closeSearchHandler:()=>void;
-    users:UserProps[]
+    users:UserProps[],
+    updateAssignee:UseMutateFunction<any, unknown, IssueUpdateProps, {
+        previousIssues: unknown;
+    }>,
+    boardId:string
 }
