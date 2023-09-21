@@ -14,27 +14,20 @@ import { Button } from "../ui/button";
 //icon
 import { AlertCircle, CheckSquare, Bookmark } from "lucide-react";
 import {
-  DoubleArrowDownIcon,
-  DoubleArrowUpIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
-  Cross1Icon,
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+
 
 //components
 import StatusDropdown from "../Issue/StatusDropdown";
 import Member from "../utils/Member";
 
 //data
-import { imgArr, issueType, piorityArr } from "../DummyData/data";
+import {issueType, piorityArr } from "../DummyData/data";
 import AddMemberButton from "../Issue/AddMemberButton";
 import SearchMember from "../utils/SearchMember";
-import PiorityDrowdown from "../Issue/PiorityDropdown";
-import Dropdown from "../Issue/Dropdown";
+
 import { useIssueTypeAndPriorityFun } from "../DndComponents/TodoCard";
 import { useSession } from "next-auth/react";
 import CreateComment from "../comment/CreateComment";
@@ -44,7 +37,7 @@ import { useParams } from "next/navigation";
 import { useGetUsersQuery } from "@/redux/apis/endpoints/users.endpoint";
 import { formatDate } from "../utils/util";
 import { useAppSelector } from "@/redux/store/hook";
-import { useAddAssignee } from "@/lib/hooks/issue.hooks";
+import { useAddAssignee, useDeleteIssue } from "@/lib/hooks/issue.hooks";
 import IssueDetailPiority from "../Issue/IssueDetailPiority";
 
 const IssueDetailComponent = ({
@@ -64,6 +57,7 @@ const IssueDetailComponent = ({
   const { data: lists } = useGetLists(param.boardId as string);
   const {mutate:updateAssignee} = useAddAssignee(issue?.id as string,listId,user!,param.boardId as string,updateIssueType);
   const { data: users, isLoading, isError, error } = useGetUsersQuery();
+  const {mutate:deleteIssue} = useDeleteIssue(param?.boardId as string,listId);
   const [openSearchInput, setOpenSearchInput] = useState<Boolean>(false);
   const [liStatus, setLiStatus] = useState<string>(
     filterStatusType(listId, lists!)
@@ -79,8 +73,8 @@ const IssueDetailComponent = ({
     () => users?.find((usr) => usr?.id === issue?.reporterId),
     [issue?.reporterId, users]
   );
-  const assignees = useMemo(() => issue?.assignees, [issue]);
-  const issuePiority = useIssueTypeAndPriorityFun(piorityArr,issueType,issue)
+  // const assignees = useMemo(() => issue?.assignees, [issue]);
+  // const issuePiority = useIssueTypeAndPriorityFun(piorityArr,issueType,issue)
 
   return (
     <Dialog>
@@ -103,6 +97,7 @@ const IssueDetailComponent = ({
               <Button
                 variant={"ghost"}
                 className="flex items-center gap-2 group bg-red-500 hover:bg-red-600 !py-1"
+                onClick={()=>deleteIssue(issue?.id as string)}
               >
                 <TrashIcon className="w-4 h-4 text-white" />
                 <span className="text-[0.72rem] uppercase font-semibold  text-white">

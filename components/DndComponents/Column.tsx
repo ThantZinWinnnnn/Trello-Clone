@@ -20,7 +20,7 @@ interface ColumnProps {
 }
 
 const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
-  const filterUsrId = useAppSelector((state) => state.board.filterUsrId);
+  const {filterUsrId,issueName} = useAppSelector((state) => state.board);
   const dispatch = useAppDispatch();
   const filterIssues = useMemo(
     () =>
@@ -30,9 +30,11 @@ const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
     [issues, filterUsrId]
   );
 
+  const queryIssuesByName = useMemo(()=>issues?.filter((issue)=>issue?.desc == issueName ),[issueName,issues])
+
   dispatch(addIssueLength(filterIssues?.length ?? 0))
 
-  const userIssues = filterUsrId.length > 0 ? filterIssues : issues;
+  const userIssues = filterUsrId.length > 0 ? filterIssues : issueName !== "" ?  queryIssuesByName : issues;
   console.log("userId",filterUsrId,"userIssues",filterIssues)
 
   return (

@@ -88,7 +88,7 @@ export const useAddAssignee = (
             user,
             value,
             boardId,
-            updateType,
+            updateType
           )
       );
       return {
@@ -114,10 +114,10 @@ const updateAssigneeLocally = (
   user: UserProps,
   value: string,
   boardId: string,
-  type: string,
+  type: string
 ) => {
   const source = issues[listId]?.slice(0);
-  const issue = source?.find((issue)=>issue?.id === issueId);
+  const issue = source?.find((issue) => issue?.id === issueId);
   const sourceIssueIdx =
     source?.find((issue) => issue?.id === issueId)?.order! - 1;
   const tobeUpdatedIssue = source?.splice(sourceIssueIdx, 1)[0];
@@ -126,20 +126,27 @@ const updateAssigneeLocally = (
     (assignee) => assignee?.User?.id === user?.id
   );
   const indx = tobeUpdatedIssue?.assignees?.length;
+  // tobeUpdatedIssue?.assignees?.splice(indx!, 0, {
+  //         id:value,
+  //         createdAt: "",
+  //         userId: user?.id!,
+  //         issueId,
+  //         boardId,
+  //         User: user,
+  //       })
 
   type == "add"
     ? tobeUpdatedIssue?.assignees?.splice(indx!, 0, {
-        id:value,
+        id: value,
         createdAt: "",
         userId: user?.id!,
         issueId,
         boardId,
         User: user,
       })
-    :  type == "remove" 
+    : type == "remove"
     ? tobeUpdatedIssue?.assignees?.splice(removeAssignIndx!, 1)
     : null;
-
 
   return { ...issues, [listId]: [...source, tobeUpdatedIssue] } as Issues;
 };
@@ -151,4 +158,49 @@ const updateAssigneeLocally = (
 
 const issueSuccessFun = (queryClient: QueryClient, boardId: string) => {
   queryClient.invalidateQueries(["issues", boardId]);
+};
+
+export const useDeleteIssue = (boardId: string, listId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (issueId: string) => {
+      const response = await axios.delete(`/api/issues?issueId=${issueId}`);
+      return response.data;
+    },
+    onMutate: async (issueId) => {
+      await queryClient.cancelQueries(["issues", boardId]);
+      const previousIssues = await queryClient.getQueryData([
+        "issues",
+        boardId,
+      ]);
+      queryClient.setQueryData(
+        ["issues", boardId],
+        (oldIssues: Issues | undefined) =>
+          deleteIssueLocally(oldIssues!, listId, issueId)
+      );
+      return {
+        previousIssues,
+      };
+    },
+    onError: (error, data, context) => {
+      queryClient.setQueryData(["issues", boardId], context?.previousIssues);
+    },
+    onSettled: () => {
+      Promise.all([
+        queryClient.invalidateQueries(["issues", boardId]),
+        queryClient.invalidateQueries(["users", boardId]),
+      ]);
+    }
+  });
+};
+
+const deleteIssueLocally = (
+  issues: Issues,
+  listId: string,
+  issueId: string
+) => {
+  const source = issues[listId]?.slice(0);
+  const toBeDeletedIndx = source?.findIndex((issue) => issue?.id === issueId);
+  source?.splice(toBeDeletedIndx!, 1);
+  return { ...issues, [listId]: source } as Issues;
 };

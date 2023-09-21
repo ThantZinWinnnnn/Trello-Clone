@@ -9,7 +9,8 @@ interface InitialStateProps {
   changedListId: string;
   issueLength: number;
   user: UserProps | null;
-  updateIssueType:"add" | "remove" | "priority" | ""
+  updateIssueType:"add" | "remove" | "priority" | "";
+  issueName:string
 }
 
 const initialState: InitialStateProps = {
@@ -21,7 +22,8 @@ const initialState: InitialStateProps = {
   changedListId: "",
   issueLength: 0,
   user: null,
-  updateIssueType:""
+  updateIssueType:"",
+  issueName:""
 };
 
 const boardSlice = createSlice({
@@ -57,6 +59,9 @@ const boardSlice = createSlice({
     },
     addIssueUpdateType:(state,action:PayloadAction<"add"|"remove"|"priority">)=>{
       state.updateIssueType = action.payload
+    },
+    addIssueName: (state, action: PayloadAction<string>) => {
+      state.issueName = action.payload;
     }
   },
 });
@@ -70,6 +75,7 @@ export const {
   changeListId,
   addIssueLength,
   addTobeUpdatedUsr,
-  addIssueUpdateType
+  addIssueUpdateType,
+  addIssueName
 } = boardSlice.actions;
 export default boardSlice.reducer;

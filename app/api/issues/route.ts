@@ -68,5 +68,16 @@ export const PUT = async (req: NextRequest) => {
     } catch (error) {
         badRequest("Invalid request for updating Issue Order", 400)
     }
+};
+
+export const DELETE = async(req:NextRequest)=>{
+    try {
+        const url = new URL(req.url);
+        const issueId = url.searchParams.get("issueId");
+        const deletedIssue = await prisma?.issue?.delete({where:{id:issueId!}});
+        return NextResponse.json(deletedIssue)
+    } catch (error) {
+        badRequest("Invalid issueId for deleting issue",400)
+    }
 }
 

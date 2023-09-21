@@ -6,11 +6,15 @@ import { Input } from "../ui/input";
 import { Search } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useAppDispatch } from "@/redux/store/hook";
+import { addIssueName } from "@/redux/features/board.slice";
 
 const IssueFilterByMem = (
   {boardId}:{boardId:string}
 ) => {
   const [active, setActive] = useState<string[]>([]);
+  const [issueName,setIssueName] = useState("")
+  const dispatch = useAppDispatch();
 
   const {data:users,isLoading} = useQuery({
     queryKey:["users",boardId],
@@ -62,7 +66,9 @@ const IssueFilterByMem = (
       </Button>
       <MemberPhotos members={users}/>
       <div className="relative w-[200px]">
-        <Input type="text" placeholder="Search..." className="pl-10" />
+        {/* <Input type="text" placeholder="Search..." className="pl-10" value={issueName}
+          onChange={()=>dispatch(addIssueName(issueName))}
+        /> */}
         <Search className="absolute top-3 left-3" size={15} />
       </div>
     </section>
