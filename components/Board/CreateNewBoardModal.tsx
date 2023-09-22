@@ -8,16 +8,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import CreateNewBoard from "../utils/CreateNewBoard";
-import { changeCreationBoardStatus } from "@/redux/features/board.slice";
-import { useAppDispatch } from "@/redux/store/hook";
 import { useMutation,useQueryClient  } from "@tanstack/react-query";
 import axios from "axios";
+import { useBoardStore } from "@/globalState/store/zustand.store";
 
 
 
 const CreateNewBoardModal = ({ children }: { children: React.ReactNode }) => {
+  const {setSuccessBoardCreation} = useBoardStore()
   const [newBoard, setNewBoard] = useState<string>("");
-  const dispatch = useAppDispatch();
   const queryClient = useQueryClient()
   const {mutate:createBoard,isLoading} = useMutation({mutationFn:async({inputName,userId}:inputProps)=>{
     const response = await axios.post('/api/board',{boardName:inputName,userId});
@@ -27,10 +26,10 @@ const CreateNewBoardModal = ({ children }: { children: React.ReactNode }) => {
   data:inputProps
   ) => {
     createBoard(data,{
-      onError:(err)=> dispatch(changeCreationBoardStatus("failed")),
+      onError:(err)=> setSuccessBoardCreation("failed"),
       onSuccess:()=>{
         queryClient.invalidateQueries(["boards"])
-        dispatch(changeCreationBoardStatus("success"))
+        setSuccessBoardCreation("success")
       },
     })
   };

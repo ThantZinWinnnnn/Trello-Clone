@@ -51,7 +51,7 @@ const TodoCard: React.FC<todoCardProps> = ({
             />
           </section>
           <section className="flex items-center justify-between px-2 py-3">
-            <h2 className="text-xs font-medium">{todo?.desc}</h2>
+            <h2 className="text-xs font-medium">{todo?.summary}</h2>
           </section>
           <section className="flex items-center justify-between p-2">
             <div className="flex items-center gap-1">

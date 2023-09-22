@@ -1,9 +1,10 @@
 import React, { Dispatch, useCallback } from "react";
 import DropdownUsers from "../utils/DropdownUser";
-import { useGetUsersQuery } from "@/redux/apis/endpoints/users.endpoint";
+
 import { toast, Toaster } from "sonner";
 import { I } from "./CreateIssue";
 import MultiSelectUsers from "../utils/MultiSelectUsers";
+import { useGetUsers } from "@/lib/hooks/issue.hooks";
 
 const Dropdown: React.FC<DropdownProps> = ({
   val,
@@ -11,7 +12,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   arVal = [],
   multiple,
 }) => {
-  const { data: users, isLoading, isError, error } = useGetUsersQuery();
+  const { data: users, isLoading, isError, error } = useGetUsers();
   if (isError) toast.error("Error fetching users");
   const dbUsr = useCallback(
     (strAr: Array<string>) => users?.filter((usr) => strAr?.includes(usr.id!)),

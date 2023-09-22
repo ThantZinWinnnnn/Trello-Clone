@@ -4,16 +4,12 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import {useQuery } from "@tanstack/react-query";
 
-//apis
-
-import { addBoardsData, changeCreationBoardStatus } from "@/redux/features/board.slice";
-
 //components
 import ProjectBoard from "@/components/utils/ProjectBoard";
-import { useAppDispatch, useAppSelector } from "@/redux/store/hook";
 import Loading from "./loading";
 import { Toaster, toast } from "sonner";
 import axios from "axios";
+import { useBoardStore } from "@/globalState/store/zustand.store";
 
 const BoardsPage = () => {
   const { data: session } = useSession({
@@ -22,10 +18,7 @@ const BoardsPage = () => {
       redirect("/login");
     },
   });
-  const dispatch = useAppDispatch();
-  const creationBoardStatus = useAppSelector(
-    (state) => state?.board.successBoardCreation
-  );
+  const {successBoardCreation,setBoards,setSuccessBoardCreation} = useBoardStore();
 
   const {data:userBoards,isLoading,isSuccess,isFetching} = useQuery({
     queryKey:['boards',session?.user?.id],
@@ -38,11 +31,11 @@ const BoardsPage = () => {
   if (isLoading || isFetching) <Loading />;
 
   if (isSuccess) {
-    dispatch(addBoardsData(userBoards?.boards!));
-    if (creationBoardStatus === "success")
+    setBoards(userBoards?.boards!);
+    if (successBoardCreation === "success")
       toast.success("Successfully created new board.");
-      dispatch(changeCreationBoardStatus(""))
-    if (creationBoardStatus === "failed")
+      setSuccessBoardCreation("")
+    if (successBoardCreation === "failed")
       toast.error("Unsuccessfully while creating new board.");
     return (
       <>

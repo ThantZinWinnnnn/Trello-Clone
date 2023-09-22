@@ -4,25 +4,23 @@ import React, { useMemo, useState } from 'react';
 import { Input } from '../ui/input';
 
 //data
-import { imgArr } from '../DummyData/data';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 //icon
 import { Cross1Icon } from '@radix-ui/react-icons';
 import { Button } from '../ui/button';
 import { UseMutateFunction } from '@tanstack/react-query';
-import { useAppDispatch } from '@/redux/store/hook';
-import { addIssueUpdateType, addTobeUpdatedUsr } from '@/redux/features/board.slice';
+import { useBoardStore } from '@/globalState/store/zustand.store';
 
 const SearchMember:React.FC<SearchMemberProps> = ({closeSearchHandler,users,updateAssignee,boardId}) => {    
     const [input, setInput] = useState('');
+    const {setUser,setIssueUpdateType} = useBoardStore()
     const filteredUsrs = useMemo(()=>users?.filter((usr)=>usr?.name?.toLowerCase().includes(input)),[users,input]);
     const updatedUsrs = input === "" ? users : filteredUsrs;
-    const dispatch = useAppDispatch()
 
     const updateAssigneeHandler = (usr:UserProps)=>{
-        dispatch(addTobeUpdatedUsr(usr));
-        dispatch(addIssueUpdateType("add"))
+        setUser(usr)
+        setIssueUpdateType("add")
         updateAssignee({type:"addAssignes",value:usr?.id!,boardId})
     }
   return (

@@ -4,8 +4,7 @@ import React, { useState } from "react";
 //profileArr
 import { imgArr } from "../DummyData/data";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { useAppDispatch } from "@/redux/store/hook";
-import { addFilterUsrId } from "@/redux/features/board.slice";
+import { useBoardStore } from "@/globalState/store/zustand.store";
 
 type MemberPhotosProps = {
   members : Array<UserProps>
@@ -13,7 +12,8 @@ type MemberPhotosProps = {
 
 const MemberPhotos:React.FC<MemberPhotosProps> = ({members}) => {
   const [selectedMember, setSelectedMember] = useState<string[]>([]);
-  const diapatch = useAppDispatch()
+  const {setMemberId} = useBoardStore()
+
 
   return (
     <section className="flex -space-x-2">
@@ -27,11 +27,12 @@ const MemberPhotos:React.FC<MemberPhotosProps> = ({members}) => {
           onClick={()=> {
             if(selectedMember.includes(usr.id!)){
               setSelectedMember(selectedMember.filter(id => id !== usr?.id));
-              diapatch(addFilterUsrId(""))
+              setMemberId("")
               
             }else{
                 setSelectedMember([...selectedMember, usr?.id!])
-                diapatch(addFilterUsrId(`${usr?.id}`))
+                // diapatch(addFilterUsrId(`${usr?.id}`))
+                setMemberId(`${usr?.id}`)
             }
           }}
         >

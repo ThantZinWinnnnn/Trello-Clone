@@ -13,18 +13,15 @@ import { Button } from "../ui/button";
 
 //icon
 import { AlertCircle, CheckSquare, Bookmark } from "lucide-react";
-import {
-  TrashIcon,
-} from "@radix-ui/react-icons";
+import { TrashIcon } from "@radix-ui/react-icons";
 import { Label } from "../ui/label";
-
 
 //components
 import StatusDropdown from "../Issue/StatusDropdown";
 import Member from "../utils/Member";
 
 //data
-import {issueType, piorityArr } from "../DummyData/data";
+import { issueType, piorityArr } from "../DummyData/data";
 import AddMemberButton from "../Issue/AddMemberButton";
 import SearchMember from "../utils/SearchMember";
 
@@ -34,47 +31,55 @@ import CreateComment from "../comment/CreateComment";
 import Comments from "../comment/Comments";
 import { useGetLists } from "@/lib/hooks/list.hooks";
 import { useParams } from "next/navigation";
-import { useGetUsersQuery } from "@/redux/apis/endpoints/users.endpoint";
 import { formatDate } from "../utils/util";
-import { useAppSelector } from "@/redux/store/hook";
-import { useAddAssignee, useDeleteIssue } from "@/lib/hooks/issue.hooks";
+import { useUpdateAssignee, useDeleteIssue,useGetUsers } from "@/lib/hooks/issue.hooks";
 import IssueDetailPiority from "../Issue/IssueDetailPiority";
+import { useBoardStore } from "@/globalState/store/zustand.store";
 
 const IssueDetailComponent = ({
   children,
   issue,
   listId,
-  indx
+  indx,
 }: {
   children: React.ReactNode;
   issue: DndIssueProps;
   listId: string;
-  indx:number
+  indx: number;
 }) => {
   const { data: session } = useSession();
-  const {user,updateIssueType} = useAppSelector(state=>state.board)
+  const { user, issueUpdateType } = useBoardStore();
   const param = useParams();
   const { data: lists } = useGetLists(param.boardId as string);
-  const {mutate:updateAssignee} = useAddAssignee(issue?.id as string,listId,user!,param.boardId as string,updateIssueType);
-  const { data: users, isLoading, isError, error } = useGetUsersQuery();
-  const {mutate:deleteIssue} = useDeleteIssue(param?.boardId as string,listId);
+  const { mutate: updateAssignee } = useUpdateAssignee(
+    issue?.id as string,
+    listId,
+    user!,
+    param.boardId as string,
+    issueUpdateType
+  );
+  const { data: users, isLoading, isError, error } = useGetUsers();
+  const { mutate: deleteIssue } = useDeleteIssue(
+    param?.boardId as string,
+    listId
+  );
   const [openSearchInput, setOpenSearchInput] = useState<Boolean>(false);
   const [liStatus, setLiStatus] = useState<string>(
     filterStatusType(listId, lists!)
   );
-  const [priority,setPriority] = useState(issue?.priority);
-  // const [assignedMembers, setAssignedMembers] = useState(issue?.assignees);
+  const [priority, setPriority] = useState(issue?.priority);
   const [nListId, setNListId] = useState("");
-  const changedListId = useAppSelector((state) => state.board.changedListId);
   const openSearchInputHandler = () => setOpenSearchInput((prev) => !prev);
-  const issueCategory = useIssueTypeAndPriorityFun(piorityArr, issueType, issue);
+  const issueCategory = useIssueTypeAndPriorityFun(
+    piorityArr,
+    issueType,
+    issue
+  );
   const status = filterStatusType(listId, lists!);
   const reporter = useMemo(
     () => users?.find((usr) => usr?.id === issue?.reporterId),
     [issue?.reporterId, users]
   );
-  // const assignees = useMemo(() => issue?.assignees, [issue]);
-  // const issuePiority = useIssueTypeAndPriorityFun(piorityArr,issueType,issue)
 
   return (
     <Dialog>
@@ -97,7 +102,7 @@ const IssueDetailComponent = ({
               <Button
                 variant={"ghost"}
                 className="flex items-center gap-2 group bg-red-500 hover:bg-red-600 !py-1"
-                onClick={()=>deleteIssue(issue?.id as string)}
+                onClick={() => deleteIssue(issue?.id as string)}
               >
                 <TrashIcon className="w-4 h-4 text-white" />
                 <span className="text-[0.72rem] uppercase font-semibold  text-white">
@@ -141,12 +146,16 @@ const IssueDetailComponent = ({
                     setNListId={setNListId}
                     liStatus={liStatus}
                     setLiStatus={setLiStatus}
-                    newListId={changedListId}
                   />
                 </div>
                 <div className="w-[140px]">
                   <Label className="uppercase text-xs">reporter</Label>
-                  <Member user={reporter!} updateAssignee={updateAssignee} boardId={param?.boardId as string} reporter={true}/>
+                  <Member
+                    user={reporter!}
+                    updateAssignee={updateAssignee}
+                    boardId={param?.boardId as string}
+                    reporter={true}
+                  />
                   {/* <Dropdown val="" dispatch={()=>void}/> */}
                 </div>
                 <div className="relative w-full">
@@ -176,7 +185,9 @@ const IssueDetailComponent = ({
                 <div className="w-[200px]">
                   <Label className="uppercase text-xs">priority</Label>
                   {/* <PiorityDrowdown/> */}
-                  <IssueDetailPiority val={priority} setPriority={setPriority}
+                  <IssueDetailPiority
+                    val={priority}
+                    setPriority={setPriority}
                     updatePriority={updateAssignee}
                     boardId={param?.boardId as string}
                   />

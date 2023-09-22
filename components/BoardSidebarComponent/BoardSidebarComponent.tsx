@@ -16,13 +16,13 @@ import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import BoardSortDropdown from "./BoardSortDropdown";
 import Link from "next/link";
-import { useAppSelector } from "@/redux/store/hook";
+import { useBoardStore } from "@/globalState/store/zustand.store";
 
 const BoardSidebarComponent = () => {
   const router = useRouter();
   const pathname = usePathname();
   const active = pathname.includes('trelloprojectboard')
-  const boards = useAppSelector((state) => state.board.boards)
+  const {boards} = useBoardStore()
   console.log("boardsss",boards)
   // console.log('path',pathname.includes('trelloprojectboard'))
   return (

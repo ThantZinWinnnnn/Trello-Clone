@@ -4,14 +4,14 @@ import React, { memo, useMemo } from 'react'
 //profile Arr
 import { imgArr } from '../DummyData/data'
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { useAppSelector } from '@/redux/store/hook';
+import { useBoardStore } from '@/globalState/store/zustand.store';
 
 
 const CardMember:React.FC<CardMemberProps> = ({members}) => {
-    const filterUsrId = useAppSelector((state)=>state.board.filterUsrId)
-    const filterAssignee = useMemo(()=> members?.filter((member)=> member.User.id === filterUsrId),[members,filterUsrId])
+    const {memberId} = useBoardStore()
+    const filterAssignee = useMemo(()=> members?.filter((member)=> member.User.id === memberId),[members,memberId])
     const foldMem = members.length > 3;
-    const assignees = filterUsrId === "" ? members : filterAssignee;
+    const assignees = memberId === "" ? members : filterAssignee;
   return (
     <section className='flex -space-x-2'>
         {

@@ -10,9 +10,8 @@ import {
 } from "@/components/ui/select";
 import { useParams } from "next/navigation";
 import { useChangeListStatus } from "@/lib/hooks/issue.hooks";
-import { useAppDispatch, useAppSelector } from "@/redux/store/hook";
-import { changeListId } from "@/redux/features/board.slice";
 import { useReorderIssues } from "@/lib/hooks/custom.borad.hooks";
+import { useBoardStore } from "@/globalState/store/zustand.store";
 
 const StatusDropdown = ({
   lists,
@@ -22,7 +21,6 @@ const StatusDropdown = ({
   setNListId,
   liStatus,
   setLiStatus,
-  newListId
 }: {
   lists: Array<ListProps>;
   status: string;
@@ -31,10 +29,10 @@ const StatusDropdown = ({
   setNListId:React.Dispatch<React.SetStateAction<string>>,
   liStatus:string,
   setLiStatus:React.Dispatch<React.SetStateAction<string>>,
-  newListId:string
+
 }) => {
   const param = useParams();
-  const dispatch = useAppDispatch();
+  const {changedListId,setChangedListId} = useBoardStore();
   const oldListId = useMemo(
     () => lists.find((li) => li.name === status)?.id!,
     [status, lists]
@@ -45,13 +43,14 @@ const StatusDropdown = ({
   const { mutate: changeIssueStatus } = useChangeListStatus(
     boardId,
     oldListId,
-    newListId,
+    changedListId,
     issueId
   );
+
   const changeStatusFun = (val: string) => {
     const newListIdd = lists.find((li) => li.name === val)?.id!;
     setNListId(newListIdd);
-    dispatch(changeListId(newListIdd))
+    setChangedListId(newListIdd)
     changeIssueStatus({type:"listId",value:newListIdd,boardId});
     setLiStatus(val);
   };

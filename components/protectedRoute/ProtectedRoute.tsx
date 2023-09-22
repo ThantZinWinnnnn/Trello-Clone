@@ -1,12 +1,12 @@
 
 import React from 'react'
-import { options } from '@/app/api/auth/[...nextauth]/route'
+import { authOptions } from '@/lib/next-auth'
 import { getServerSession } from "next-auth/next"
 import {redirect} from "next/navigation"
 const ProtectedRoute = async(
     {children} : {children: React.ReactNode}
 ) => {
-  const session = await getServerSession(options)
+  const session = await getServerSession(authOptions)
 
   if (!session) {
       redirect('/login')

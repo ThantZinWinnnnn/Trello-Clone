@@ -2,15 +2,10 @@
 import React, { memo, useMemo } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import TodoCard from "./TodoCard";
-import { useAppDispatch, useAppSelector } from "@/redux/store/hook";
-import { Button } from "../ui/button";
-
-//icon
-import { PlusIcon } from "@radix-ui/react-icons";
 
 //components
 import CreateIssue from "../Issue/CreateIssue";
-import { addIssueLength } from "@/redux/features/board.slice";
+import { useBoardStore } from "@/globalState/store/zustand.store";
 
 interface ColumnProps {
   id: string;
@@ -20,22 +15,22 @@ interface ColumnProps {
 }
 
 const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
-  const {filterUsrId,issueName} = useAppSelector((state) => state.board);
-  const dispatch = useAppDispatch();
+  const {issueName,memberId} = useBoardStore();
   const filterIssues = useMemo(
     () =>
       issues?.filter((issue) =>
-        issue?.assignees.some((assignee) => assignee?.User?.id === filterUsrId)
+        issue?.assignees.some((assignee) => assignee?.User?.id === memberId)
       ),
-    [issues, filterUsrId]
+    [issues, memberId]
   );
 
-  const queryIssuesByName = useMemo(()=>issues?.filter((issue)=>issue?.desc == issueName ),[issueName,issues])
+  const queryIssuesByName = useMemo(()=>issues?.filter((issue)=>issue?.summary.toLowerCase().includes(issueName) ),[issueName,issues])
+  console.log("query",issueName)
 
-  dispatch(addIssueLength(filterIssues?.length ?? 0))
+  // dispatch(addIssueLength(filterIssues?.length ?? 0))
 
-  const userIssues = filterUsrId.length > 0 ? filterIssues : issueName !== "" ?  queryIssuesByName : issues;
-  console.log("userId",filterUsrId,"userIssues",filterIssues)
+  const userIssues = memberId.length > 0 ? filterIssues : issueName !== "" ?  queryIssuesByName : issues;
+  console.log("userId",memberId,"userIssues",filterIssues)
 
   return (
     <Draggable draggableId={id} index={index!} key={id}>

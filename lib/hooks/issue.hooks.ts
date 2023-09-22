@@ -1,10 +1,21 @@
 import {
   QueryClient,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
-import exp from "constants";
+
+
+export const useGetUsers = () => {
+  return useQuery<UserProps[]>({
+    queryKey:["users"],
+    queryFn:async()=>{
+      const response = await axios.get('/api/user');
+      return response.data;
+    }
+  })
+}
 
 export const useChangeListStatus = (
   boardId: string,
@@ -58,7 +69,7 @@ const updateListStatusLocally = (
   return { ...issues, [oldListId]: source, [newListId]: target } as Issues;
 };
 
-export const useAddAssignee = (
+export const useUpdateAssignee = (
   issueId: string,
   listId: string,
   user: UserProps,

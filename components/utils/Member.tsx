@@ -4,15 +4,15 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Cross1Icon } from '@radix-ui/react-icons'
 import { UseMutateFunction } from '@tanstack/react-query'
 import { Button } from '../ui/button'
-import { useAppDispatch } from '@/redux/store/hook'
-import { addIssueUpdateType, addTobeUpdatedUsr } from '@/redux/features/board.slice'
+import { useBoardStore } from '@/globalState/store/zustand.store'
 
 const Member:React.FC<MemberProps> = ({updateAssignee,boardId,user,reporter,setAssigneeMember}) => {
-  const dispatch = useAppDispatch()
+  const {setIssueUpdateType,setUser} = useBoardStore()
+
   const removeAssigneeFun = (usr:UserProps)=>{
    if(!reporter){
-    dispatch(addTobeUpdatedUsr(usr))
-    dispatch(addIssueUpdateType("remove"))
+    setUser(usr)
+    setIssueUpdateType("remove")
     updateAssignee({type:"remvoeAssignee",value:usr?.id!,boardId})
    }
   }

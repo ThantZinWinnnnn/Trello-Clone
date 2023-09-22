@@ -1,8 +1,6 @@
 "use client";
 import React from "react";
 import { SessionProvider } from "next-auth/react";
-import { Provider } from "react-redux";
-import { store } from "@/redux/store/store";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { type ThemeProviderProps } from "next-themes/dist/types";
 import {
@@ -12,8 +10,8 @@ import {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: Infinity,
-      cacheTime:Infinity,
+      staleTime: 5*(60*1000), // 5 mins
+      cacheTime: 10*(60*1000), // 10 mins
       refetchOnWindowFocus: false,
     },
   },
@@ -24,7 +22,7 @@ const Providers = ({ children }: ThemeProviderProps) => {
     <QueryClientProvider client={queryClient}>
       <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
         <SessionProvider>
-          <Provider store={store}>{children}</Provider>
+          {children}
         </SessionProvider>
       </NextThemesProvider>
     </QueryClientProvider>

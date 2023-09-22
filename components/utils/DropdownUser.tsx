@@ -22,7 +22,7 @@ const DropdownUsers: React.FC<DropdownUserProps> = ({
   const filteredUsers =
     filterUser !== ""
       ? users?.filter((user) =>
-          user?.name.toLowerCase().includes(filterUser.toLowerCase())
+          user?.name!.toLowerCase().includes(filterUser.toLowerCase())
         )
       : users;
 
@@ -47,11 +47,11 @@ const DropdownUsers: React.FC<DropdownUserProps> = ({
                 <SelectItem
                   className="flex items-center"
                   key={user?.id}
-                  value={user?.id}
+                  value={user?.id!}
                 >
                   <div className="flex items-center gap-2">
                     <Avatar className="w-6 h-6">
-                      <AvatarImage src={user?.image} alt={user.name} />
+                      <AvatarImage src={user?.image!} alt={user.name!} />
                       <AvatarFallback>{user?.name}</AvatarFallback>
                     </Avatar>
                     <span className="text-xs font-medium">{user?.name}</span>

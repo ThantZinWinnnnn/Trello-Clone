@@ -3,16 +3,15 @@ import React, { memo } from 'react'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { piorityArr } from '../DummyData/data';
 import { UseMutateFunction } from '@tanstack/react-query';
-import { useAppDispatch } from '@/redux/store/hook';
-import { addIssueUpdateType } from '@/redux/features/board.slice';
+import { useBoardStore } from '@/globalState/store/zustand.store';
 
 const IssueDetailPiority = ({val,setPriority,updatePriority,boardId}:Props) => {
-    const dispatch = useAppDispatch();
+    const {setIssueUpdateType} = useBoardStore();
     return (
         <section>
           <Select onValueChange={(val)=>{
             setPriority(val)
-            dispatch(addIssueUpdateType("priority"))
+            setIssueUpdateType("priority")
             updatePriority({type:"priority",value:val,boardId})
         }
         } 
