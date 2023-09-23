@@ -6,7 +6,7 @@ import CreateNewBoardModal from "../Board/CreateNewBoardModal";
 
 const ProjectBoard: React.FC<GetUserBoardsProps> = ({ boards }) => {
   const memoizedBoards = useMemo(() => boards, [boards]);
-
+  console.log("board",memoizedBoards)
   return (
     <main className="">
       <CreateNewBoardModal>

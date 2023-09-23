@@ -26,14 +26,14 @@ const MultiSelectUsers: React.FC<MultiSelectUsersProps> = function ({
 }) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<Array<UserProps> | undefined>(val);
+  const [selected, setSelected] = React.useState<Array<MemberProps> | undefined>(val);
   const [inputValue, setInputValue] = React.useState("");
 
   const handleUnselect = React.useCallback(
     (user: UserProps) => {
       setSelected((prev) =>
         prev?.filter(
-          (u) => u.id !== selected?.find((usr) => usr.id === user.id)?.id
+          (u) => u.User?.id !== selected?.find((usr) => usr.User?.id === user.id)?.User?.id
         )
       );
     },
@@ -63,7 +63,7 @@ const MultiSelectUsers: React.FC<MultiSelectUsersProps> = function ({
   );
 
   const selectables = users?.filter((usr) => !selected?.includes(usr));
-  const assigneesArr = selected?.map((usr)=>usr.id)
+  const assigneesArr = selected?.map((usr)=>usr?.User.id)
 
   return (
     <Command
@@ -75,26 +75,26 @@ const MultiSelectUsers: React.FC<MultiSelectUsersProps> = function ({
         <div className="flex gap-1 flex-wrap">
           {selected?.map((usr) => {
             return (
-              <Badge key={usr.id} variant="secondary">
+              <Badge key={usr.User?.id} variant="secondary">
                 <div className="flex items-center gap-2">
                   <Avatar className="w-6 h-6">
-                    <AvatarImage src={usr?.image!} alt={usr.name!} />
-                    <AvatarFallback>{usr?.name}</AvatarFallback>
+                    <AvatarImage src={usr?.User?.image!} alt={usr.User?.name!} />
+                    <AvatarFallback>{usr?.User?.name}</AvatarFallback>
                   </Avatar>
-                  <span className="text-xs font-medium">{usr?.name}</span>
+                  <span className="text-xs font-medium">{usr?.User?.name}</span>
                 </div>
                 <button
                   className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                      handleUnselect(usr);
+                      handleUnselect(usr?.User);
                     }
                   }}
                   onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                   }}
-                  onClick={() => handleUnselect(usr)}
+                  onClick={() => handleUnselect(usr?.User)}
                 >
                   <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
                 </button>
@@ -123,7 +123,7 @@ const MultiSelectUsers: React.FC<MultiSelectUsersProps> = function ({
                 users?.map((user) => {
                   return (
                     <CommandItem
-                      key={user.id}
+                      key={user.User?.id}
                       onMouseDown={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -131,17 +131,17 @@ const MultiSelectUsers: React.FC<MultiSelectUsersProps> = function ({
                       onSelect={(value) => {
                         setInputValue("");
                         setSelected((prev) => [...prev!, user]);
-                        dispatch({type:"assignee",value:[...assigneesArr!,user.id] as string[]})
+                        dispatch({type:"assignee",value:[...assigneesArr!,user?.User?.id] as string[]})
                       }}
                       className={"cursor-pointer"}
                     >
                       <div className="flex items-center gap-2">
                         <Avatar className="w-6 h-6">
-                          <AvatarImage src={user?.image!} alt={user.name!} />
-                          <AvatarFallback>{user?.name}</AvatarFallback>
+                          <AvatarImage src={user?.User?.image!} alt={user.User?.name!} />
+                          <AvatarFallback>{user?.User?.name}</AvatarFallback>
                         </Avatar>
                         <span className="text-xs font-medium">
-                          {user?.name}
+                          {user?.User?.name}
                         </span>
                       </div>
                     </CommandItem>
@@ -158,8 +158,8 @@ const MultiSelectUsers: React.FC<MultiSelectUsersProps> = function ({
 
 export default React.memo(MultiSelectUsers);
 interface MultiSelectUsersProps {
-  users: Array<UserProps>;
+  users: Array<MemberProps>;
   isLoading?: boolean;
-  val: Array<UserProps> | undefined;
+  val: Array<MemberProps> | undefined;
   dispatch: React.Dispatch<I>;
 }

@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useBoardStore } from "@/globalState/store/zustand.store";
 
 type MemberPhotosProps = {
-  members : Array<UserProps>
+  members : Array<MemberProps>
 }
 
 const MemberPhotos:React.FC<MemberPhotosProps> = ({members}) => {
@@ -19,24 +19,24 @@ const MemberPhotos:React.FC<MemberPhotosProps> = ({members}) => {
     <section className="flex -space-x-2">
       {members?.map((usr) => (
         <Avatar
-          key={`${usr?.id}`}
+          key={`${usr?.User?.id}`}
           className={`
           w-9 h-9 hover:-translate-y-2 ring-2 ring-white cursor-pointer transition-all duration-100 hover:ring-blue-600
-          ${selectedMember.includes(usr?.id!) ? "ring-blue-600 -translate-y-2" : ""}
+          ${selectedMember.includes(usr?.User?.id!) ? "ring-blue-600 -translate-y-2" : ""}
           `}
           onClick={()=> {
-            if(selectedMember.includes(usr.id!)){
-              setSelectedMember(selectedMember.filter(id => id !== usr?.id));
+            if(selectedMember.includes(usr?.User?.id!)){
+              setSelectedMember(selectedMember.filter(id => id !== usr?.User?.id));
               setMemberId("")
               
             }else{
-                setSelectedMember([...selectedMember, usr?.id!])
+                setSelectedMember([...selectedMember, usr?.User?.id!])
                 // diapatch(addFilterUsrId(`${usr?.id}`))
-                setMemberId(`${usr?.id}`)
+                setMemberId(`${usr?.User?.id}`)
             }
           }}
         >
-          <AvatarImage src={usr?.image!} alt={` profile ${usr?.name}`} />
+          <AvatarImage src={usr?.User?.image!} alt={` profile ${usr?.User?.name}`} />
           <AvatarFallback>Profile</AvatarFallback>
         </Avatar>
       ))}

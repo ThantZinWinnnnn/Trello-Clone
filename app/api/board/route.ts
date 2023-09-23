@@ -9,7 +9,7 @@ export const GET = async (req:NextRequest)=>{
       const userId = url.searchParams.get("userId");
       const userBoards = await prisma.user.findUnique({
          where:{
-            id:userId!
+            id:userId!  
          },
          select:{
             boards:true,

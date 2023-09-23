@@ -32,9 +32,10 @@ import Comments from "../comment/Comments";
 import { useGetLists } from "@/lib/hooks/list.hooks";
 import { useParams } from "next/navigation";
 import { formatDate } from "../utils/util";
-import { useUpdateAssignee, useDeleteIssue,useGetUsers } from "@/lib/hooks/issue.hooks";
+import { useUpdateAssignee, useDeleteIssue } from "@/lib/hooks/issue.hooks";
 import IssueDetailPiority from "../Issue/IssueDetailPiority";
 import { useBoardStore } from "@/globalState/store/zustand.store";
+import { useGetMembers } from "@/lib/hooks/member.hooks";
 
 const IssueDetailComponent = ({
   children,
@@ -58,7 +59,7 @@ const IssueDetailComponent = ({
     param.boardId as string,
     issueUpdateType
   );
-  const { data: users, isLoading, isError, error } = useGetUsers();
+  const { data: users, isLoading, isError, error } = useGetMembers(param.boardId as string);
   const { mutate: deleteIssue } = useDeleteIssue(
     param?.boardId as string,
     listId
@@ -77,7 +78,7 @@ const IssueDetailComponent = ({
   );
   const status = filterStatusType(listId, lists!);
   const reporter = useMemo(
-    () => users?.find((usr) => usr?.id === issue?.reporterId),
+    () => users?.find((usr) => usr?.User?.id === issue?.reporterId)?.User,
     [issue?.reporterId, users]
   );
 

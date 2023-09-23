@@ -10,6 +10,7 @@ import Loading from "./loading";
 import { Toaster, toast } from "sonner";
 import axios from "axios";
 import { useBoardStore } from "@/globalState/store/zustand.store";
+import { useGetBoards } from "@/lib/hooks/board.hooks";
 
 const BoardsPage = () => {
   const { data: session } = useSession({
@@ -20,32 +21,25 @@ const BoardsPage = () => {
   });
   const {successBoardCreation,setBoards,setSuccessBoardCreation} = useBoardStore();
 
-  const {data:userBoards,isLoading,isSuccess,isFetching} = useQuery({
-    queryKey:['boards',session?.user?.id],
-    queryFn:async ()=>{
-      const response = await axios.get(`/api/board?userId=${session?.user?.id}`);
-      return response.data;
-    },
-  })
+  const {data:userBoards,isLoading,isSuccess,isFetching,isError} = useGetBoards(session)
 
   if (isLoading || isFetching) <Loading />;
 
-  if (isSuccess) {
-    setBoards(userBoards?.boards!);
-    if (successBoardCreation === "success")
+  if (successBoardCreation === "success") {
       toast.success("Successfully created new board.");
       setSuccessBoardCreation("")
-    if (successBoardCreation === "failed")
-      toast.error("Unsuccessfully while creating new board.");
-    return (
-      <>
-      <Toaster richColors position="top-center" />
-      <main className="p-3">
-        <ProjectBoard boards={userBoards?.boards!} />
-      </main>
-      </>
-    );
-  }
-};
+   }
+   if(isError && successBoardCreation === "failed"){
+    toast.error("Unsuccessfully while creating new board.");
+   }
+  return (
+    <>
+    <Toaster richColors position="top-center" />
+    <main className="p-3">
+      <ProjectBoard boards={userBoards?.boards!} />
+    </main>
+    </>
+  );
+}
 
 export default memo(BoardsPage);

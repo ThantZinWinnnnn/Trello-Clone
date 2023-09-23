@@ -61,6 +61,10 @@ interface UserProps {
   image: string | null;
 }
 
+interface MemberProps{
+  User:UserProps
+}
+
 type OptimisticUser = Partial<UserProps>
 
 interface AssigneeProps {
@@ -199,3 +203,17 @@ interface CommentProps{
   createdAt:string | undefined,
   User:OptimisticUser 
 }
+
+interface AddMember{
+  boardId:string,
+  userId:string
+}
+
+interface RemoveMember extends AddMember {
+  memberId:string
+};
+
+type AddMembersArr = {
+  members:Array<AddMember>
+}
+

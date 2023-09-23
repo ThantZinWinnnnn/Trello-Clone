@@ -5,7 +5,13 @@ import { badRequest } from "../utils/api.utils";
 //get all users
 export const GET = async (req: NextRequest) => {
     try {
-        const users = await prisma.user.findMany();
+        const url = new URL(req.url);
+        const q = url.searchParams.get("query");
+        const users = await prisma.user.findMany({
+            where:{
+                name:{contains:q!}
+            },
+        });
         return NextResponse.json(users);
     } catch (error) {
 

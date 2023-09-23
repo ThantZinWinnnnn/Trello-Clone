@@ -7,15 +7,7 @@ import {
 import axios from "axios";
 
 
-export const useGetUsers = () => {
-  return useQuery<UserProps[]>({
-    queryKey:["users"],
-    queryFn:async()=>{
-      const response = await axios.get('/api/user');
-      return response.data;
-    }
-  })
-}
+
 
 export const useChangeListStatus = (
   boardId: string,

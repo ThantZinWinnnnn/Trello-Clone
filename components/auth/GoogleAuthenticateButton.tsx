@@ -12,7 +12,7 @@ const GoogleAuthenticateButton = () => {
 
   return (
     <Button className='w-full' type='button'
-      onClick={()=> signIn('google')}
+      onClick={()=> signIn('google',{callbackUrl})}
     >
         <svg
         aria-hidden='true'

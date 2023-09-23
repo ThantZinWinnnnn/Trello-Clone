@@ -6,6 +6,7 @@ import TodoCard from "./TodoCard";
 //components
 import CreateIssue from "../Issue/CreateIssue";
 import { useBoardStore } from "@/globalState/store/zustand.store";
+import moment from "moment";
 
 interface ColumnProps {
   id: string;
@@ -15,7 +16,7 @@ interface ColumnProps {
 }
 
 const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
-  const {issueName,memberId} = useBoardStore();
+  const { issueName, memberId, currentDate } = useBoardStore();
   const filterIssues = useMemo(
     () =>
       issues?.filter((issue) =>
@@ -24,13 +25,36 @@ const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
     [issues, memberId]
   );
 
-  const queryIssuesByName = useMemo(()=>issues?.filter((issue)=>issue?.summary.toLowerCase().includes(issueName) ),[issueName,issues])
-  console.log("query",issueName)
+  console.log("date", filterIssues);
+
+  const queryIssuesByName = useMemo(
+    () =>
+      issues?.filter((issue) =>
+        issue?.summary.toLowerCase().includes(issueName)
+      ),
+    [issueName, issues]
+  );
+  console.log("query", issueName);
+
+  const updatedIssues = useMemo(
+    () =>
+      issues?.filter((iss) =>
+        moment(iss?.updatedAt).isSame(currentDate, "day")
+      ),
+    [issues, currentDate]
+  );
 
   // dispatch(addIssueLength(filterIssues?.length ?? 0))
 
-  const userIssues = memberId.length > 0 ? filterIssues : issueName !== "" ?  queryIssuesByName : issues;
-  console.log("userId",memberId,"userIssues",filterIssues)
+  const userIssues =
+    memberId.length > 0
+      ? filterIssues
+      : issueName !== ""
+      ? queryIssuesByName
+      : currentDate !== ""
+      ? updatedIssues
+      : issues;
+  console.log("userId", memberId, "userIssues", filterIssues);
 
   return (
     <Draggable draggableId={id} index={index!} key={id}>

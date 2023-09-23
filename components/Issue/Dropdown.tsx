@@ -4,7 +4,8 @@ import DropdownUsers from "../utils/DropdownUser";
 import { toast, Toaster } from "sonner";
 import { I } from "./CreateIssue";
 import MultiSelectUsers from "../utils/MultiSelectUsers";
-import { useGetUsers } from "@/lib/hooks/issue.hooks";
+import { useGetMembers } from "@/lib/hooks/member.hooks";
+import { useParams, usePathname } from "next/navigation";
 
 const Dropdown: React.FC<DropdownProps> = ({
   val,
@@ -12,16 +13,17 @@ const Dropdown: React.FC<DropdownProps> = ({
   arVal = [],
   multiple,
 }) => {
-  const { data: users, isLoading, isError, error } = useGetUsers();
+  const params = useParams()
+  const { data: members, isLoading, isError, error } = useGetMembers(params.boardId as string);
   if (isError) toast.error("Error fetching users");
   const dbUsr = useCallback(
-    (strAr: Array<string>) => users?.filter((usr) => strAr?.includes(usr.id!)),
-    [users]
+    (strAr: Array<string>) => members?.filter((usr) => strAr?.includes(usr?.User?.id!)),
+    [members]
   );
   if (multiple) {
     return (
       <MultiSelectUsers
-        users={users!}
+        users={members!}
         isLoading={isLoading}
         val={dbUsr(arVal)}
         dispatch={dispatch}
@@ -33,7 +35,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     <>
       <Toaster richColors position="top-center" />
       <DropdownUsers
-        users={users}
+        users={members!}
         multiple={false}
         isLoading={isLoading}
         val={val!}

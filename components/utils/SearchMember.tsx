@@ -15,7 +15,7 @@ import { useBoardStore } from '@/globalState/store/zustand.store';
 const SearchMember:React.FC<SearchMemberProps> = ({closeSearchHandler,users,updateAssignee,boardId}) => {    
     const [input, setInput] = useState('');
     const {setUser,setIssueUpdateType} = useBoardStore()
-    const filteredUsrs = useMemo(()=>users?.filter((usr)=>usr?.name?.toLowerCase().includes(input)),[users,input]);
+    const filteredUsrs = useMemo(()=>users?.filter((usr)=>usr?.User?.name?.toLowerCase().includes(input)),[users,input]);
     const updatedUsrs = input === "" ? users : filteredUsrs;
 
     const updateAssigneeHandler = (usr:UserProps)=>{
@@ -41,14 +41,14 @@ const SearchMember:React.FC<SearchMemberProps> = ({closeSearchHandler,users,upda
         <div className='flex flex-col '>
             {
                 updatedUsrs?.map((user)=> (
-                    <Button variant={'ghost'} key={user?.id}
-                    onClick={()=>updateAssigneeHandler(user)}
+                    <Button variant={'ghost'} key={user?.User?.id}
+                    onClick={()=>updateAssigneeHandler(user?.User)}
                     className='flex justify-start items-center gap-2 cursor-pointer hover:bg-slate-300 py-2 pl-3'>
                         <Avatar className='w-4 h-4'>
-                            <AvatarImage src={user?.image!} alt={user?.name!}/>
-                            <AvatarFallback>{user?.name}</AvatarFallback>
+                            <AvatarImage src={user?.User?.image!} alt={user?.User?.name!}/>
+                            <AvatarFallback>{user?.User?.name}</AvatarFallback>
                         </Avatar>
-                        <span className='text-xs font-medium'>{user?.name}</span>
+                        <span className='text-xs font-medium'>{user?.User?.name}</span>
                     </Button>
                 ))
             }
@@ -61,7 +61,7 @@ export default SearchMember;
 
 interface SearchMemberProps{
     closeSearchHandler:()=>void;
-    users:UserProps[],
+    users:MemberProps[],
     updateAssignee:UseMutateFunction<any, unknown, IssueUpdateProps, {
         previousIssues: unknown;
     }>,

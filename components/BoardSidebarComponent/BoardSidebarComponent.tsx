@@ -1,7 +1,7 @@
 "use client"
 import React ,{memo}from "react";
 // to remove below import to button array components
-import { useRouter ,usePathname} from 'next/navigation'
+import { useRouter ,usePathname, redirect, useParams} from 'next/navigation'
 
 //icon
 import {
@@ -17,12 +17,23 @@ import { Button } from "../ui/button";
 import BoardSortDropdown from "./BoardSortDropdown";
 import Link from "next/link";
 import { useBoardStore } from "@/globalState/store/zustand.store";
+import { useSession } from "next-auth/react";
+import { useGetBoards } from "@/lib/hooks/board.hooks";
 
 const BoardSidebarComponent = () => {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/login");
+    },
+  });
+  const {data:userBoards,isLoading,isSuccess,isFetching,isError}  = useGetBoards(session)
   const router = useRouter();
+  const params = useParams()
   const pathname = usePathname();
   const active = pathname.includes('trelloprojectboard')
   const {boards} = useBoardStore()
+  const boardId = params.boardId as string;
   console.log("boardsss",boards)
   // console.log('path',pathname.includes('trelloprojectboard'))
   return (
@@ -88,12 +99,12 @@ const BoardSidebarComponent = () => {
         </div>
         <section className="pt-4 flex flex-col gap-2">
           {
-            boards?.map((board)=> (
+            userBoards?.boards?.map((board)=> (
               <Button
               key={board.id}
             variant={"ghost"}
             onClick={()=>router.push("/boards/trelloprojectboard") }
-            className={`hover:bg-slate-300 hover:text-blue-700 w-full ${active && 'bg-slate-300 text-blue-700'} flex justify-start`}
+            className={`hover:bg-slate-300 hover:text-blue-700 w-full ${(boardId === board.id) && 'bg-slate-300 text-blue-700'} flex justify-start`}
           >
             <LayoutIcon className="w-5 h-5 mr-2" />
             <span>{board.name}</span>
