@@ -12,12 +12,12 @@ import { useReorderIssues } from "@/lib/hooks/custom.borad.hooks";
 import { useReorderLists } from "@/lib/hooks/useReorderLists";
 import { useGetLists } from "@/lib/hooks/list.hooks";
 
-type Params = {
-  params: {
-    boardId: string;
+  type Params = {
+    params: {
+      boardId: string;
+    };
   };
-};
-const Boards = ({ params: { boardId } }: Params) => {
+  const Board = ({ params: { boardId } }: Params) => {
 
   const {data :lists} = useGetLists(boardId);
 
@@ -81,4 +81,4 @@ const Boards = ({ params: { boardId } }: Params) => {
   );
 };
 
-export default Boards;
+export default Board;

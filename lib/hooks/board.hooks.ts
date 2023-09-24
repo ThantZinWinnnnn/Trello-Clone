@@ -8,6 +8,7 @@ export const useGetBoards = (session:Session | null)=>{
         queryKey:['boards',session?.user?.id],
         queryFn:async ()=>{
           const response = await axios.get(`/api/board?userId=${session?.user?.id}`);
+          console.log("response",response)
           return response.data;
         },
       })

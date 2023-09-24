@@ -33,7 +33,7 @@ import Dropdown from "./Dropdown";
 import PiorityDrowdown from "./PiorityDropdown";
 
 //api
-import { useCreateIssue } from "@/lib/hooks/useCreateIssue";
+import { useCreateIssue } from "@/lib/hooks/issue.hooks";
 import { useQueryClient } from "@tanstack/react-query";
 
 const CreateIssue = ({ listId }: { listId: string }) => {
