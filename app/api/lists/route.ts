@@ -47,3 +47,32 @@ export const PUT = async (req: NextRequest) => {
     badRequest("Error Found in updating Lists", 400);
   }
 }
+
+export const PATCH = async(req:NextRequest)=>{
+  try {
+    const body :UpdateListName = await req.json();
+    const {name,listId} = body;
+    const list = await prisma?.list.update({
+      where:{id:listId},
+      data:{
+        name
+      }
+    });
+    return NextResponse.json(list)
+  } catch (error) {
+    badRequest("Error Found in updating Lists", 400);
+  }
+};
+
+export const DELETE = async(req:NextRequest)=>{
+  try {
+    const url = new URL(req.url);
+    const listId = url.searchParams.get("listId");
+    const deletedList = await prisma?.list.delete({
+      where:{id:listId!}
+    });
+    return NextResponse.json(deletedList)
+  } catch (error) {
+    badRequest("Error Found in deleting List", 400);
+  }
+}

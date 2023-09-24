@@ -56,9 +56,9 @@ const Boards = ({ params: { boardId } }: Params) => {
         <Droppable direction="horizontal" type="column" droppableId="board">
           {(provided, snapshot) => (
             <div
-              {...provided.droppableProps}
+              {...provided.droppableProps}  
               ref={provided.innerRef}
-              className="flex gap-4 mt-8 overflow-x-auto h-full"
+              className="flex gap-4 mt-8 overflow-x-scroll"
             >
               {lists?.length! > 0 &&
                 issues !== undefined &&

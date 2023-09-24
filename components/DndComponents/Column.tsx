@@ -1,12 +1,18 @@
 "use client";
-import React, { memo, useMemo } from "react";
+import React, { memo, useMemo, useState } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import TodoCard from "./TodoCard";
+import { Pencil2Icon } from "@radix-ui/react-icons";
+import { PenSquare,XCircle ,X,Trash2} from "lucide-react";
 
 //components
 import CreateIssue from "../Issue/CreateIssue";
 import { useBoardStore } from "@/globalState/store/zustand.store";
 import moment from "moment";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { useDeleteList, useUpdateList } from "@/lib/hooks/list.hooks";
+import { useParams } from "next/navigation";
 
 interface ColumnProps {
   id: string;
@@ -16,7 +22,13 @@ interface ColumnProps {
 }
 
 const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
+  const params = useParams()
+  const [edit,setEdit] = useState(false);
+  const [listName,setListName] = useState(column?.name);
   const { issueName, memberId, currentDate } = useBoardStore();
+  const boardId = params.boardId as string;
+  const {mutate:updateListName} = useUpdateList(boardId,id);
+  const {mutate:deleteList} = useDeleteList(boardId);
   const filterIssues = useMemo(
     () =>
       issues?.filter((issue) =>
@@ -25,8 +37,6 @@ const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
     [issues, memberId]
   );
 
-  console.log("date", filterIssues);
-
   const queryIssuesByName = useMemo(
     () =>
       issues?.filter((issue) =>
@@ -34,7 +44,6 @@ const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
       ),
     [issueName, issues]
   );
-  console.log("query", issueName);
 
   const updatedIssues = useMemo(
     () =>
@@ -43,8 +52,16 @@ const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
       ),
     [issues, currentDate]
   );
+  const updateListHandler = (e:React.KeyboardEvent<HTMLInputElement>)=>{
+    if(e.key === 'Enter'){
+      updateListName({name:listName,listId:id})
+      setEdit(false)
+    }
+  };
 
-  // dispatch(addIssueLength(filterIssues?.length ?? 0))
+  const deleteListHandler = ()=>{
+    deleteList(id)
+  }
 
   const userIssues =
     memberId.length > 0
@@ -75,12 +92,28 @@ const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
                   snapshot.isDraggingOver ? "bg-gray-200" : "bg-[#F4F5F7]"
                 }`}
               >
-                <h1 className="flex justify-between items-center">
-                  {column?.name}
-                  <span className="text-slate-500 font-normal px-2 py-1 rounded-full bg-slate-300 text-xs">
-                    {userIssues?.length ?? 0}
-                  </span>
-                </h1>
+                <div className="flex justify-between items-center">
+                  {edit ? <Input value={listName} 
+                    onChange={(e)=>setListName(e.target.value)}
+                    onKeyDown={updateListHandler}
+                  /> 
+                  :  <h1>{column?.name}</h1>}
+                  <div className="flex gap-1 items-center">
+                    {
+                      !edit ? <span className="text-slate-500 font-normal px-2 py-1 rounded-full bg-slate-300 text-xs">
+                      {userIssues?.length ?? 0}
+                      </span> : 
+                      <span onClick={deleteListHandler}>
+                        <Trash2 className="h-5 w-5 text-red-600 ml-3"/>
+                      </span>
+                    }
+                    <Button variant={'ghost'} className=""
+                      onClick={()=>setEdit(!edit)}
+                    >
+                      {edit ? <X className="h-5 w-5"/> : <PenSquare className="h-5 w-5 hover:text-blue-600"/>}
+                    </Button>
+                  </div>
+                </div>
                 <CreateIssue listId={column?.id} />
                 <div className="space-y-3">
                   {userIssues?.length > 0

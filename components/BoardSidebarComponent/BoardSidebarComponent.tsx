@@ -103,7 +103,7 @@ const BoardSidebarComponent = () => {
               <Button
               key={board.id}
             variant={"ghost"}
-            onClick={()=>router.push("/boards/trelloprojectboard") }
+            onClick={()=>router.push(`/boards/${board.id}`) }
             className={`hover:bg-slate-300 hover:text-blue-700 w-full ${(boardId === board.id) && 'bg-slate-300 text-blue-700'} flex justify-start`}
           >
             <LayoutIcon className="w-5 h-5 mr-2" />

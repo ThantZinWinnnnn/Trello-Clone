@@ -69,7 +69,7 @@ const CreateIssue = ({ listId }: { listId: string }) => {
         <Button
           variant={"ghost"}
           onClick={() => setOpenModal(true)}
-          className="w-6 h-6 bg-blue-500 rounded-full ml-auto p-1 flex items-center justify-center my-2 hover:bg-blue-600"
+          className="w-6 h-6 bg-blue-500 rounded-full ml-auto p-1 flex items-center justify-center my-2 mr-4 hover:bg-blue-600"
         >
           <PlusIcon className="text-white" />
         </Button>

@@ -217,3 +217,8 @@ type AddMembersArr = {
   members:Array<AddMember>
 }
 
+interface UpdateListName {
+  listId:string,
+  name:string
+}
+
