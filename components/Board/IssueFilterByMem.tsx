@@ -4,12 +4,8 @@ import { Button } from "../ui/button";
 import MemberPhotos from "../utils/MemberPhotos";
 import { Input } from "../ui/input";
 import { Search } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { useBoardStore } from "@/globalState/store/zustand.store";
 import { useAddMember, useGetMembers } from "@/lib/hooks/member.hooks";
-import { useGetUsers } from "@/lib/hooks/user.hooks";
-import AddMemberModal from "./AddMemberModal";
 import { useSession } from "next-auth/react";
 import moment from "moment";
 
@@ -17,20 +13,13 @@ const IssueFilterByMem = (
   {boardId}:{boardId:string}
 ) => {
   const {data:session} = useSession()
-  const {issueName,setIssueName,memberName,setMemberId,member,setCurrentDate} = useBoardStore()
+  const {issueName,setIssueName,setMemberId,setCurrentDate} = useBoardStore()
   const [active, setActive] = useState<string[]>([]);
   const {data:members,isLoading} = useGetMembers(boardId);
-  const {data:users,isLoading:loading,isError,refetch} = useGetUsers(memberName)
-  const {mutate:addMember} = useAddMember(boardId,member!)
   const currentDate = moment().format("YYYY-MM-DD");
-   
-  console.log("memberName",memberName,"users",users);
   return (
-    <section className="flex justify-between items-center">
-      <AddMemberModal users={users!} loading={loading} mutate={addMember} boardId={boardId}>
-      <Button className="bg-blue-500 hover:bg-blue-600">Add Member</Button>
-      </AddMemberModal>
-      <section className="flex items-center gap-6">
+
+      <section className="flex items-center gap-6 justify-end">
       {((active.includes("1") && active.includes("2")) ||
         active.includes("1") ||
         active.includes("2")) && (
@@ -88,7 +77,6 @@ const IssueFilterByMem = (
         <Search className="absolute top-3 left-3" size={15} />
       </div>
       </section>
-    </section>
   );
 };
 

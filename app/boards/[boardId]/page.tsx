@@ -11,6 +11,12 @@ import axios from "axios";
 import { useReorderIssues } from "@/lib/hooks/custom.borad.hooks";
 import { useReorderLists } from "@/lib/hooks/useReorderLists";
 import { useGetLists } from "@/lib/hooks/list.hooks";
+import AddMemberModal from "@/components/members/AddMemberModal";
+import { useBoardStore } from "@/globalState/store/zustand.store";
+import { useAddMember } from "@/lib/hooks/member.hooks";
+import { useGetUsers } from "@/lib/hooks/user.hooks";
+import { Button } from "@/components/ui/button";
+import Members from "@/components/members/Members";
 
   type Params = {
     params: {
@@ -18,7 +24,9 @@ import { useGetLists } from "@/lib/hooks/list.hooks";
     };
   };
   const Board = ({ params: { boardId } }: Params) => {
-
+  const {member,memberName} = useBoardStore();
+  const {mutate:addMember} = useAddMember(boardId,member!);
+  const {data:users,isLoading:loading,isError,refetch} = useGetUsers(memberName)
   const {data :lists} = useGetLists(boardId);
 
   const { data: issues, isLoading } = useQuery<Issues>({
@@ -49,7 +57,16 @@ import { useGetLists } from "@/lib/hooks/list.hooks";
 
   return (
     <main className="p-3 w-[calc(100vw-251px)] pl-10 overflow-y-scroll">
+      <section className="flex justify-between items-center">
       <Breadcrumbs />
+      <section className="flex gap-2 items-center">
+        {/* to hidden add member btn when login user is not equal to board admin */}
+      <AddMemberModal users={users!} loading={loading} mutate={addMember} boardId={boardId}>
+        <Button className="bg-blue-600 hover:bg-blue-500">Add Member</Button>
+      </AddMemberModal>
+      <Members boardId={boardId}/>
+      </section>
+      </section>
       <h2 className=" font-semibold my-5 text-xl">Trello Project Board</h2>
       <IssueFilterByMem boardId={boardId}/>
       <DragDropContext onDragEnd={handleDrag}>

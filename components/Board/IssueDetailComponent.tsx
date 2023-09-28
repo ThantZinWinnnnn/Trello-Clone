@@ -22,7 +22,7 @@ import Member from "../utils/Member";
 
 //data
 import { issueType, piorityArr } from "../DummyData/data";
-import AddMemberButton from "../Issue/AddMemberButton";
+import AddMemberButton from "../members/AddMemberButton";
 import SearchMember from "../utils/SearchMember";
 
 import { useIssueTypeAndPriorityFun } from "../DndComponents/TodoCard";
@@ -81,6 +81,7 @@ const IssueDetailComponent = ({
     () => users?.find((usr) => usr?.User?.id === issue?.reporterId)?.User,
     [issue?.reporterId, users]
   );
+  const toBeAssignees = useMemo(()=>users?.filter((ass)=> ass?.User?.id !== reporter?.id),[reporter?.id,users])
 
   return (
     <Dialog>
@@ -176,7 +177,7 @@ const IssueDetailComponent = ({
                     {openSearchInput && (
                       <SearchMember
                         closeSearchHandler={openSearchInputHandler}
-                        users={users!}
+                        users={toBeAssignees!}
                         updateAssignee={updateAssignee}
                         boardId={param.boardId as string}
                       />

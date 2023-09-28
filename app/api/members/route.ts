@@ -10,7 +10,7 @@ export const GET = async (req: NextRequest) => {
       where: {
         boardId: boardId!,
       },
-      select: {
+      include: {
         User: true,
       },
     });

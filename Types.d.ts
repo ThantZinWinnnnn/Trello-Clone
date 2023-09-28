@@ -62,6 +62,9 @@ interface UserProps {
 }
 
 interface MemberProps{
+  id:string | null,
+  isAdmin:boolean | null,
+  createdAt:string | null,
   User:UserProps
 }
 

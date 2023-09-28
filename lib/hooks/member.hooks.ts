@@ -43,7 +43,7 @@ export const useAddMember = (boardId: string, usr: UserProps) => {
 };
 
 const addMemberLocally = (members: MemberProps[], user: UserProps) => {
-  const newMember = { User: user };
+  const newMember = { User: user,id:user?.id,createdAt:user?.id, isAdmin:false };
   return [...members, newMember];
 };
 
