@@ -17,7 +17,8 @@ import { useSession ,signOut} from "next-auth/react";
 //icon
 import { SettingsIcon, LogOutIcon } from "lucide-react";
 import { PersonIcon } from "@radix-ui/react-icons";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { useBoardStore } from "@/globalState/store/zustand.store";
 
 export function AvatarDropdown() {
   const {data:session} = useSession({
@@ -25,7 +26,11 @@ export function AvatarDropdown() {
     onUnauthenticated(){
       redirect("/login?callbackUrl=/boards")
     }
-  })
+  });
+  const router = useRouter()
+  const {setProfileUser} = useBoardStore()
+  const user = session?.user;
+
 
   return (
     <DropdownMenu>
@@ -39,7 +44,11 @@ export function AvatarDropdown() {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem className="flex gap-1 items-center cursor-pointer">
+          <DropdownMenuItem className="flex gap-1 items-center cursor-pointer"
+             onClick={()=>{setProfileUser(user!);
+                            router.push('/profile')
+            }}
+          >
             <Avatar className="w-8 h-8 cursor-pointer">
               <AvatarImage src={session?.user?.image!} alt="profile" />
               <AvatarFallback>TZ</AvatarFallback>
@@ -53,18 +62,20 @@ export function AvatarDropdown() {
               </p>
             </div>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">
+          <DropdownMenuItem className="cursor-pointer"
+            onClick={()=>{setProfileUser(user!);router.push('/profile')}}
+          >
             Profile
             <DropdownMenuShortcut>
               <PersonIcon className="w-4 h-4" />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">
+          {/* <DropdownMenuItem className="cursor-pointer">
             Settings
             <DropdownMenuShortcut>
               <SettingsIcon className="w-4 h-4" />
             </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem disabled>API</DropdownMenuItem>

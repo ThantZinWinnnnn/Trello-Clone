@@ -42,7 +42,7 @@ export const POST = async (req: NextRequest) => {
 export const DELETE = async (req: NextRequest) => {
   try {
     const body: RemoveMember = await req.json();
-    const { memberId: id, boardId, userId } = body;
+    const {boardId, userId, memberId: id } = body;
     const member = await prisma?.member.delete({ where: { id } });
     const removeAssignee = await prisma?.assignee.deleteMany({
       where: { AND: { userId, boardId } },

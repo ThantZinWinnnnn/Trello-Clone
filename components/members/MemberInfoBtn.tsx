@@ -3,9 +3,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Button } from '../ui/button'
 import { ExternalLink, UserX } from 'lucide-react'
 import { useSession } from 'next-auth/react'
+import { UseMutateFunction } from '@tanstack/react-query'
 
 const MemberInfoBtn:React.FC<MemberInfoBtnProps> = ({
-    imgUrl,name,isAdmin,userId,adminId
+    imgUrl,name,isAdmin,userId,adminId,bId,mId,mutate
 }) => {
     const {data:session} = useSession();
     const admin = session?.user?.id === adminId;
@@ -26,10 +27,11 @@ const MemberInfoBtn:React.FC<MemberInfoBtnProps> = ({
     </section>
     {
         ( session?.user?.id === userId || admin ) && (
-            <Button
+    <Button
       variant={"ghost"}
       disabled={isAdmin!}
       className="text-xs flex gap-1 items-center hover:text-red-600"
+      onClick={()=>mutate({boardId:bId!,userId,memberId:mId!})}
     >
       
       {
@@ -50,5 +52,10 @@ interface MemberInfoBtnProps{
     name:string
     isAdmin:boolean,
     userId:string,
-    adminId:string
+    adminId:string,
+    bId?:string,
+    mId?:string,
+    mutate:UseMutateFunction<any, unknown, RemoveMember, {
+      previousMembers: unknown;
+  }>
 }

@@ -59,7 +59,8 @@ interface UserProps {
   email: string | null;
   emailVerified?: null | undefined | Date;
   image: string | null;
-}
+};
+type ProfileUserProps = Partial<UserProps> 
 
 interface MemberProps{
   id:string | null,

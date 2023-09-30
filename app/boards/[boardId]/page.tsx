@@ -58,7 +58,7 @@ import Members from "@/components/members/Members";
   return (
     <main className="p-3 w-[calc(100vw-251px)] pl-10 overflow-y-scroll">
       <section className="flex justify-between items-center">
-      <Breadcrumbs />
+      <Breadcrumbs/>
       <section className="flex gap-2 items-center">
         {/* to hidden add member btn when login user is not equal to board admin */}
       <AddMemberModal users={users!} loading={loading} mutate={addMember} boardId={boardId}>

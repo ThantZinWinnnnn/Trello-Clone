@@ -47,7 +47,7 @@ const addMemberLocally = (members: MemberProps[], user: UserProps) => {
   return [...members, newMember];
 };
 
-export const useRemoveMember = (boardId: string, userId: string) => {
+export const useRemoveMember = (boardId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: RemoveMember) => {
@@ -73,7 +73,10 @@ export const useRemoveMember = (boardId: string, userId: string) => {
       queryClient.setQueryData(["members", boardId], context?.previousMembers);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["members", boardId]);
+      Promise.all([
+        queryClient.invalidateQueries(["members", boardId]),
+        queryClient.invalidateQueries(["issues",boardId])
+      ])
     }
   });
 };

@@ -20,7 +20,15 @@ interface BoardState{
     member:UserProps | null,
     setMember:(usr:UserProps)=>void,
     currentDate:string,
-    setCurrentDate:(date:string)=>void
+    setCurrentDate:(date:string)=>void,
+    profileUser:ProfileUserProps | null,
+    setProfileUser:(usr:ProfileUserProps)=>void,
+    boardName:string,
+    setBoardName:(name:string)=>void,
+    openSetting:boolean,
+    setOpenSetting:(bool:boolean)=>void,
+    reachedSetting:boolean,
+    setReachedSetting:(bool:boolean)=>void
 };
 
 export const useBoardStore = create<BoardState>()((set)=>({
@@ -34,6 +42,10 @@ export const useBoardStore = create<BoardState>()((set)=>({
     memberName:"",
     member:null,
     currentDate:"",
+    profileUser:null,
+    boardName:"",
+    openSetting:false,
+    reachedSetting:false,
     setIssueName:(val:string)=>set(({issueName:val})),
     setMemberId:(id:string)=>set(({memberId:id})),
     setChangedListId:(listId:string)=>set(({changedListId:listId})),
@@ -43,5 +55,9 @@ export const useBoardStore = create<BoardState>()((set)=>({
     setBoards:((boards:BoardProps[])=>set(({boards:boards}))),
     setMemberName:((val:string)=>set(({memberName:val}))),
     setMember:((usr:UserProps)=>set(({member:usr}))),
-    setCurrentDate:((date:string)=>set(({currentDate:date})))
+    setCurrentDate:((date:string)=>set(({currentDate:date}))),
+    setProfileUser:((usr:ProfileUserProps)=>set(({profileUser:usr}))),
+    setBoardName:((name:string)=>set(({boardName:name}))),
+    setOpenSetting:((bool:boolean)=>set(({openSetting:bool}))),
+    setReachedSetting:((bool:boolean)=>set(({reachedSetting:bool})))
 }))
