@@ -6,8 +6,10 @@ import CreateNewBoardModal from "../Board/CreateNewBoardModal";
 import { useBoardStore } from "@/globalState/store/zustand.store";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Label } from "../ui/label";
+import { Separator } from "../ui/separator";
 
-const ProjectBoard: React.FC<GetUserBoardsProps> = ({ boards }) => {
+const ProjectBoard = ({ boards }:{boards:Array<BoardProps>}) => {
   const router = useRouter()
   const {data:session} = useSession()
   const {setProfileUser,setBoardName,setOpenSetting} = useBoardStore()
@@ -15,12 +17,14 @@ const ProjectBoard: React.FC<GetUserBoardsProps> = ({ boards }) => {
   const user = session?.user;
   console.log("board",memoizedBoards)
   return (
-    <main className="">
+    <main className="flex flex-col gap-2">
       <CreateNewBoardModal>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-xs mb-4 px-6">
+        <Button className="bg-blue-600 hover:bg-blue-700 text-xs mb-4 px-6 w-40">
           Create Board
         </Button>
       </CreateNewBoardModal>
+      <Label>Created Boards</Label>
+        <Separator className="my-4"/>
       <section className="flex gap-3 flex-wrap">
         {memoizedBoards?.map((board) => (
           <Button

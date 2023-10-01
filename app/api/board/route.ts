@@ -7,16 +7,38 @@ export const GET = async (req:NextRequest)=>{
    try {
       const url = new URL(req.url);
       const userId = url.searchParams.get("userId");
-      const userBoards = await prisma.user.findUnique({
-         where:{
-            id:userId!  
-         },
-         select:{
-            boards:true,
-         }
-      });
-      console.log("boards",userBoards)
-      return NextResponse.json(userBoards)
+      // const userBoards = await prisma.user.findUnique({
+      //    where:{
+      //       id:userId!  
+      //    },
+      //    select:{
+      //       boards:true,
+      //    }
+      // });
+      const [createdBoards, assignedBoards] = await Promise.all([
+         prisma.user.findUnique({
+            where:{
+               id:userId!  
+            },
+            select:{
+               boards:true,
+            }
+         }),
+         prisma?.board.findMany({
+            where:{
+               assignees:{
+                  some:{
+                     userId:userId!
+                  }
+               }
+            },
+         })
+      ])
+      console.log("boards",{ownBoards:createdBoards,assign:assignedBoards})
+      return NextResponse.json({
+         createdBoards,
+         assignedBoards
+      })
    } catch (error) {
       badRequest("Error Found in searching Boards",400)
    }

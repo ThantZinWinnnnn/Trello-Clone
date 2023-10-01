@@ -18,8 +18,14 @@ interface BoardProps {
   userId: string;
 }
 
+interface DetailBoardProps extends BoardProps{
+  User:UserProps,
+  members:Array<BoardMemberProps>
+}
+
 interface GetUserBoardsProps {
-  boards: BoardProps[];
+  createdBoards: {boards:Array<BoardProps>},
+  assignedBoards:Array<BoardProps>
 }
 type inputProps = {
   inputName:string,
@@ -67,6 +73,15 @@ interface MemberProps{
   isAdmin:boolean | null,
   createdAt:string | null,
   User:UserProps
+}
+
+interface BoardMemberProps{
+  id:string | null,
+  isAdmin:boolean | null,
+  boardId:string,
+  createdAt:string | null,
+  userId:string,
+  User:UserProps,
 }
 
 type OptimisticUser = Partial<UserProps>

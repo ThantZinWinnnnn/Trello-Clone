@@ -28,7 +28,9 @@ interface BoardState{
     openSetting:boolean,
     setOpenSetting:(bool:boolean)=>void,
     reachedSetting:boolean,
-    setReachedSetting:(bool:boolean)=>void
+    setReachedSetting:(bool:boolean)=>void,
+    removeORLeaveBoard:"removed" | "leave" | "",
+    setRemoveOrLeaveBoard:(status:"removed" | "leave")=>void
 };
 
 export const useBoardStore = create<BoardState>()((set)=>({
@@ -46,6 +48,7 @@ export const useBoardStore = create<BoardState>()((set)=>({
     boardName:"",
     openSetting:false,
     reachedSetting:false,
+    removeORLeaveBoard:"",
     setIssueName:(val:string)=>set(({issueName:val})),
     setMemberId:(id:string)=>set(({memberId:id})),
     setChangedListId:(listId:string)=>set(({changedListId:listId})),
@@ -59,5 +62,6 @@ export const useBoardStore = create<BoardState>()((set)=>({
     setProfileUser:((usr:ProfileUserProps)=>set(({profileUser:usr}))),
     setBoardName:((name:string)=>set(({boardName:name}))),
     setOpenSetting:((bool:boolean)=>set(({openSetting:bool}))),
-    setReachedSetting:((bool:boolean)=>set(({reachedSetting:bool})))
+    setReachedSetting:((bool:boolean)=>set(({reachedSetting:bool}))),
+    setRemoveOrLeaveBoard:((st:"removed" | "leave")=>set(({removeORLeaveBoard:st})))
 }))

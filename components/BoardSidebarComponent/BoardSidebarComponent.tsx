@@ -20,6 +20,7 @@ import { useBoardStore } from "@/globalState/store/zustand.store";
 import { useSession } from "next-auth/react";
 import { useGetBoards } from "@/lib/hooks/board.hooks";
 import { Settings } from "lucide-react";
+import BoardButton from "./BoardButton";
 
 const BoardSidebarComponent = () => {
   const { data: session } = useSession({
@@ -47,6 +48,8 @@ const BoardSidebarComponent = () => {
     
   } = useBoardStore();
   const boardId = params.boardId as string;
+  const createdBoards = userBoards?.createdBoards?.boards;
+  const assignedBoards = userBoards?.assignedBoards;
   console.log("boardsss", boards);
   // console.log('path',pathname.includes('trelloprojectboard'))
   return (
@@ -55,33 +58,7 @@ const BoardSidebarComponent = () => {
         <h1 className="text-xl font-semibold text-center">Trello Workspace</h1>
         <Separator className="my-4" />
         <section className="pl-5 flex flex-col space-y-3">
-          <Button
-            onClick={() => {
-              setOpenSetting(false);
-              setReachedSetting(false);
-              router.push("/boards");
-            }}
-            variant={"ghost"}
-            className={`flex items-center justify-start gap-7 text-base  w-[95%] text-black bg-transparent px-2 hover:bg-blue-600 hover:text-white py-2 rounded-sm cursor-pointer`}
-          >
-            <span>
-              <svg
-                className="w-5 h-5"
-                role="presentation"
-                focusable="false"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M3 5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5ZM5 6C5 5.44772 5.44772 5 6 5H10C10.5523 5 11 5.44772 11 6V16C11 16.5523 10.5523 17 10 17H6C5.44772 17 5 16.5523 5 16V6ZM14 5C13.4477 5 13 5.44772 13 6V12C13 12.5523 13.4477 13 14 13H18C18.5523 13 19 12.5523 19 12V6C19 5.44772 18.5523 5 18 5H14Z"
-                  fill="currentColor"
-                ></path>
-              </svg>
-            </span>
-            <p className="font-rubik text-left">Boards</p>
-          </Button>
+          <BoardButton setOpenSetting={setOpenSetting} setReachedSetting={setReachedSetting} btnText="Create Boards"/>
           <Link
             href={"/highlights"}
             className="flex items-center gap-7 text-base w-[95%] text-black hover:bg-blue-600 hover:text-white py-2 px-2 rounded-sm cursor-pointer"
@@ -104,7 +81,7 @@ const BoardSidebarComponent = () => {
             </div>
           </div>
           <section className="pt-4 flex flex-col gap-2">
-            {userBoards?.boards?.map((board) => (
+            {createdBoards?.map((board) => (
               <Button
                 key={board.id}
                 variant={"ghost"}
@@ -128,7 +105,7 @@ const BoardSidebarComponent = () => {
       </section>
       {openSetting ? (
         <Button
-          className="flex gap-2"
+          className="flex gap-2 bg-blue-600 text-white hover:bg-blue-700"
           onClick={() => {
             setReachedSetting(true);
             router.push(`/boards/${boardId}/settings`);

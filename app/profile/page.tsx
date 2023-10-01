@@ -1,6 +1,6 @@
 "use client";
 import ProfileButton from "@/components/profile/ProfileButton";
-import Info from "@/components/utils/Info";
+import UserInfo from "@/components/profile/UserInfo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useSession } from "next-auth/react";
@@ -19,7 +19,7 @@ const ProfilePage = () => {
   const profileStates :UserProfile = {
       name:profileUser?.name!  ?? "",
       email:profileUser?.email! as string,
-      img:profileUser?.image! as string
+      img:profileUser?.image! as string,
   }
 
   
@@ -51,7 +51,7 @@ const ProfilePage = () => {
           Manage your Personal Information
         </h4>
        <section className="flex flex-col gap-4">
-       <Info
+       <UserInfo
           label="Name"
           connect="name"
           type="text"
@@ -59,7 +59,7 @@ const ProfilePage = () => {
           dispatch={dispatch}
           disabled={false}
         />
-        <Info
+        <UserInfo
           label="Email"
           connect="email"
           type="email"
@@ -67,7 +67,7 @@ const ProfilePage = () => {
           dispatch={dispatch}
           disabled={true}
         />
-        < Info
+        < UserInfo
           label="Image"
           connect="img"
           type="text"
@@ -99,7 +99,7 @@ export default ProfilePage;
 interface UserProfile {
     name:string,
     email:string,
-    img:string
+    img:string,
 };
 export type T = "name" | "email" | "img";
 export type P = {type:T,value:string}
@@ -111,7 +111,9 @@ const reduer = (state:UserProfile,{type,value}:P)=>{
         case "email":
             return {...state,email:value};
         case "img":
-            return {...state,img:value}
+            return {...state,img:value};
+        default:
+            return state
     }
 }
 

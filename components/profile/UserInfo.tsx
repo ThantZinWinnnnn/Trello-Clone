@@ -25,5 +25,5 @@ interface InfoProps{
     type:string,
     value:string,
     dispatch:Dispatch<P>,
-    disabled:boolean
+    disabled:boolean,
 }
