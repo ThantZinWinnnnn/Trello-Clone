@@ -23,7 +23,7 @@ const AssignedBoards = ({boards,isLoading}:{boards:Array<BoardProps>,isLoading:b
               setProfileUser(user!);
               setBoardName(board?.name);
               setOpenSetting(true)
-              router.push(`/boards/${board.id}`)
+              router.push(`/boards/${board?.name}/${board.id}`)
             }}
             className="bg-[url('/photos/board-bg.jpeg')] bg-cover bg-center h-[150px] w-[250px] rounded-sm flex items-center justify-center"
           >

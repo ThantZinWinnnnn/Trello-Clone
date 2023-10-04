@@ -39,6 +39,7 @@ const BoardSidebarComponent = () => {
   } = useGetBoards(session);
   const router = useRouter();
   const params = useParams();
+  const path = usePathname()
   const {
     boards,
     setBoardName,
@@ -54,7 +55,9 @@ const BoardSidebarComponent = () => {
     (board) => board?.userId !== session?.user?.id
   );
   const userAllBoards = [...createdBoards!, ...filteredAssignedBoards!];
-  const skArr = new Array(3).fill(0)
+  const skArr = new Array(3).fill(0);
+  const bName = path?.split('/')[2];
+  const decodeName = decodeURIComponent(bName)
   console.log("boardsss", boards);
   // console.log('path',pathname.includes('trelloprojectboard'))
   return (
@@ -101,7 +104,7 @@ const BoardSidebarComponent = () => {
                     setBoardName(board?.name);
                     setOpenSetting(true);
                     setReachedSetting(false);
-                    router.push(`/boards/${board.id}`);
+                    router.push(`/boards/${board?.name}/${board.id}`);
                   }}
                   className={`hover:bg-slate-300 hover:text-blue-700 w-full ${
                     boardId === board.id && "bg-slate-300 text-blue-700"
@@ -120,7 +123,7 @@ const BoardSidebarComponent = () => {
           className="flex gap-2 bg-blue-600 text-white hover:bg-blue-700"
           onClick={() => {
             setReachedSetting(true);
-            router.push(`/boards/${boardId}/settings`);
+            router.push(`/boards/${decodeName}/${boardId}/settings`);
           }}
         >
           Project Settings <Settings className="w-4 h-4" />

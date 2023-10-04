@@ -9,19 +9,20 @@ import { usePathname } from 'next/navigation';
 
 const Breadcrumbs = () => {
   const {data:session} = useSession()
-  const {boardName} = useBoardStore()
   const paths = usePathname();
-  const boardId = paths?.split("/")[2];
-  const setting = paths?.split("/")[3];
+  const boardName = paths?.split("/")[2];
+  const boardId = paths?.split("/")[3];
+  const setting = paths?.split("/")[4];
+  const name = decodeURIComponent(boardName);
   return (
     <section className='flex items-center gap-2 mt-1'>
         <Link href={''}  className='text-sm'>{session?.user?.name}</Link>
         <SlashIcon  className='w-4 h-4'/>
         <Link href={'/boards'} className='hover:underline text-sm'>boards</Link>
         <SlashIcon className='w-4 h-4'/>
-        <Link href={`/boards/${boardId}`}  className='hover:underline text-sm'>{boardName}</Link>
+        <Link href={`/boards/${name}/${boardId}`}  className='hover:underline text-sm'>{name}</Link>
         {setting ? <SlashIcon className='w-4 h-4'/> : null}
-        {setting ? <Link href={`/boards/${boardId}/settings`}  className='hover:underline text-sm'>settings</Link> : null}
+        {setting ? <Link href={`/boards/${name}/${boardId}/settings`}  className='hover:underline text-sm'>settings</Link> : null}
 
     </section>
   )
