@@ -1,34 +1,52 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Trello-Clone
 
-## Getting Started
+<br>
 
-First, run the development server:
+## About this project and Why to develop?
+I am a frontend web developer prioritizing Next.js, TypeScript, and UI libraries for frontend development. Simultaneously, I am keen to expand my knowledge into server-side technologies and backend logic to become a more versatile developer.This project is to enhance my skills in React, Next.js, TypeScript and gained valuable backend database experience.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+<br>
+
+## Project Technologies
+**Typescript,Nextjs,TailwindCss,Zustand,React Query,Nextjs API Routes,MySQL,Prisma,NextAuth,Google Provider**
+
+<br>
+
+## Project Structure
+
+```
+├───app/
+│   ├───api(Nextjs Api Routes)
+│   ├───boards
+│   ├───create-first-team
+│   ├───first-signup
+│   ├───login
+│   └───profile
+├───components/
+│   ├───auth
+│   ├───Board
+│   ├───BoardSideBarComponent
+│   ├───comment
+│   ├───DNDComponents
+│   ├───firstSignUp
+│   ├───Intro
+│   ├───Issue
+│   ├───members
+│   ├───profile
+│   ├───setting
+│   ├───skeleton
+│   ├───ui (ShadCn Component)
+│   └───utils
+├───globalState
+│   └───store (Zustand Store)
+├───lib
+│   └───hooks (Custom Hooks)
+├───prisma
+│   └───schema.prisma (MySQL)
+├───public
+└───README.md
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Contribution
+I actively contribute to my trello open-source project by raising issues, fixing bugs, and encouraging collaboration through open pull requests, fostering a welcoming environment for anyone interested in contributing.

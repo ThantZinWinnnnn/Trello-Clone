@@ -117,13 +117,13 @@ const IssueDetailComponent = ({
                 <h2 className="text-lg font-semibold mt-4">{issue?.summary}</h2>
 
                 {/* desc */}
-                <div className="flex flex-col gap-2 mt-6">
-                  <Label htmlFor="desc" className="text-base">
+                <div className="flex flex-col gap-2 mt-6 w-[90%]">
+                  <Label htmlFor="desc" className="text-xs">
                     Description
                   </Label>
                   <p
                     id="desc"
-                    className="text-sm font-medium font-rubik tracking-wide leading-6"
+                    className="text-base font-semibold font-rubik tracking-wide leading-6"
                   >
                     {issue?.desc}
                   </p>

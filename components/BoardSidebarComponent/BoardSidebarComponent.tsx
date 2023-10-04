@@ -21,6 +21,7 @@ import { useSession } from "next-auth/react";
 import { useGetBoards } from "@/lib/hooks/board.hooks";
 import { Settings } from "lucide-react";
 import BoardButton from "./BoardButton";
+import BoardNameSk from "../skeleton/BoardNameSk";
 
 const BoardSidebarComponent = () => {
   const { data: session } = useSession({
@@ -45,11 +46,15 @@ const BoardSidebarComponent = () => {
     openSetting,
     setProfileUser,
     setReachedSetting,
-    
   } = useBoardStore();
   const boardId = params.boardId as string;
-  const createdBoards = userBoards?.createdBoards?.boards;
-  const assignedBoards = userBoards?.assignedBoards;
+  const createdBoards = userBoards?.createdBoards?.boards! ?? [];
+  const assignedBoards = userBoards?.assignedBoards ?? [];
+  const filteredAssignedBoards = assignedBoards?.filter(
+    (board) => board?.userId !== session?.user?.id
+  );
+  const userAllBoards = [...createdBoards!, ...filteredAssignedBoards!];
+  const skArr = new Array(3).fill(0)
   console.log("boardsss", boards);
   // console.log('path',pathname.includes('trelloprojectboard'))
   return (
@@ -58,7 +63,11 @@ const BoardSidebarComponent = () => {
         <h1 className="text-xl font-semibold text-center">Trello Workspace</h1>
         <Separator className="my-4" />
         <section className="pl-5 flex flex-col space-y-3">
-          <BoardButton setOpenSetting={setOpenSetting} setReachedSetting={setReachedSetting} btnText="Create Boards"/>
+          <BoardButton
+            setOpenSetting={setOpenSetting}
+            setReachedSetting={setReachedSetting}
+            btnText="Create Boards"
+          />
           <Link
             href={"/highlights"}
             className="flex items-center gap-7 text-base w-[95%] text-black hover:bg-blue-600 hover:text-white py-2 px-2 rounded-sm cursor-pointer"
@@ -81,25 +90,28 @@ const BoardSidebarComponent = () => {
             </div>
           </div>
           <section className="pt-4 flex flex-col gap-2">
-            {createdBoards?.map((board) => (
-              <Button
-                key={board.id}
-                variant={"ghost"}
-                onClick={() => {
-                  setProfileUser(session?.user!);
-                  setBoardName(board?.name);
-                  setOpenSetting(true);
-                  setReachedSetting(false);
-                  router.push(`/boards/${board.id}`);
-                }}
-                className={`hover:bg-slate-300 hover:text-blue-700 w-full ${
-                  boardId === board.id && "bg-slate-300 text-blue-700"
-                } flex justify-start`}
-              >
-                <LayoutIcon className="w-5 h-5 mr-2" />
-                <span>{board.name}</span>
-              </Button>
-            ))}
+            {
+              isLoading ? skArr.map((_,i)=><BoardNameSk key={i} />) :
+              userAllBoards?.map((board) => (
+                <Button
+                  key={board.id}
+                  variant={"ghost"}
+                  onClick={() => {
+                    setProfileUser(session?.user!);
+                    setBoardName(board?.name);
+                    setOpenSetting(true);
+                    setReachedSetting(false);
+                    router.push(`/boards/${board.id}`);
+                  }}
+                  className={`hover:bg-slate-300 hover:text-blue-700 w-full ${
+                    boardId === board.id && "bg-slate-300 text-blue-700"
+                  } flex justify-start`}
+                >
+                  <LayoutIcon className="w-5 h-5 mr-2" />
+                  <span>{board.name}</span>
+                </Button>
+              ))
+            }
           </section>
         </section>
       </section>

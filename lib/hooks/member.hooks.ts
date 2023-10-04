@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { deleteBoardLocally } from "./board.hooks";
 
 export const useGetMembers = (boardId: string) => {
   return useQuery<MemberProps[]>({
@@ -47,7 +48,7 @@ const addMemberLocally = (members: MemberProps[], user: UserProps) => {
   return [...members, newMember];
 };
 
-export const useRemoveMember = (boardId: string) => {
+export const useRemoveMember = (boardId: string,userId:string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: RemoveMember) => {
@@ -55,21 +56,28 @@ export const useRemoveMember = (boardId: string) => {
       return response.data;
     },
     onMutate: async (data) => {
+      const {boardId,userId,memberId} = data;
       await queryClient.cancelQueries(["members", boardId]);
       const previousMembers = await queryClient.getQueryData([
         "members",
         boardId,
       ]);
+      const previousUserBoards = await queryClient.getQueryData(["boards",userId]);
+      queryClient.setQueryData(['boards',userId],(oldUserBoards:GetUserBoardsProps | undefined)=>
+        deleteBoardLocally(oldUserBoards!,boardId,"leave")
+      );
       queryClient.setQueryData(
         ["members", boardId],
         (oldMembers: MemberProps[] | undefined) =>
           removeMemberLocally(oldMembers!, data?.userId)
       );
       return {
-        previousMembers
+        previousMembers,
+        previousUserBoards
       }
     },
     onError: (error, data, context) => {
+      queryClient.setQueryData(["boards",userId],context?.previousUserBoards);
       queryClient.setQueryData(["members", boardId], context?.previousMembers);
     },
     onSuccess: () => {

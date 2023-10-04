@@ -7,14 +7,6 @@ export const GET = async (req:NextRequest)=>{
    try {
       const url = new URL(req.url);
       const userId = url.searchParams.get("userId");
-      // const userBoards = await prisma.user.findUnique({
-      //    where:{
-      //       id:userId!  
-      //    },
-      //    select:{
-      //       boards:true,
-      //    }
-      // });
       const [createdBoards, assignedBoards] = await Promise.all([
          prisma.user.findUnique({
             where:{
@@ -26,7 +18,7 @@ export const GET = async (req:NextRequest)=>{
          }),
          prisma?.board.findMany({
             where:{
-               assignees:{
+               members:{
                   some:{
                      userId:userId!
                   }

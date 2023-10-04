@@ -64,7 +64,9 @@ const CommentInfo = ({
         ) : (
           <p className="text-xs font-rubik font-medium">{comment?.desc}</p>
         )}
-        <div className="flex items-center gap-2">
+       {
+        currentUser ? (
+          <div className="flex items-center gap-2">
           <Button
             variant={"link"}
             className="text-xs px-0 hover:text-blue-700"
@@ -80,6 +82,9 @@ const CommentInfo = ({
             Delete
           </Button>
         </div>
+        ) 
+        :null
+      }
       </div>
     </section>
   );

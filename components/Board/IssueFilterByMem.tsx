@@ -66,7 +66,7 @@ const IssueFilterByMem = (
       >
         Only My Issues
       </Button>
-      <MemberPhotos members={members!}/>
+      <MemberPhotos members={members!} isLoading={isLoading}/>
       <div className="relative w-[200px]">
         <Input type="text" placeholder="Search..." className="pl-10" value={issueName}
           onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{

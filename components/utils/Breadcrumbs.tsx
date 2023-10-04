@@ -4,24 +4,24 @@ import React from 'react'
 import { SlashIcon } from '@radix-ui/react-icons';
 import { useSession } from 'next-auth/react';
 import { useBoardStore } from '@/globalState/store/zustand.store';
+import { usePathname } from 'next/navigation';
 
 
 const Breadcrumbs = () => {
   const {data:session} = useSession()
-  const {boardName ,reachedSetting} = useBoardStore()
-
-    const breadcrumbs = 'boards thantzinwin trello'
-    const breadcrumbsArray = breadcrumbs.split('/');
-    console.log("bread",breadcrumbsArray)
+  const {boardName} = useBoardStore()
+  const paths = usePathname();
+  const boardId = paths?.split("/")[2];
+  const setting = paths?.split("/")[3];
   return (
     <section className='flex items-center gap-2 mt-1'>
-        <Link href={""} className='hover:underline text-sm'>{session?.user?.name}</Link>
+        <Link href={''}  className='text-sm'>{session?.user?.name}</Link>
         <SlashIcon  className='w-4 h-4'/>
-        <Link href={""} className='hover:underline text-sm'>boards</Link>
+        <Link href={'/boards'} className='hover:underline text-sm'>boards</Link>
         <SlashIcon className='w-4 h-4'/>
-        <Link href={""} className='hover:underline text-sm'>{boardName}</Link>
-        {reachedSetting ? <SlashIcon className='w-4 h-4'/> : null}
-        {reachedSetting ? <Link href={""} className='hover:underline text-sm'>settings</Link> : null}
+        <Link href={`/boards/${boardId}`}  className='hover:underline text-sm'>{boardName}</Link>
+        {setting ? <SlashIcon className='w-4 h-4'/> : null}
+        {setting ? <Link href={`/boards/${boardId}/settings`}  className='hover:underline text-sm'>settings</Link> : null}
 
     </section>
   )

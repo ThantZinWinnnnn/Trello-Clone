@@ -16,7 +16,7 @@ const ThemeDropdown = () => {
     return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-          <Half2Icon className="w-5 h-5 cursor-pointer"/>
+          <Half2Icon className="w-7 h-7 cursor-pointer"/>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
             <DropdownMenuLabel>Theme</DropdownMenuLabel>

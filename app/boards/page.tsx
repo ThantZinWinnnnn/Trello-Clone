@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 
 //components
 import ProjectBoard from "@/components/utils/ProjectBoard";
-import Loading from "./loading";
 import { Toaster, toast } from "sonner";
 import { useBoardStore } from "@/globalState/store/zustand.store";
 import { useGetBoards } from "@/lib/hooks/board.hooks";
@@ -24,7 +23,7 @@ const BoardsPage = () => {
 
   const {data:userBoards,isLoading,isSuccess,isFetching,isError} = useGetBoards(session)
 
-  if (isLoading || isFetching) <Loading />;
+  // if (isLoading || isFetching) <Loading />;
 
   if (successBoardCreation === "success") {
       toast.success("Successfully created new board.");
@@ -47,13 +46,13 @@ const BoardsPage = () => {
     <>
     <Toaster richColors position="top-center" />
     <main className="p-3">
-      <ProjectBoard boards={createdBoards!} />
+      <ProjectBoard boards={createdBoards!} isLoading={isLoading}/>
       {
         filterAssignedBoards?.length ? (
           <section>
             <Separator className="my-4"/>
               <Label className="mb-5">Assigned Boards</Label>
-              <AssignedBoards boards={filterAssignedBoards!}/>
+              <AssignedBoards boards={filterAssignedBoards!} isLoading={isLoading}/>
           </section>
         ):
         null

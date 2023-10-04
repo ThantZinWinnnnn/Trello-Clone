@@ -8,13 +8,15 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
+import BoardSkeleton from "../skeleton/BoardSkeleton";
 
-const ProjectBoard = ({ boards }:{boards:Array<BoardProps>}) => {
+const ProjectBoard = ({ boards,isLoading }:{boards:Array<BoardProps>,isLoading:boolean}) => {
   const router = useRouter()
   const {data:session} = useSession()
   const {setProfileUser,setBoardName,setOpenSetting} = useBoardStore()
   const memoizedBoards = useMemo(() => boards!, [boards]);
   const user = session?.user;
+  const skeletonBoards = new Array(3).fill(0).map((_, i) => <BoardSkeleton key={i} />);
   console.log("board",memoizedBoards)
   return (
     <main className="flex flex-col gap-2">
@@ -26,7 +28,9 @@ const ProjectBoard = ({ boards }:{boards:Array<BoardProps>}) => {
       <Label>Created Boards</Label>
         <Separator className="my-4"/>
       <section className="flex gap-3 flex-wrap">
-        {memoizedBoards?.map((board) => (
+        {
+          isLoading ? skeletonBoards :
+          memoizedBoards?.map((board) => (
           <Button
             key={board.id}
             onClick={()=> {
@@ -39,7 +43,9 @@ const ProjectBoard = ({ boards }:{boards:Array<BoardProps>}) => {
           >
             <p className="text-white font-medium">{board.name}</p>
           </Button>
-        ))}
+        ))
+        }
+        
       </section>
     </main>
   );

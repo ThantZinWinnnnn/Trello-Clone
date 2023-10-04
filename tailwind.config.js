@@ -2,11 +2,11 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   theme: {
     container: {
       center: true,
@@ -16,11 +16,11 @@ module.exports = {
       },
     },
     extend: {
-      boxShadow:{
-        'first-card':'rgb(0 0 0 / 10%) 0px 0px 10px'
+      boxShadow: {
+        "first-card": "rgb(0 0 0 / 10%) 0px 0px 10px",
       },
       fontFamily: {
-       rubik: ['"Rubik"', "sans-serif"],
+        rubik: ['"Rubik"'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -79,4 +79,4 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};

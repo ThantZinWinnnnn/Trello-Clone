@@ -13,10 +13,13 @@ import { Button } from "../ui/button";
 import { Users, ExternalLink, UserX } from "lucide-react";
 import MemberInfoBtn from "./MemberInfoBtn";
 import { Separator } from "../ui/separator";
+import { useSession } from "next-auth/react";
 
 const Members = ({ boardId }: Props) => {
+  const { data: session } = useSession();
+  const user = session?.user;
   const { data: members, isLoading } = useGetMembers(boardId);
-  const {mutate:removeMember} = useRemoveMember(boardId)
+  const {mutate:removeMember} = useRemoveMember(boardId,user?.id!)
   const admin = useMemo(
     () => members?.find((mem) => mem?.isAdmin === true),
     [members]

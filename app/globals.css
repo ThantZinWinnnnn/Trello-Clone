@@ -83,4 +83,12 @@
 
 *:focus-visible{
   outline: none;
+};
+
+.lightT {
+  --primary : '#2563EB',
+  --secondary: '#1D4ED8',
+  --c-txt:'#fff',
+  --light-bg:'#F5F6F7',
+  --side-board-hc:'#CED7E3'
 }

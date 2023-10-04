@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { Input } from "@/components/ui/input";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { toast,Toaster } from "sonner";
-import { useCreateList } from "@/lib/hooks/useCreateList";
+import { useCreateList } from "@/lib/hooks/list.hooks";
 
 const CreateNewList:React.FC<CreateNewListProps> = ({boardId}) => {
   const [openListInput, setOpenListInput] = useState(false);

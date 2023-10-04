@@ -31,10 +31,12 @@ import { Label } from "../ui/label";
 import InputTextEditor from "./InputTextEditor";
 import Dropdown from "./Dropdown";
 import PiorityDrowdown from "./PiorityDropdown";
+import { Textarea } from "../ui/textarea";
 
 //api
 import { useCreateIssue } from "@/lib/hooks/issue.hooks";
 import { useQueryClient } from "@tanstack/react-query";
+import DescTextArea from "./DescTextArea";
 
 const CreateIssue = ({ listId }: { listId: string }) => {
   const queryClient = useQueryClient();
@@ -80,7 +82,7 @@ const CreateIssue = ({ listId }: { listId: string }) => {
               Create Issue
             </DialogTitle>
           </DialogHeader>
-          <section className="flex flex-col space-y-6">
+          <section className="flex flex-col space-y-6 overflow-y-scroll px-1">
             <div
               className={`h-[100px] overflow-hidden w-full relative flex items-center justify-center  ${
                 form.image !== ""
@@ -162,8 +164,9 @@ const CreateIssue = ({ listId }: { listId: string }) => {
               />
             </div>
             <div>
-              <Label className="text-xs font-medium">Description</Label>
-              <InputTextEditor dispatch={dispatch} val={form.desc} />
+              <Label htmlFor="description" className="text-xs font-medium">Description</Label>
+              <DescTextArea value={form.desc} dispatch={dispatch}/>
+              {/* <InputTextEditor dispatch={dispatch} val={form.desc} /> */}
             </div>
             <div>
               <Label className="text-xs font-medium">Reporter</Label>
