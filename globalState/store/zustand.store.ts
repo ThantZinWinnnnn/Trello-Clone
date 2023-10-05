@@ -30,7 +30,9 @@ interface BoardState{
     reachedSetting:boolean,
     setReachedSetting:(bool:boolean)=>void,
     removeORLeaveBoard:"removed" | "leave" | "",
-    setRemoveOrLeaveBoard:(status:"removed" | "leave")=>void
+    setRemoveOrLeaveBoard:(status:"removed" | "leave")=>void,
+    sort:string,
+    setSort:(sort:string)=>void
 };
 
 export const useBoardStore = create<BoardState>()((set)=>({
@@ -49,6 +51,7 @@ export const useBoardStore = create<BoardState>()((set)=>({
     openSetting:false,
     reachedSetting:false,
     removeORLeaveBoard:"",
+    sort:"alpha",
     setIssueName:(val:string)=>set(({issueName:val})),
     setMemberId:(id:string)=>set(({memberId:id})),
     setChangedListId:(listId:string)=>set(({changedListId:listId})),
@@ -63,5 +66,6 @@ export const useBoardStore = create<BoardState>()((set)=>({
     setBoardName:((name:string)=>set(({boardName:name}))),
     setOpenSetting:((bool:boolean)=>set(({openSetting:bool}))),
     setReachedSetting:((bool:boolean)=>set(({reachedSetting:bool}))),
-    setRemoveOrLeaveBoard:((st:"removed" | "leave")=>set(({removeORLeaveBoard:st})))
+    setRemoveOrLeaveBoard:((st:"removed" | "leave")=>set(({removeORLeaveBoard:st}))),
+    setSort:((sort:string)=>set(({sort:sort})))
 }))

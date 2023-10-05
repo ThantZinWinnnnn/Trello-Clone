@@ -33,7 +33,7 @@ const BoardButton:React.FC<BoardButtonProps> = ({
                 ></path>
               </svg>
             </span>
-            <p className="font-rubik text-left">{btnText}</p>
+            <p className="text-left">{btnText}</p>
           </Button>
   )
 }

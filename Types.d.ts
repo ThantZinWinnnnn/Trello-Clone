@@ -241,3 +241,9 @@ interface UpdateListName {
   name:string
 }
 
+type UpdateUserProps = {
+  id:string,
+  name:string,
+  image:string,
+}
+

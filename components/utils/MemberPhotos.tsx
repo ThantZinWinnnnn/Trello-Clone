@@ -13,7 +13,7 @@ type MemberPhotosProps = {
 }
 
 const MemberPhotos:React.FC<MemberPhotosProps> = ({members,isLoading}) => {
-  const [selectedMember, setSelectedMember] = useState<string[]>([]);
+  const [selectedMember, setSelectedMember] = useState<string>("");
   const {setMemberId} = useBoardStore()
   const MembersSk = new Array(3).fill(0).map((_,i)=><UserProfileSk key={i}/>)
 
@@ -29,12 +29,14 @@ const MemberPhotos:React.FC<MemberPhotosProps> = ({members,isLoading}) => {
             ${selectedMember.includes(usr?.User?.id!) ? "ring-blue-600 -translate-y-2" : ""}
             `}
             onClick={()=> {
-              if(selectedMember.includes(usr?.User?.id!)){
-                setSelectedMember(selectedMember.filter(id => id !== usr?.User?.id));
+              if(selectedMember === usr?.User?.id){
+                // setSelectedMember(selectedMember.filter(id => id !== usr?.User?.id));
+                setSelectedMember('');
                 setMemberId("")
                 
               }else{
-                  setSelectedMember([...selectedMember, usr?.User?.id!])
+                  // setSelectedMember([...selectedMember, usr?.User?.id!])
+                  setSelectedMember(usr?.User?.id!)
                   // diapatch(addFilterUsrId(`${usr?.id}`))
                   setMemberId(`${usr?.User?.id}`)
               }

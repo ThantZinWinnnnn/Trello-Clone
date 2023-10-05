@@ -46,4 +46,18 @@ export const POST = async (req: NextRequest) => {
     }
 }
 
+export const PATCH = async (req:NextRequest)=>{
+    try {
+        const body:UpdateUserProps = await req.json();
+        const {id,...data}   = body;
+        const user = await prisma?.user?.update({
+            where:{id},
+            data:{...data}
+        });
+        return NextResponse.json(user)
+    } catch (error) {
+        badRequest("Error Found in updating User",400)
+    }
+}
+
 

@@ -139,7 +139,7 @@ const IssueDetailComponent = ({
               </section>
               <section className="w-[35%] flex flex-col gap-6">
                 <div>
-                  <Label className="uppercase text-xs">status</Label>
+                  <Label className="uppercase text-sm">Lists</Label>
                   <StatusDropdown
                     lists={lists!}
                     status={status}
@@ -194,10 +194,10 @@ const IssueDetailComponent = ({
                     boardId={param?.boardId as string}
                   />
                 </div>
-                <p className="text-xs font-rubik text-slate-400">
+                <p className="text-xs text-slate-400">
                   Created - <span>{formatDate(issue?.createdAt!)}</span>
                 </p>
-                <p className="text-xs font-rubik text-slate-400">
+                <p className="text-xs text-slate-400">
                   Updated - {formatDate(issue?.updatedAt!)}
                 </p>
               </section>

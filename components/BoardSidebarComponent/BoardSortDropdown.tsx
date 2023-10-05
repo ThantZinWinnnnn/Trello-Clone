@@ -9,19 +9,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useBoardStore } from "@/globalState/store/zustand.store";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Label } from "../ui/label";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
 const BoardSortDropdown= ({ children }: { children: React.ReactNode }) => {
-  const [position, setPosition] = React.useState("alpha")
+  const {sort,setSort} = useBoardStore();
  
   return (
     <DropdownMenu>
@@ -31,9 +23,9 @@ const BoardSortDropdown= ({ children }: { children: React.ReactNode }) => {
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel className="text-center">Your boards</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value={position} onValueChange={setPosition} className="space-y-1">
+        <DropdownMenuRadioGroup value={sort} onValueChange={(val)=>setSort(val)} className="space-y-1">
           <DropdownMenuRadioItem value="alpha" className="py-3">Sort alphabetically</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="data" className="py-3">Sort by most recent</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="date" className="py-3">Sort by most recent</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

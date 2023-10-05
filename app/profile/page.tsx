@@ -57,7 +57,7 @@ const ProfilePage = () => {
           type="text"
           value={profile?.name}
           dispatch={dispatch}
-          disabled={false}
+          disabled={true}
         />
         <UserInfo
           label="Email"
@@ -73,7 +73,7 @@ const ProfilePage = () => {
           type="text"
           value={profile?.img}
           dispatch={dispatch}
-          disabled={false}
+          disabled={true}
         />
         <section>
 
@@ -84,7 +84,7 @@ const ProfilePage = () => {
          <section className="flex justify-end gap-2 mt-14">
 
           <ProfileButton text="Back" onClick={()=>{router.back()}} className="" Icon={Undo2}/>
-         <ProfileButton text="Update" onClick={()=>{}} className="" Icon={ArrowBigUpDash}/>
+         {/* <ProfileButton text="Update" onClick={()=>{}} className="" Icon={ArrowBigUpDash}/> */}
 
          </section>
          </section>
