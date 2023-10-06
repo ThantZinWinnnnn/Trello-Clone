@@ -59,7 +59,7 @@ const StatusDropdown = ({
       <SelectTrigger className="w-[150px]">
         <SelectValue defaultValue={liStatus} />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="dark:bg-gray-700">
         <SelectGroup>
           {lists.map((li) => (
             <SelectItem key={li.id} value={li.name}>

@@ -20,7 +20,7 @@ const BoardSortDropdown= ({ children }: { children: React.ReactNode }) => {
       <DropdownMenuTrigger asChild>
       {children}
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className="w-56 dark:bg-gray-700">
         <DropdownMenuLabel className="text-center">Your boards</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={sort} onValueChange={(val)=>setSort(val)} className="space-y-1">

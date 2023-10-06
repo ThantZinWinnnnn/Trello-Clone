@@ -25,7 +25,7 @@ const Member:React.FC<MemberProps> = ({updateAssignee,boardId,user,reporter,setA
             <AvatarImage src={user?.image!} alt={` profile pic of ${user?.name}`}/>
             <AvatarFallback>{user?.name}</AvatarFallback>
         </Avatar>
-        <span className='text-[0.71rem] font-medium'>{user?.name}</span>
+        <span className='text-[0.68rem] font-medium dark:text-black'>{user?.name}</span>
         <Cross1Icon className='w-4 h-4 text-gray-400'/>
     </Button>
   )

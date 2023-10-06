@@ -108,7 +108,7 @@ const MultiSelectUsers: React.FC<MultiSelectUsersProps> = function ({
       <div className="relative mt-2">
         {open && selectables?.length > 0 ? (
           <div className="absolute w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
-            <CommandGroup className="h-full overflow-auto">
+            <CommandGroup className="h-full overflow-auto dark:bg-gray-700">
               {isLoading ? (
                 <span>Loading...</span>
               ) : (

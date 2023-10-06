@@ -9,8 +9,8 @@ import { Toaster, toast } from "sonner";
 import { useBoardStore } from "@/globalState/store/zustand.store";
 import { useGetBoards } from "@/lib/hooks/board.hooks";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import AssignedBoards from "@/components/Board/AssignedBoards";
+import LineSeparator from "@/components/utils/LineSeparator";
 
 const BoardsPage = () => {
   const { data: session } = useSession({
@@ -19,7 +19,7 @@ const BoardsPage = () => {
       redirect("/login");
     },
   });
-  const {successBoardCreation,setBoards,setSuccessBoardCreation,removeORLeaveBoard} = useBoardStore();
+  const {successBoardCreation,setSuccessBoardCreation,removeORLeaveBoard} = useBoardStore();
 
   const {data:userBoards,isLoading,isSuccess,isFetching,isError} = useGetBoards(session)
 
@@ -50,7 +50,7 @@ const BoardsPage = () => {
       {
         filterAssignedBoards?.length ? (
           <section>
-            <Separator className="my-4"/>
+            <LineSeparator/>
               <Label className="mb-5">Assigned Boards</Label>
               <AssignedBoards boards={filterAssignedBoards!} isLoading={isLoading}/>
           </section>

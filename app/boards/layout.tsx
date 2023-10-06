@@ -8,7 +8,7 @@ const BoardLayout = ({
     children: React.ReactNode
   }) => {
   return (
-    <main className='overflow-hidden'>
+    <main className='overflow-hidden dark:bg-gray-700'>
         <BoardNav/>
         <section className='flex  h-[calc(100vh-48px)] overflow-hidden'>
           <BoardSidebarComponent/>

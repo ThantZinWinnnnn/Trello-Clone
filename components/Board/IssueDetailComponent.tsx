@@ -88,7 +88,7 @@ const IssueDetailComponent = ({
       <DialogTrigger className="w-full" asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-[1050px] focus-visible:border-none">
+      <DialogContent className="max-w-[1050px] focus-visible:border-none  dark:bg-gray-700">
         <DialogHeader>
           <DialogTitle className="text-center">Issue Detail</DialogTitle>
         </DialogHeader>
@@ -123,7 +123,7 @@ const IssueDetailComponent = ({
                   </Label>
                   <p
                     id="desc"
-                    className="text-base font-semibold font-rubik tracking-wide leading-6"
+                    className="text-base font-semibold tracking-wide leading-6"
                   >
                     {issue?.desc}
                   </p>

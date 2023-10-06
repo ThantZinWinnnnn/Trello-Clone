@@ -92,7 +92,7 @@ const Board = ({ params: { boardId } }: Params) => {
               mutate={addMember}
               boardId={boardId}
             >
-              <Button className="bg-blue-600 hover:bg-blue-500">
+              <Button className="bg-blue-600 hover:bg-blue-500 dark:text-white">
                 Add Member
               </Button>
             </AddMemberModal>

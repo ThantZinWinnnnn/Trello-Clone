@@ -19,7 +19,7 @@ const IssueDetailPiority = ({val,setPriority,updatePriority,boardId}:Props) => {
             <SelectTrigger>
               <SelectValue defaultValue={val} placeholder="Please Select piority" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="dark:bg-gray-700">
               <SelectGroup>
                 {piorityArr.map((pr, index) => (
                   <SelectItem key={index} value={pr.value}>

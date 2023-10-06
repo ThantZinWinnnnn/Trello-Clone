@@ -2,21 +2,17 @@ import React from "react";
 
 //components
 import Logo from "../firstSignUp/Logo";
-import { Input } from "../ui/input";
 import { AvatarDropdown } from "../Intro/AvatarDropdown";
 import ThemeDropdown from "../Intro/ThemeDropdown";
-import NotificationsDropdown from "../Intro/NotificationsDropdown";
-
-//icon
-import { Search } from "lucide-react";
 import Link from "next/link";
+
 
 
 
 const BoardNav = () => {
   return (
-    <nav className="flex justify-between items-center py-2 px-10 border-b-[1px]">
-      <Link href={"/"} className="flex items-center">
+    <nav className="flex justify-between items-center py-2 px-10 border-b-[1px] dark:bg-[#374151]">
+      <Link href={"/boards"} className="flex items-center">
         <Logo className={"!w-[90px] !h-[30px] !mb-0"}/>
       </Link>
       <div className="flex items-center gap-6">

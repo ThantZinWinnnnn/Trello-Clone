@@ -1,28 +1,38 @@
+"use client";
 import React from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import GoogleAuthenticateButton from "./GoogleAuthenticateButton";
-import { Label } from "../ui/label";
+import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const Authenticate = () => {
+  const searchParams = useSearchParams();
+  const callbackUrl = (searchParams.get("callbackUrl") as string) ?? "/boards";
   return (
-    <form className="bg-white rounded-lg px-6 py-8 shadow-lg">
-      <div className="flex flex-col gap-6">
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="email" className="mb-1">Username</Label>
-          <Input type="email" id="email" placeholder="username" />
-        </div>
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="email" className="mb-1">Email</Label>
-          <Input type="email" id="email" placeholder="example@gmail.com" />
-        </div>
-      </div>
-      <Button className="mt-10 w-full" disabled>Sign In(soon)</Button>
-      <div className="mx-auto my-10 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
-        or
-      </div>
-      <GoogleAuthenticateButton />
-    </form>
+    <Card className="w-[18.75rem] shadow-md dark:bg-gray-700">
+      <CardHeader>
+        <CardTitle className="text-base">Welcome to My Trello 🔥!</CardTitle>
+        <CardDescription className="text-sm text-slate-400">
+          Welcome to my minimalist project management Trello. Let&apos;s begin
+          by logging in below.!!
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button
+          type="button"
+          className="bg-blue-600 hover:bg-blue-500 text-white text-sm mt-2"
+          onClick={() => signIn("google", { callbackUrl })}
+        >
+          Sign In with Google
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
 

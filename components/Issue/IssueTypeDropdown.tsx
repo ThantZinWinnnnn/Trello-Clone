@@ -1,4 +1,4 @@
-import React, { Dispatch } from "react";
+import React, { Dispatch, useMemo } from "react";
 import {
   Select,
   SelectContent,
@@ -10,17 +10,21 @@ import {
 } from "@/components/ui/select";
 
 //data
-import { issueType } from "../DummyData/data";
+import { issueType, issueTypePhoto } from "../DummyData/data";
 import { I } from "./CreateIssue";
 
 const IssueTypeDropdown:React.FC<IssueTypeDropdownProps> = ({val,dispatch}) => {
-
+  const issueTypeDropdownFun = (val:string)=>{
+    const issuePhoto = issueTypePhoto.find((typ) => typ.type === val)?.bg ?? "";
+    dispatch({type:"image",value:issuePhoto});
+    dispatch({type:"type",value:val});
+  }
   return (
-    <Select onValueChange={(val)=> dispatch({type:"type",value:val})} >
+    <Select onValueChange={(val)=> issueTypeDropdownFun(val)} >
       <SelectTrigger>
         <SelectValue  placeholder="Select issue type" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="dark:bg-gray-700">
         <SelectGroup>
           {issueType.map((type, index) => (
             <SelectItem

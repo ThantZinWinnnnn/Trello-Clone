@@ -17,7 +17,7 @@ export default async function Home() {
   return (
     <main className="w-full h-screen">
      <IntroNavBar/>
-     <section className='flex'>
+     <section className='flex dark:bg-gray-700'>
       <section className='flex flex-col items-center justify-center w-1/2 h-[calc(100vh-49px)]'>
         <section className='flex flex-col gap-5'>
         <h1 className='font-semibold text-3xl text-left'>Welcome to Trello!</h1>

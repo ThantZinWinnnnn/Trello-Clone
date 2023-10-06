@@ -43,15 +43,16 @@ const TodoCard: React.FC<todoCardProps> = ({
         <section>
           <section className="relative h-[100px] overflow-hidden">
             <Image
-              // src={todo.image ? `${todo.image}` : "/photos/board-bg.jpeg"}
-              src={"/photos/board-bg.jpeg"}
+              src={todo.image ? `${todo.image}` : "/photos/board-bg.jpeg"}
+              // src={"/photos/board-bg.jpeg"}
               fill
               alt="todo bg"
               className="object-cover"
+              style={{objectFit:"contain"}}
             />
           </section>
           <section className="flex items-center justify-between px-2 py-3">
-            <h2 className="text-xs font-medium">{todo?.summary}</h2>
+            <h2 className="text-xs font-medium dark:text-black">{todo?.summary}</h2>
           </section>
           <section className="flex items-center justify-between p-2">
             <div className="flex items-center gap-1">

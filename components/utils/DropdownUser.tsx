@@ -34,7 +34,7 @@ const DropdownUsers: React.FC<DropdownUserProps> = ({
       <SelectTrigger>
         <SelectValue placeholder="Select user" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="dark:bg-gray-700">
         <SelectGroup>
           {isLoading ? (
             <p>Loading...</p>
@@ -43,7 +43,7 @@ const DropdownUsers: React.FC<DropdownUserProps> = ({
               <Input
                 placeholder="search..."
                 value={filterUser}
-                className="focus:border-none border-none mb-1"
+                className="focus:border-none border-none mb-1 dark:bg-gray-500"
                 onChange={(e) => setFilterUser(e.target.value)}
               />
               {filteredUsers?.map((user) => (

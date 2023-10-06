@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +12,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 //next-auth/client
-import { useSession ,signOut} from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 //icon
 import { SettingsIcon, LogOutIcon } from "lucide-react";
@@ -21,16 +21,15 @@ import { redirect, useRouter } from "next/navigation";
 import { useBoardStore } from "@/globalState/store/zustand.store";
 
 export function AvatarDropdown() {
-  const {data:session} = useSession({
-    required:true,
-    onUnauthenticated(){
-      redirect("/login?callbackUrl=/boards")
-    }
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/login?callbackUrl=/boards");
+    },
   });
-  const router = useRouter()
-  const {setProfileUser} = useBoardStore()
+  const router = useRouter();
+  const { setProfileUser } = useBoardStore();
   const user = session?.user;
-
 
   return (
     <DropdownMenu>
@@ -40,13 +39,15 @@ export function AvatarDropdown() {
           <AvatarFallback>TZ</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className="w-56 dark:bg-gray-700">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem className="flex gap-1 items-center cursor-pointer"
-             onClick={()=>{setProfileUser(user!);
-                            router.push('/profile')
+          <DropdownMenuItem
+            className="flex gap-1 items-center cursor-pointer"
+            onClick={() => {
+              setProfileUser(user!);
+              router.push("/profile");
             }}
           >
             <Avatar className="w-8 h-8 cursor-pointer">
@@ -54,16 +55,20 @@ export function AvatarDropdown() {
               <AvatarFallback>TZ</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <p className="text-[0.75rem] font-medium font-rubik">
+              <p className="text-[0.7rem] font-medium">
                 {session?.user.name ?? "thantzinwin"}
               </p>
-              <p className="text-[0.6rem] -mt-2 font-rubik">
-              {session?.user.email ?? "thant.zin.winnnn@gmail.com"}
+              <p className="text-[0.6rem] -mt-2">
+                {session?.user.email ?? "thant.zin.winnnn@gmail.com"}
               </p>
             </div>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer"
-            onClick={()=>{setProfileUser(user!);router.push('/profile')}}
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => {
+              setProfileUser(user!);
+              router.push("/profile");
+            }}
           >
             Profile
             <DropdownMenuShortcut>
@@ -77,13 +82,14 @@ export function AvatarDropdown() {
             </DropdownMenuShortcut>
           </DropdownMenuItem> */}
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem disabled>API</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer" onClick={()=> {
-          signOut();
 
-        }}>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={() => {
+            signOut();
+          }}
+        >
           Log out
           <DropdownMenuShortcut>
             <LogOutIcon className="w-4 h-4" />

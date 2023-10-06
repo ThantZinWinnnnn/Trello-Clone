@@ -6,14 +6,15 @@ import leftLogo from "@/public/photos/left-logo.png";
 import rightLogo from "@/public/photos/right-logo.png";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
+import LineSeparator from "@/components/utils/LineSeparator";
 
 const page = () => {
   return (
-    <main className="flex flex-col items-center justify-center h-screen bg-[#F9FAFC] relative">
-      <section className="w-[400px] flex flex-col gap-14">
+    <main className="flex flex-col items-center justify-center h-screen bg-white relative dark:bg-gray-500">
+      <section className="w-[400px] flex flex-col gap-14 items-center justify-center">
         <Logo />
         <Authenticate />
-        <Separator className="my-10" />
+        <LineSeparator className="my-10"/>
       </section>
 
       <section className="mt-8">
@@ -30,12 +31,6 @@ const page = () => {
       </section>
       {/* to add copyright */}
       <p></p>
-      {/* <div className="absolute left-0 bottom-0">
-        <Image src={leftLogo} alt="left-logo" className="w-[300px] h-[297px]"/>
-      </div>
-      <div className="absolute right-0 bottom-0">
-        <Image src={rightLogo} alt="right-logo" className="w-[350px] h-[297px]"/>
-      </div> */}
     </main>
   );
 };

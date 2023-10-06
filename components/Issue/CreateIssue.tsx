@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState, useReducer } from "react";
+import React, { useRef, useState, useReducer, useMemo } from "react";
 import { useParams } from "next/navigation";
 
 // You need to import our styles for the button to look right. Best to import in the root /layout.tsx but this is fine
@@ -31,7 +31,6 @@ import { Label } from "../ui/label";
 import InputTextEditor from "./InputTextEditor";
 import Dropdown from "./Dropdown";
 import PiorityDrowdown from "./PiorityDropdown";
-import { Textarea } from "../ui/textarea";
 
 //api
 import { useCreateIssue } from "@/lib/hooks/issue.hooks";
@@ -46,20 +45,33 @@ const CreateIssue = ({ listId }: { listId: string }) => {
   const { mutate: createIssue, isLoading } = useCreateIssue();
   const params = useParams();
   const boardId = params.boardId as string;
+  
   console.log("form", form, "id", boardId);
+  const getAllRequiredValues =
+    form.image !== "" &&
+    form.summary !== "" &&
+    form.desc !== "" &&
+    form.reporterId !== "" &&
+    form.assignees.length > 0 &&
+    form.priority !== "";
 
   const createIssueHandler = () => {
-    createIssue(
-      { ...form, boardId: boardId, listId: listId },
-      {
-        onError: () => toast.error("Error Creating Issue"),
-        onSuccess: () => {
-          queryClient.invalidateQueries(["issues",boardId]);
-          toast.success("Issue Created");
-          setOpenModal(false);
-        },
-      }
-    );
+    if (getAllRequiredValues) {
+      createIssue(
+        { ...form, boardId: boardId, listId: listId },
+        {
+          onError: () => toast.error("Error Creating Issue"),
+          onSuccess: () => {
+            queryClient.invalidateQueries(["issues", boardId]);
+            toast.success("Issue Created");
+            setOpenModal(false);           
+          },
+        }
+      );
+    }else{
+      toast.error("Please fill the all fields values");
+    }
+    
 
     // toast.error("Error Creating Issue");
   };
@@ -76,7 +88,7 @@ const CreateIssue = ({ listId }: { listId: string }) => {
           <PlusIcon className="text-white" />
         </Button>
 
-        <DialogContent>
+        <DialogContent className="dark:bg-gray-700">
           <DialogHeader>
             <DialogTitle className="text-base font-normal ">
               Create Issue
@@ -84,7 +96,7 @@ const CreateIssue = ({ listId }: { listId: string }) => {
           </DialogHeader>
           <section className="flex flex-col space-y-6 overflow-y-scroll px-1">
             <div
-              className={`h-[100px] overflow-hidden w-full relative flex items-center justify-center  ${
+              className={`h-[100px] overflow-hidden w-full relative flex items-center justify-center dark:bg-gray-500 rounded-md  ${
                 form.image !== ""
                   ? "border-none"
                   : "border-dashed border-[1px] rounded-sm"
@@ -92,7 +104,7 @@ const CreateIssue = ({ listId }: { listId: string }) => {
             >
               {form.image !== "" ? (
                 <Image
-                  src={form.image !== "" ? form.image : "/photos/board-bg.jpeg"}
+                  src={form.image}
                   alt="issue photo"
                   fill
                   className="w-full h-full object-contain cursor-pointer"
@@ -123,17 +135,23 @@ const CreateIssue = ({ listId }: { listId: string }) => {
                 //     alert(`ERROR! ${error.message}`);
                 //   }}
                 // />
-                <Button
-                  variant={"ghost"}
-                  className="flex items-center justify-center gap-2 w-full h-full"
-                  onClick={() => imageRef.current?.click()}
-                >
-                  <span className="font-medium"> Click to select an image</span>
+                // <Button
+                //   variant={"ghost"}
+                //   className="flex items-center justify-center gap-2 w-full h-full"
+                //   onClick={() => imageRef.current?.click()}
+                // >
+                //   <span className="font-medium"> Click to select an image</span>
+                //   <ImageIcon />
+                // </Button>
+                <div className="flex items-center justify-center gap-2 w-full h-full">
+                  <span className="font-medium">
+                    Please select the issue type
+                  </span>
                   <ImageIcon />
-                </Button>
+                </div>
               )}
             </div>
-            <Input
+            {/* <Input
               type="file"
               ref={imageRef}
               className="hidden"
@@ -147,7 +165,7 @@ const CreateIssue = ({ listId }: { listId: string }) => {
                 });
               }}
               placeholder="select file"
-            />
+            /> */}
             <IssueTypeDropdown val={form.type} dispatch={dispatch} />
             <div className="grid w-full  items-center gap-1.5">
               <Label htmlFor="summary" className="text-xs">
@@ -161,11 +179,14 @@ const CreateIssue = ({ listId }: { listId: string }) => {
                 onChange={(e) =>
                   dispatch({ type: "summary", value: e.target.value })
                 }
+                className="dark:bg-gray-500"
               />
             </div>
             <div>
-              <Label htmlFor="description" className="text-xs font-medium">Description</Label>
-              <DescTextArea value={form.desc} dispatch={dispatch}/>
+              <Label htmlFor="description" className="text-xs font-medium">
+                Description
+              </Label>
+              <DescTextArea value={form.desc} dispatch={dispatch} />
               {/* <InputTextEditor dispatch={dispatch} val={form.desc} /> */}
             </div>
             <div>
@@ -198,8 +219,9 @@ const CreateIssue = ({ listId }: { listId: string }) => {
 
             <Button
               type="button"
-              className="px-6 bg-blue-600 hover:bg-blue-700"
+              className="px-6 bg-blue-600 hover:bg-blue-700 dark:text-white"
               onClick={createIssueHandler}
+              disabled={!getAllRequiredValues}
             >
               {isLoading ? "Creating..." : "Create"}
             </Button>

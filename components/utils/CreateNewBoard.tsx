@@ -26,10 +26,11 @@ const CreateNewBoard: React.FC<CreateBoardProps> = ({
           placeholder="e.g.,My Trello board"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          className="dark:bg-gray-500"
         />
       </div>
       <Button
-        className={`bg-blue-700 text-xs hover:bg-blue-800 rounded-sm flex items-center ${
+        className={`bg-blue-700 text-xs hover:bg-blue-800 rounded-sm flex items-center dark:text-white ${
           isLoading && "cursor-not-allowed gap-6"
         }`}
         disabled={isLoading}

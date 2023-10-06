@@ -35,7 +35,7 @@ const Members = ({ boardId }: Props) => {
           <Users className="w-4 h-4 text-white" />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="dark:bg-gray-700">
         <DialogHeader>Members</DialogHeader>
         <section>
           {isLoading ? (

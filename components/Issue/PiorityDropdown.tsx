@@ -22,7 +22,7 @@ const PiorityDrowdown: React.FC<PiorityDropdownProps> = ({ className ,val,dispat
         <SelectTrigger>
           <SelectValue placeholder="Please Select piority" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="dark:bg-gray-700">
           <SelectGroup>
             {piorityArr.map((pr, index) => (
               <SelectItem key={index} value={pr.value}>

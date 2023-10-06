@@ -27,7 +27,7 @@ const CreateFirstTeamPage = () => {
       onError:(err)=> toast.error('Unfortunately, unsuccessful request for board.Please try again'),
       onSuccess:()=>{
         toast.success("Board created successfully")
-        setTimeout(()=> router.push("/boards"),500)
+        setTimeout(()=> router.push("/boards"),200)
       },
     });
   };
@@ -40,7 +40,7 @@ const CreateFirstTeamPage = () => {
     <main className="w-full h-screen">
      
       <IntroNavBar />
-      <section className="flex">
+      <section className="flex dark:bg-gray-700">
         <section className="flex flex-col items-center justify-center w-1/2 h-[calc(100vh-49px)]">
           <section className="flex flex-col gap-5">
             <h1 className="text-2xl font-semibold">
@@ -59,10 +59,11 @@ const CreateFirstTeamPage = () => {
                 placeholder="e.g.,My Trello board"
                 value={boardName}
                 onChange={(e) => setBoardName(e.target.value)}
+                className="dark:bg-gray-500"
               />
             </div>
             <Button
-              className={`bg-blue-700 text-xs hover:bg-blue-800 rounded-sm flex items-center ${
+              className={`bg-blue-700 text-xs hover:bg-blue-800 rounded-sm flex items-center dark:text-white ${
                 isLoading && "cursor-not-allowed gap-6"
               }`}
               disabled={isLoading}

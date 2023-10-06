@@ -144,4 +144,19 @@ export const issueType = [
         icon:Bookmark,
         color:'bg-[#58249c]'
     },
+];
+
+export const issueTypePhoto = [
+    {
+        type:"Task",
+        bg:"/photos/task.png"   
+    },
+    {
+        type:"Bug",
+        bg:"/photos/bug-issue.png"
+    },
+    {
+        type:"story",
+        bg:"/photos/story.png"
+    }
 ]

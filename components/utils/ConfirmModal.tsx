@@ -22,7 +22,7 @@ const ConfirmModal = ({
   return (
     <Dialog open={open}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="max-w-[23rem]">
+      <DialogContent className="max-w-[23rem] dark:bg-gray-700">
         <DialogHeader>
           <DialogTitle>
             <p className="text-left">{title}</p>

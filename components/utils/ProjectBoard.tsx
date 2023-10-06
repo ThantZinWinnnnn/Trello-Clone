@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import BoardSkeleton from "../skeleton/BoardSkeleton";
+import LineSeparator from "./LineSeparator";
 
 const ProjectBoard = ({ boards,isLoading }:{boards:Array<BoardProps>,isLoading:boolean}) => {
   const router = useRouter()
@@ -21,12 +22,12 @@ const ProjectBoard = ({ boards,isLoading }:{boards:Array<BoardProps>,isLoading:b
   return (
     <main className="flex flex-col gap-2">
       <CreateNewBoardModal>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-xs mb-4 px-6 w-40">
+        <Button className="bg-blue-600 hover:bg-blue-700 text-xs mb-4 px-6 w-40 dark:text-white">
           Create Board
         </Button>
       </CreateNewBoardModal>
       <Label>Created Boards</Label>
-        <Separator className="my-4"/>
+        <LineSeparator/>
       <section className="flex gap-3 flex-wrap">
         {
           isLoading ? skeletonBoards :

@@ -5,7 +5,7 @@ const ProfileLayout = (
     {children}:{children:React.ReactNode}
 ) => {
   return (
-    <main>
+    <main className='dark:bg-gray-700 h-screen'>
         <BoardNav/>
         {children}
     </main>

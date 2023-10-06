@@ -8,8 +8,8 @@ const AddMemberButton:React.FC<ButtonProps> = ({handler}) => {
     <Button variant={'ghost'} className='flex items-center gap-2 text-blue-800'
         onClick={handler}
     >
-        <PlusIcon className='w-4 h-4 text-blue-800 hover:text-blue-800'/>
-        <span className='text-[0.7rem] hover:text-blue-800'>Add more</span>
+        <PlusIcon className='w-4 h-4 text-blue-800 hover:text-blue-800 dark:text-white'/>
+        <span className='text-[0.7rem] hover:text-blue-800 dark:text-white'>Add more</span>
     </Button>
   )
 }

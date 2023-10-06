@@ -35,7 +35,7 @@ const CreateComment = ({ session,issueId }: { session: Session ,issueId:string})
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         placeholder="Enter a comment and press enter"
-        className="w-full h-[35px]"
+        className="w-full h-[35px] dark:bg-gray-500"
         onKeyDown={createCommentFun}
       />
     </div>

@@ -23,7 +23,7 @@ const FirstSignUpPage = () => {
   console.log("session",session,"status",status)
 
   return (
-    <main className="flex flex-col h-screen justify-center items-center relative">
+    <main className="flex flex-col h-screen justify-center items-center relative dark:bg-white ">
       <section className="w-[380px] shadow-first-card rounded-sm p-5">
         <Logo />
         <p className="font-semibold text-center mb-5 text-sm">Create your account</p>

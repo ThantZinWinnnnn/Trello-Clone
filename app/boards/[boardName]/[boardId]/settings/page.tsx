@@ -83,7 +83,7 @@ const CurrentProjectSettingsPage = () => {
         />
         <section className="flex flex-col gap-2">
           <Label className="font-semibold">Board Members</Label>
-          <section className="flex flex-wrap gap-3 bg-slate-200 p-1 rounded-md min-h-6">
+          <section className="flex flex-wrap gap-3 bg-slate-200 p-1 rounded-md min-h-6 dark:bg-gray-500">
             {
               (isLoadingMembers || fetchingMembers) ? <SettingMemSk/>
               :board?.members?.map((member) => (
@@ -99,7 +99,7 @@ const CurrentProjectSettingsPage = () => {
                       />
                       <AvatarFallback>{member?.User?.name}</AvatarFallback>
                     </Avatar>
-                    <p className="text-xs font-medium">
+                    <p className="text-xs font-medium dark:text-white">
                       {member?.User?.name}
                       <span className="ml-1">
                         {member?.isAdmin && "(Admin)"}

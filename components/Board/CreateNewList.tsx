@@ -28,12 +28,12 @@ const CreateNewList:React.FC<CreateNewListProps> = ({boardId}) => {
         <div className="flex flex-col gap-2 w-[250px]">
           <Input
             value={newList}
-            className="w-full"
+            className="w-full dark:bg-gray-500"
             onChange={(e) => setNewList(e.target.value)}
             placeholder="Enter list title..."
           />
           <div className="flex justify-between items-center">
-            <Button className="text-xs bg-blue-600 hover:bg-blue-700 px-6"
+            <Button className="text-xs bg-blue-600 hover:bg-blue-700 px-6 dark:text-white"
                 onClick={()=>{
                     createList(body)
                     setNewList("");
@@ -43,7 +43,7 @@ const CreateNewList:React.FC<CreateNewListProps> = ({boardId}) => {
             >
               {"Add list"}
             </Button>
-            <Button variant={"outline"} onClick={handleOpenListInput}>
+            <Button variant={"outline"} onClick={handleOpenListInput} className="dark:bg-gray-700">
               <Cross1Icon className="w-4 h-4" />
             </Button>
           </div>

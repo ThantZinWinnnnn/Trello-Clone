@@ -38,7 +38,7 @@ const CreateNewBoardModal = ({ children }: { children: React.ReactNode }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className="dark:bg-gray-700">
         <DialogHeader>
           <DialogTitle className="mb-6">New Board</DialogTitle>
         </DialogHeader>

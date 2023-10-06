@@ -97,7 +97,7 @@ const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
                     onChange={(e)=>setListName(e.target.value)}
                     onKeyDown={updateListHandler}
                   /> 
-                  :  <h1>{column?.name}</h1>}
+                  :  <h1 className="dark:text-black">{column?.name}</h1>}
                   <div className="flex gap-1 items-center">
                     {
                       !edit ? <span className="text-slate-500 font-normal px-2 py-1 rounded-full bg-slate-300 text-xs">
@@ -107,10 +107,10 @@ const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
                         <Trash2 className="h-5 w-5 text-red-600 ml-3"/>
                       </span>
                     }
-                    <Button variant={'ghost'} className=""
+                    <Button variant={'ghost'} className="dark:hover:bg-transparent"
                       onClick={()=>setEdit(!edit)}
                     >
-                      {edit ? <X className="h-5 w-5"/> : <PenSquare className="h-5 w-5 hover:text-blue-600"/>}
+                      {edit ? <X className="h-5 w-5 dark:text-black dark:hover:text-blue-600"/> : <PenSquare className="h-5 w-5 hover:text-blue-600 dark:text-black dark:hover:text-blue-600"/>}
                     </Button>
                   </div>
                 </div>

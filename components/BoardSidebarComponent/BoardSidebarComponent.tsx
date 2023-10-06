@@ -75,25 +75,25 @@ const BoardSidebarComponent = () => {
   // console.log("sort", sort);
   // console.log('path',pathname.includes('trelloprojectboard'))
   return (
-    <section className="flex flex-col justify-between w-[250px] border-r-[1px] border-gray-300 h-[calc(100vh-48px)] opacity-95 bg-[#F4F5F7] p-2">
+    <section className="flex flex-col justify-between w-[250px] border-r-[1px] border-gray-300 h-[calc(100vh-48px)] opacity-95 bg-[#F4F5F7] p-2 dark:bg-gray-700">
       <section>
         <h1 className="text-xl font-semibold text-center">Trello Workspace</h1>
-        <Separator className="my-4" />
+        <Separator className="my-4 dark:bg-white"/>
         <section className="pl-5 flex flex-col space-y-3">
           <BoardButton
             setOpenSetting={setOpenSetting}
             setReachedSetting={setReachedSetting}
             btnText="Create Boards"
           />
-          <Link
+          {/* <Link
             href={"/highlights"}
             className="flex items-center gap-7 text-base w-[95%] text-black hover:bg-blue-600 hover:text-white py-2 px-2 rounded-sm cursor-pointer"
           >
             <HeartIcon className="w-5 h-5" />
             <p className="font-medium">HighLights</p>
-          </Link>
+          </Link> */}
         </section>
-        <Separator className="my-6" />
+        <Separator className="my-6 dark:bg-white" />
         {/* to make boards array */}
 
         <section>
@@ -132,7 +132,7 @@ const BoardSidebarComponent = () => {
       </section>
       {openSetting ? (
         <Button
-          className="flex gap-2 bg-blue-600 text-white hover:bg-blue-700"
+          className="flex gap-2 bg-blue-600 text-white hover:bg-blue-700 mb-4"
           onClick={() => {
             setReachedSetting(true);
             router.push(`/boards/${decodeName}/${boardId}/settings`);

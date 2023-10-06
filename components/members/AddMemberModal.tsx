@@ -29,7 +29,7 @@ const AddMemberModal: React.FC<Props> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className="dark:bg-gray-700">
         <DialogHeader>Add Member</DialogHeader>
         <section className="flex items-center">
           <Input
