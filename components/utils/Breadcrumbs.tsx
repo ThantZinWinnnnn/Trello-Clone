@@ -15,14 +15,14 @@ const Breadcrumbs = () => {
   const setting = paths?.split("/")[4];
   const name = decodeURIComponent(boardName);
   return (
-    <section className='flex items-center gap-2 mt-1'>
-        <Link href={''}  className='text-sm'>{session?.user?.name}</Link>
+    <section className='flex lg:items-center gap-0 sm:gap-2 mt-1'>
+        <Link href={''}  className='text-[0.6rem] sm:text-xs xl:text-sm'>{session?.user?.name}</Link>
         <SlashIcon  className='w-4 h-4'/>
-        <Link href={'/boards'} className='hover:underline text-sm'>boards</Link>
+        <Link href={'/boards'} className='hover:underline text-[0.6rem] sm:text-xs xl:text-sm'>boards</Link>
         <SlashIcon className='w-4 h-4'/>
-        <Link href={`/boards/${name}/${boardId}`}  className='hover:underline text-sm'>{name}</Link>
+        <Link href={`/boards/${name}/${boardId}`}  className='hover:underline text-[0.6rem] sm:text-xs xl:text-sm'>{name}</Link>
         {setting ? <SlashIcon className='w-4 h-4'/> : null}
-        {setting ? <Link href={`/boards/${name}/${boardId}/settings`}  className='hover:underline text-sm'>settings</Link> : null}
+        {setting ? <Link href={`/boards/${name}/${boardId}/settings`}  className='hover:underline text-[0.6rem] sm:text-xs xl:text-sm'>settings</Link> : null}
 
     </section>
   )

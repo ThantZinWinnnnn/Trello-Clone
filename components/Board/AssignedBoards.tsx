@@ -25,7 +25,7 @@ const AssignedBoards = ({boards,isLoading}:{boards:Array<BoardProps>,isLoading:b
               setOpenSetting(true)
               router.push(`/boards/${board?.name}/${board.id}`)
             }}
-            className="bg-[url('/photos/board-bg.jpeg')] bg-cover bg-center h-[150px] w-[250px] rounded-sm flex items-center justify-center"
+            className="bg-[url('/photos/board-bg.jpeg')] bg-cover bg-center w-full h-[120px] lg:h-[150px] sm:w-[210px] lg:w-[220px] xl:w-[250px] rounded-sm flex items-center justify-center"
           >
             <p className="text-white font-medium">{board.name}</p>
           </Button>

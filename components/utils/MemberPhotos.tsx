@@ -25,7 +25,7 @@ const MemberPhotos:React.FC<MemberPhotosProps> = ({members,isLoading}) => {
           <Avatar
             key={`${usr?.User?.id}`}
             className={`
-            w-9 h-9 hover:-translate-y-2 ring-2 ring-white cursor-pointer transition-all duration-100 hover:ring-blue-600
+            w-7 h-7 xl:w-9 xl:h-9 hover:-translate-y-2 ring-2 ring-white cursor-pointer transition-all duration-100 hover:ring-blue-600
             ${selectedMember.includes(usr?.User?.id!) ? "ring-blue-600 -translate-y-2" : ""}
             `}
             onClick={()=> {

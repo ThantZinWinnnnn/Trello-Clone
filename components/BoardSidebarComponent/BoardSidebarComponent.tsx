@@ -24,6 +24,7 @@ import BoardButton from "./BoardButton";
 import BoardNameSk from "../skeleton/BoardNameSk";
 import moment from "moment";
 import { sortFun } from "../utils/util";
+import BoardSettingBtn from "../utils/BoardSettingBtn";
 
 const BoardSidebarComponent = () => {
   const { data: session } = useSession({
@@ -41,7 +42,6 @@ const BoardSidebarComponent = () => {
   } = useGetBoards(session);
   const router = useRouter();
   const params = useParams();
-  const path = usePathname();
   const {
     boards,
     setBoardName,
@@ -59,8 +59,7 @@ const BoardSidebarComponent = () => {
   );
   const userAllBoards = [...createdBoards!, ...filteredAssignedBoards!];
   const skArr = new Array(3).fill(0);
-  const bName = path?.split("/")[2];
-  const decodeName = decodeURIComponent(bName);
+
   const sortedByAlphaBoards = userAllBoards?.sort((a, b) => sortFun(a, b));
   const sortedByDateBoards = userAllBoards?.sort((a, b) =>
     moment(a.updatedAt).diff(moment(b.updatedAt), "days")
@@ -75,10 +74,12 @@ const BoardSidebarComponent = () => {
   // console.log("sort", sort);
   // console.log('path',pathname.includes('trelloprojectboard'))
   return (
-    <section className="flex flex-col justify-between w-[250px] border-r-[1px] border-gray-300 h-[calc(100vh-48px)] opacity-95 bg-[#F4F5F7] p-2 dark:bg-gray-700">
-      <section>
-        <h1 className="text-xl font-semibold text-center">Trello Workspace</h1>
-        <Separator className="my-4 dark:bg-white"/>
+    <section className="hidden lg:!flex flex-col justify-between  w-[280px] lg:w-[280px] xl:w-[250px] border-r-[1px] border-gray-300 h-[calc(100vh-48px)] opacity-95 bg-[#F4F5F7] p-2 dark:bg-gray-700">
+      <section className="">
+        <h1 className="text-sm 2xl:text-xl font-semibold text-center">
+          Trello Workspace
+        </h1>
+        <Separator className="my-4 dark:bg-white" />
         <section className="pl-5 flex flex-col space-y-3">
           <BoardButton
             setOpenSetting={setOpenSetting}
@@ -98,7 +99,7 @@ const BoardSidebarComponent = () => {
 
         <section>
           <div className="w-full px-2 flex justify-between items-center">
-            <p className="">Your boards</p>
+            <p className="text-sm 2xl:text-base">Your boards</p>
             <div className="flex items-center gap-3 group relative">
               <BoardSortDropdown>
                 <DotsHorizontalIcon className="w-4 h-4 cursor-pointer" />
@@ -124,22 +125,16 @@ const BoardSidebarComponent = () => {
                     } flex justify-start`}
                   >
                     <LayoutIcon className="w-5 h-5 mr-2" />
-                    <span>{board.name}</span>
+                    <span className="text-[0.7rem] font-rubik 2xl:text-sm overflow-hidden text-ellipsis">
+                      {board.name}
+                    </span>
                   </Button>
                 ))}
           </section>
         </section>
       </section>
       {openSetting ? (
-        <Button
-          className="flex gap-2 bg-blue-600 text-white hover:bg-blue-700 mb-4"
-          onClick={() => {
-            setReachedSetting(true);
-            router.push(`/boards/${decodeName}/${boardId}/settings`);
-          }}
-        >
-          Project Settings <Settings className="w-4 h-4" />
-        </Button>
+        <BoardSettingBtn boardId={boardId}/>
       ) : null}
     </section>
   );

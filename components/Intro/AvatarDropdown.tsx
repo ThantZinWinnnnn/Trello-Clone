@@ -34,7 +34,7 @@ export function AvatarDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="w-8 h-8 cursor-pointer">
+        <Avatar className="w-7 h-7 sm:w-8 sm:h-8 cursor-pointer">
           <AvatarImage src={session?.user?.image!} alt="profile" />
           <AvatarFallback>TZ</AvatarFallback>
         </Avatar>

@@ -11,7 +11,7 @@ import Link from "next/link";
 
 const BoardNav = () => {
   return (
-    <nav className="flex justify-between items-center py-2 px-10 border-b-[1px] dark:bg-[#374151]">
+    <nav className="flex justify-between items-center py-2 px-3 sm:px-10 border-b-[1px] dark:bg-[#374151]">
       <Link href={"/boards"} className="flex items-center">
         <Logo className={"!w-[90px] !h-[30px] !mb-0"}/>
       </Link>

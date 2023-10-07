@@ -88,7 +88,7 @@ const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className={`flex flex-col gap-2 p-2 rounded-md shadow-sm w-[300px] ${
+                className={`flex flex-col gap-2 p-2 rounded-md shadow-sm w-[250px] 2xl:w-[300px] ${
                   snapshot.isDraggingOver ? "bg-gray-200" : "bg-[#F4F5F7]"
                 }`}
               >
@@ -97,7 +97,7 @@ const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
                     onChange={(e)=>setListName(e.target.value)}
                     onKeyDown={updateListHandler}
                   /> 
-                  :  <h1 className="dark:text-black">{column?.name}</h1>}
+                  :  <h1 className="dark:text-black text-sm xl:text-base">{column?.name}</h1>}
                   <div className="flex gap-1 items-center">
                     {
                       !edit ? <span className="text-slate-500 font-normal px-2 py-1 rounded-full bg-slate-300 text-xs">

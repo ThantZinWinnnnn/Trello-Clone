@@ -45,7 +45,7 @@ const BoardsPage = () => {
   return (
     <>
     <Toaster richColors position="top-center" />
-    <main className="p-3">
+    <main className="p-3 h-full">
       <ProjectBoard boards={createdBoards!} isLoading={isLoading}/>
       {
         filterAssignedBoards?.length ? (

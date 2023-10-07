@@ -28,11 +28,11 @@ const Members = ({ boardId }: Props) => {
     <Dialog>
       <DialogTrigger asChild>
         <Button
-          className="flex items-center gap-2  bg-blue-600 hover:bg-blue-500 text-white hover:text-white"
+          className="flex items-center gap-2 py-1!   bg-blue-600 hover:bg-blue-500 text-white hover:text-white h-8 sm:h-9"
           // onClick={handler}
         >
-          <span className="text-sm">Members</span>
-          <Users className="w-4 h-4 text-white" />
+          <span className="text-[0.7rem] font-rubik xl:text-sm">Members</span>
+          <Users className="w-3 h-3 xl:w-4 xl:h-4 text-white" />
         </Button>
       </DialogTrigger>
       <DialogContent className="dark:bg-gray-700">

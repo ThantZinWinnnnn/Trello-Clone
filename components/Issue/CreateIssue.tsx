@@ -83,20 +83,20 @@ const CreateIssue = ({ listId }: { listId: string }) => {
         <Button
           variant={"ghost"}
           onClick={() => setOpenModal(true)}
-          className="w-6 h-6 bg-blue-500 rounded-full ml-auto p-1 flex items-center justify-center my-2 mr-4 hover:bg-blue-600"
+          className="w-6 h-6 bg-blue-500 rounded-full ml-auto p-1 flex items-center justify-center my-1 xl:my-2 mr-4 hover:bg-blue-600"
         >
           <PlusIcon className="text-white" />
         </Button>
 
-        <DialogContent className="dark:bg-gray-700">
+        <DialogContent className="dark:bg-gray-700 h-[90vh] my-auto w-[90%] mx-auto sm:mx-0 sm:w-auto overflow-y-scroll rounded-md px-2 sm:px-4">
           <DialogHeader>
             <DialogTitle className="text-base font-normal ">
               Create Issue
             </DialogTitle>
           </DialogHeader>
-          <section className="flex flex-col space-y-6 overflow-y-scroll px-1">
+          <section className="flex flex-col space-y-6  px-1">
             <div
-              className={`h-[100px] overflow-hidden w-full relative flex items-center justify-center dark:bg-gray-500 rounded-md  ${
+              className={` h-[100px] overflow-hidden w-full relative flex items-center justify-center dark:bg-gray-500 rounded-md  ${
                 form.image !== ""
                   ? "border-none"
                   : "border-dashed border-[1px] rounded-sm"
@@ -206,11 +206,11 @@ const CreateIssue = ({ listId }: { listId: string }) => {
               <PiorityDrowdown val={form.priority} dispatch={dispatch} />
             </section>
           </section>
-          <DialogFooter>
+          <DialogFooter className="gap-2">
             <DialogTrigger>
               <Button
                 type="button"
-                className="px-5 bg-slate-400 hover:bg-slate-500"
+                className="px-5 bg-slate-400 hover:bg-slate-500 w-full"
                 onClick={() => setOpenModal(false)}
               >
                 Cancel

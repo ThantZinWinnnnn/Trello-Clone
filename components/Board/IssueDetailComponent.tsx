@@ -88,7 +88,7 @@ const IssueDetailComponent = ({
       <DialogTrigger className="w-full" asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-[1050px] focus-visible:border-none  dark:bg-gray-700">
+      <DialogContent className="max-w-[1050px] focus-visible:border-none  dark:bg-gray-700 h-[95vh] sm:h-[90vh] overflow-y-scroll">
         <DialogHeader>
           <DialogTitle className="text-center">Issue Detail</DialogTitle>
         </DialogHeader>
@@ -103,7 +103,7 @@ const IssueDetailComponent = ({
               </div>
               <Button
                 variant={"ghost"}
-                className="flex items-center gap-2 group bg-red-500 hover:bg-red-600 !py-1"
+                className="flex items-center gap-2 group bg-red-500 hover:bg-red-600 !py-1 h-8 sm:h-9"
                 onClick={() => deleteIssue(issue?.id as string)}
               >
                 <TrashIcon className="w-4 h-4 text-white" />
@@ -112,8 +112,8 @@ const IssueDetailComponent = ({
                 </span>
               </Button>
             </div>
-            <section className="flex gap-4">
-              <section className="w-[65%]">
+            <section className="flex flex-col-reverse sm:!flex-row gap-4 overflow-y-scroll">
+              <section className="w-full sm:w-[65%]">
                 <h2 className="text-lg font-semibold mt-4">{issue?.summary}</h2>
 
                 {/* desc */}
@@ -137,7 +137,7 @@ const IssueDetailComponent = ({
                   <Comments issueId={issue?.id} />
                 </section>
               </section>
-              <section className="w-[35%] flex flex-col gap-6">
+              <section className="w-full sm:w-[35%] flex flex-col gap-6">
                 <div>
                   <Label className="uppercase text-sm">Lists</Label>
                   <StatusDropdown

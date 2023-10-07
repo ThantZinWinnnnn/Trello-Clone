@@ -19,6 +19,9 @@ import { Button } from "@/components/ui/button";
 import Members from "@/components/members/Members";
 import { useSession } from "next-auth/react";
 import ListSkeleton from "@/components/skeleton/ListSkeleton";
+import { Settings } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import BoardSettingBtn from "@/components/utils/BoardSettingBtn";
 
 type Params = {
   params: {
@@ -26,8 +29,10 @@ type Params = {
   };
 };
 const Board = ({ params: { boardId } }: Params) => {
+  const path = usePathname();
+  const router = useRouter();
   const { data: session } = useSession();
-  const { member, memberName } = useBoardStore();
+  const { member, memberName,openSetting,setReachedSetting } = useBoardStore();
   const { mutate: addMember } = useAddMember(boardId, member!);
   const {
     data: users,
@@ -50,7 +55,9 @@ const Board = ({ params: { boardId } }: Params) => {
   const boardAdmin = boardMembers?.find(
     (member) => member?.User?.id === user?.id
   )?.isAdmin!;
-  const ListsSk = new Array(3).fill(0).map((_,i)=><ListSkeleton key={i}/>)
+  const ListsSk = new Array(3).fill(0).map((_,i)=><ListSkeleton key={i}/>);
+  const bName = path?.split("/")[2];
+  const decodeName = decodeURIComponent(bName);
 
   const handleDrag = (result: DropResult) => {
     const { source: s, destination: d, type, draggableId } = result;
@@ -80,10 +87,10 @@ const Board = ({ params: { boardId } }: Params) => {
   };
 
   return (
-    <main className="p-3 w-[calc(100vw-251px)] pl-10 overflow-y-scroll">
-      <section className="flex justify-between items-center">
+    <main className="p-3 w-full pl-4 xl:pl-10 overflow-y-scroll">
+      <section className="flex flex-col sm:!flex-row sm:justify-between sm:items-center gap-4">
         <Breadcrumbs />
-        <section className="flex gap-2 items-center">
+        <section className="flex  gap-2 items-center">
           {/* to hidden add member btn when login user is not equal to board admin */}
           {boardAdmin ? (
             <AddMemberModal
@@ -92,7 +99,7 @@ const Board = ({ params: { boardId } }: Params) => {
               mutate={addMember}
               boardId={boardId}
             >
-              <Button className="bg-blue-600 hover:bg-blue-500 dark:text-white">
+              <Button className="bg-blue-600 hover:bg-blue-500 py-1! font-rubik dark:text-white text-[0.7rem] lg:text-xs h-8 sm:h-9">
                 Add Member
               </Button>
             </AddMemberModal>
@@ -100,7 +107,10 @@ const Board = ({ params: { boardId } }: Params) => {
           <Members boardId={boardId} />
         </section>
       </section>
-      <h2 className=" font-semibold my-5 text-xl">Trello Project Board</h2>
+      <section className="flex items-center justify-between my-5">
+      <h2 className=" font-semibold text-sm 2xl:text-xl">Trello Project Board</h2>
+        <BoardSettingBtn boardId={boardId} className="text-[0.7rem] font-rubik lg:hidden"/>
+      </section>
       <IssueFilterByMem boardId={boardId} />
       <DragDropContext onDragEnd={handleDrag}>
         <Droppable direction="horizontal" type="column" droppableId="board">

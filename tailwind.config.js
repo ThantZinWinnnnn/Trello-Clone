@@ -20,7 +20,7 @@ module.exports = {
         "first-card": "rgb(0 0 0 / 10%) 0px 0px 10px",
       },
       fontFamily: {
-        rubik: ['"Rubik"'],
+        rubik: ['"Rubik"', "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

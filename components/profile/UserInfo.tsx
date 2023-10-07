@@ -9,7 +9,7 @@ const Info:React.FC<InfoProps> = ({
 }) => {
   return (
     <section className='flex flex-col gap-1'>
-        <Label htmlFor={connect} className='text-md'>{label}</Label>
+        <Label htmlFor={connect} className='text-sm sm:text-md'>{label}</Label>
         <Input id={connect} type={type} value={value} onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
             dispatch({type:`${connect}`,value:e.target.value})
         }} disabled={disabled}/>

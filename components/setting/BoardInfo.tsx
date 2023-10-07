@@ -20,7 +20,7 @@ const BoardInfo = ({
         </section>
       ) : (
         <section className="flex flex-col gap-2">
-          <Label htmlFor={connection} className="font-semibold">
+          <Label htmlFor={connection} className="text-xs sm:text-base font-semibold">
             {label}
           </Label>
           <Input
@@ -29,6 +29,7 @@ const BoardInfo = ({
             value={value}
             onChange={onChange}
             disabled={disabled}
+            className="text-xs sm:text-base"
           />
         </section>
       )}

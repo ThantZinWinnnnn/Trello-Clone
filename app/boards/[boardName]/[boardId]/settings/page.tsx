@@ -40,20 +40,20 @@ const CurrentProjectSettingsPage = () => {
   }
   // const {}
   return (
-    <section className="pt-3 px-10 w-[calc(100vw-251px)]">
+    <section className="pt-3 px-2 sm:px-10 w-full xl:w-[calc(100vw-250px)]">
       <Breadcrumbs />
-      <section className="flex gap-2 mt-5">
-        <Avatar>
+      <section className="flex gap-2 mt-5 w-full">
+        <Avatar className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14">
           <AvatarImage src={loggedInUser?.image!} alt={loggedInUser?.name!}/>
           <AvatarFallback>loggedInUser?.name!</AvatarFallback>
         </Avatar>
-        <p className="flex flex-col text-sm">
+        <p className="flex flex-col text-xs sm:text-sm">
           <span>{loggedInUser?.name!}</span>
-          <span className="text-[0.65rem]">{loggedInUser?.email!}</span>
+          <span className="text-[0.6rem] sm:text-[0.65rem]">{loggedInUser?.email!}</span>
         </p>
       </section>
-      <Separator className="mb-10 mt-5" />
-      <h5 className="text-2xl font-semibold text-center my-6">
+      <Separator className="mb-5 sm:mb-10 mt-5" />
+      <h5 className="text-lg sm:text-2xl font-semibold text-center my-2 sm:my-6">
         Board Settings
       </h5>
       <section className="flex flex-col gap-3 max-w-[33rem] mx-auto">
@@ -119,7 +119,7 @@ const CurrentProjectSettingsPage = () => {
           disabled={false}
           isLoading={false}
         />
-        <p className="text-xs text-red-600 my-2">
+        <p className="text-[0.6rem] sm:text-xs text-red-600 my-2">
           Note : This settings can be changed only by Admin
         </p>
         <section className="flex justify-end items-center">
@@ -136,7 +136,7 @@ const CurrentProjectSettingsPage = () => {
             confrimHandler={currentUserIsAdmin ? deleteBoardHandler : leaveBoardHandler}
           >
             <Button
-              className="bg-red-500 text-white hover:bg-red-600 py-1 px-4"
+              className="bg-red-500 text-white hover:bg-red-600 py-1 px-4 text-xs sm:text-base h-8 sm:h-9"
               onClick={() => setOpenConfrimModal(!openConfirmModal)}
             >
               {currentUserIsAdmin ? "Delete Board" : "Leave Board"}

@@ -95,3 +95,17 @@
 .darkT {
   --bg-c : '#374151',
 }
+
+body{
+  margin:0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.sidebar{
+  @media (min-width: 1024px) {
+    .lg\:flex {
+        display: flex;
+    }
+}
+}

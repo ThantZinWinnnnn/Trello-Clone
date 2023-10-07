@@ -8,7 +8,7 @@ const Comments = ({issueId}:{issueId:string}) => {
     const {data:comments,isLoading} = useGetComments(issueId);
 
   return (
-    <section className="flex flex-col gap-2">
+    <section className="flex flex-col gap-2 overflow-y-scroll">
         {
            isLoading ? 
            <CommentSk/> : 

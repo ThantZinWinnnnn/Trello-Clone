@@ -21,11 +21,11 @@ const BoardSortDropdown= ({ children }: { children: React.ReactNode }) => {
       {children}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 dark:bg-gray-700">
-        <DropdownMenuLabel className="text-center">Your boards</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-center text-xs 2xl:text-base">Your boards</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={sort} onValueChange={(val)=>setSort(val)} className="space-y-1">
-          <DropdownMenuRadioItem value="alpha" className="py-3">Sort alphabetically</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="date" className="py-3">Sort by most recent</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="alpha" className="py-3 text-[0.7rem]">Sort alphabetically</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="date" className="py-3 text-[0.7rem]">Sort by most recent</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

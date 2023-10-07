@@ -11,7 +11,7 @@ import { Separator } from "../ui/separator";
 import BoardSkeleton from "../skeleton/BoardSkeleton";
 import LineSeparator from "./LineSeparator";
 
-const ProjectBoard = ({ boards,isLoading }:{boards:Array<BoardProps>,isLoading:boolean}) => {
+const   ProjectBoard = ({ boards,isLoading }:{boards:Array<BoardProps>,isLoading:boolean}) => {
   const router = useRouter()
   const {data:session} = useSession()
   const {setProfileUser,setBoardName,setOpenSetting} = useBoardStore()
@@ -40,7 +40,7 @@ const ProjectBoard = ({ boards,isLoading }:{boards:Array<BoardProps>,isLoading:b
               setOpenSetting(true)
               router.push(`/boards/${board?.name}/${board.id}`)
             }}
-            className="bg-[url('/photos/board-bg.jpeg')] bg-cover bg-center h-[150px] w-[250px] rounded-sm flex items-center justify-center"
+            className="bg-[url('/photos/board-bg.jpeg')] bg-cover bg-center w-full  h-[120px] lg:h-[150px] sm:w-[210px] lg:w-[220px] xl:w-[250px] rounded-sm flex items-center justify-center"
           >
             <p className="text-white font-medium">{board.name}</p>
           </Button>
