@@ -76,7 +76,7 @@ export const useRemoveMember = (boardId: string,userId:string) => {
         previousUserBoards
       }
     },
-    onError: (error, data, context) => {
+    onError: (_, data, context) => {
       queryClient.setQueryData(["boards",userId],context?.previousUserBoards);
       queryClient.setQueryData(["members", boardId], context?.previousMembers);
     },
@@ -92,3 +92,5 @@ export const useRemoveMember = (boardId: string,userId:string) => {
 const removeMemberLocally = (members: MemberProps[], userId: string) => {
   return members.filter((member) => member?.User?.id !== userId);
 };
+
+// export const useDeleteMember = 

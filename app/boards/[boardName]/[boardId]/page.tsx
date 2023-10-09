@@ -49,6 +49,7 @@ const Board = ({ params: { boardId } }: Params) => {
     (member) => member?.User?.id === user?.id
   )?.isAdmin!;
   const ListsSk = new Array(3).fill(0).map((_, i) => <ListSkeleton key={i} />);
+  const alreadyAddedMember = Boolean(boardMembers?.find((mem)=>mem?.User?.id === member?.id));
 
   const handleDrag = (result: DropResult) => {
     const { source: s, destination: d, type, draggableId } = result;
@@ -89,6 +90,7 @@ const Board = ({ params: { boardId } }: Params) => {
               loading={loading}
               mutate={addMember}
               boardId={boardId}
+              beenAdded={alreadyAddedMember}
             >
               <Button className="bg-blue-600 hover:bg-blue-500 py-1! font-rubik dark:text-white text-[0.7rem] lg:text-xs h-8 sm:h-9">
                 Add Member
@@ -104,7 +106,7 @@ const Board = ({ params: { boardId } }: Params) => {
         </h2>
         <BoardSettingBtn
           boardId={boardId}
-          className="text-[0.7rem] font-rubik lg:hidden"
+          className="text-[0.7rem] font-rubik lg:!hidden"
         />
       </section>
       <IssueFilterByMem boardId={boardId} />

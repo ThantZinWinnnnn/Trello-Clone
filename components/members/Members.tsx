@@ -19,7 +19,8 @@ const Members = ({ boardId }: Props) => {
   const { data: session } = useSession();
   const user = session?.user;
   const { data: members, isLoading } = useGetMembers(boardId);
-  const {mutate:removeMember} = useRemoveMember(boardId,user?.id!)
+  const {mutate:removeMember} = useRemoveMember(boardId,user?.id!);
+  
   const admin = useMemo(
     () => members?.find((mem) => mem?.isAdmin === true),
     [members]
@@ -48,7 +49,7 @@ const Members = ({ boardId }: Props) => {
                 isAdmin={admin?.isAdmin!}
                 userId={admin?.User?.id!}
                 adminId={admin?.User?.id!}
-                mutate={()=>{}}
+                mutate={removeMember}
               />
               <Separator className="my-2" />
               <section className="flex flex-col gap-3">

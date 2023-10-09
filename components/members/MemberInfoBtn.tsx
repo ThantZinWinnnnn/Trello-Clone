@@ -1,3 +1,4 @@
+"use client"
 import React, { memo } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Button } from '../ui/button'
@@ -29,9 +30,14 @@ const MemberInfoBtn:React.FC<MemberInfoBtnProps> = ({
         ( session?.user?.id === userId || admin ) && (
     <Button
       variant={"ghost"}
-      disabled={isAdmin!}
+      disabled={isAdmin!}   
       className="text-xs flex gap-1 items-center hover:text-red-600"
-      onClick={()=>mutate({boardId:bId!,userId,memberId:mId!})}
+      onClick={()=>{
+        console.log("clicked","bId",bId,"usd",userId,"mmeId",mId)
+        
+          mutate({boardId:bId!,userId,memberId:mId!})
+
+      }}
     >
       
       {

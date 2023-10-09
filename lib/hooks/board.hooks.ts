@@ -54,19 +54,21 @@ const updateRemoveOrLeaveBoard = (
   action: "delete" | "leave",
   boardId: string
 ) => {
-  const { createdBoards, assignedBoards } = oldUserBoards;
-  const updatedDeletedBoards = createdBoards?.boards?.filter((board) => board?.id !== boardId);
-  const updatedLeavedBoards = assignedBoards?.filter((board) => board?.id !== boardId);
+  const oldCreatedBoards = oldUserBoards?.createdBoards;
+  const oldAssignedBoards = oldUserBoards?.assignedBoards
+  // const { createdBoards, assignedBoards } = oldUserBoards;
+  const updatedDeletedBoards = oldUserBoards?.createdBoards?.boards?.filter((board) => board?.id !== boardId);
+  const updatedLeavedBoards = oldUserBoards?.assignedBoards?.filter((board) => board?.id !== boardId);
    if(action === "delete"){
     return {
         createdBoards:{
             boards:updatedDeletedBoards
         },
-        assignedBoards
+        assignedBoards:oldAssignedBoards
     } as GetUserBoardsProps
    }else if(action === "leave"){
     return {
-        createdBoards,
+        createdBoards:oldCreatedBoards,
         assignedBoards:updatedLeavedBoards
        } as GetUserBoardsProps
    }
@@ -75,19 +77,20 @@ const updateRemoveOrLeaveBoard = (
 };
 
 export const deleteBoardLocally = (oldUserBoards: GetUserBoardsProps, boardId: string,action:"remove" | "leave") => {
-  const {createdBoards,assignedBoards} = oldUserBoards;
-  const updatedDeletedBoards = createdBoards?.boards?.filter((board) => board?.id !== boardId);
-  const updatedLeavedBoards = assignedBoards?.filter((board) => board?.id !== boardId);
+  const oldCreatedBoards = oldUserBoards?.createdBoards;
+  const oldAssignedBoards = oldUserBoards?.assignedBoards;
+  const updatedDeletedBoards = oldCreatedBoards?.boards?.filter((board) => board?.id !== boardId);
+  const updatedLeavedBoards = oldAssignedBoards?.filter((board) => board?.id !== boardId);
   if(action === "remove"){
     return {
         createdBoards:{
             boards:updatedDeletedBoards
         },
-        assignedBoards
+        assignedBoards:oldAssignedBoards
     } as GetUserBoardsProps
    }else if(action === "leave"){
     return {
-        createdBoards,
+        createdBoards:oldCreatedBoards,
         assignedBoards:updatedLeavedBoards
        } as GetUserBoardsProps
    }

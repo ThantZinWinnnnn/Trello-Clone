@@ -20,7 +20,7 @@ const BoardSettingBtn = ({boardId,className}:Props) => {
   return (
     <Button
           className={
-            cn('flex gap-2 bg-blue-600 text-white hover:bg-blue-700 mb-4 text-xs xl:text-sm h-8 sm:h-9 lg:!hidden',className)
+            cn('flex gap-2 bg-blue-600 text-white hover:bg-blue-700 mb-4 text-xs xl:text-sm h-8 sm:h-9',className)
           }
           onClick={() => {
             setReachedSetting(true);

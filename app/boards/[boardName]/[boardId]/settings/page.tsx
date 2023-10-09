@@ -40,7 +40,7 @@ const CurrentProjectSettingsPage = () => {
   }
   // const {}
   return (
-    <section className="pt-3 px-2 sm:px-10 w-full xl:w-[calc(100vw-250px)]">
+    <section className="pt-3 px-2 sm:px-10 w-full xl:w-[calc(100vw-250px)] h-full overflow-y-scroll pb-12">
       <Breadcrumbs />
       <section className="flex gap-2 mt-5 w-full">
         <Avatar className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14">
