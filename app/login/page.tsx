@@ -7,6 +7,12 @@ import rightLogo from "@/public/photos/right-logo.png";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import LineSeparator from "@/components/utils/LineSeparator";
+import { Metadata } from "next";
+
+export const metadata:Metadata = {
+  title:"Login Page",
+  description:"This page is authentication for Trello Clone"
+}
 
 const page = () => {
   return (

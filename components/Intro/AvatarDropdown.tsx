@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import Image from "next/image";
 
 //next-auth/client
 import { useSession, signOut } from "next-auth/react";
@@ -36,7 +37,9 @@ export function AvatarDropdown() {
       <DropdownMenuTrigger asChild>
         <Avatar className="w-7 h-7 sm:w-8 sm:h-8 cursor-pointer">
           <AvatarImage src={session?.user?.image!} alt="profile" />
-          <AvatarFallback>TZ</AvatarFallback>
+          <AvatarFallback className="relative w-8 h-8 sm:w-8 sm:h-8 rounded-full overflow-hidden">
+          <Image src={'/photos/default-user.png'} fill alt="default user photo" style={{objectFit:'cover'}}/>
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 dark:bg-gray-700">

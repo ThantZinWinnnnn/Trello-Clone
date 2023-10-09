@@ -1,7 +1,12 @@
 import BoardSidebarComponent from '@/components/BoardSidebarComponent/BoardSidebarComponent'
 import BoardNav from '@/components/Board/BoardNav'
 import React from 'react'
+import { Metadata } from 'next'
 
+export const metadata:Metadata = {
+  title:"Boards Page",
+  description:"This page shows the all boards which were created by user and assigned boards which was created by other user"
+}
 const BoardLayout = ({
     children,
   }: {

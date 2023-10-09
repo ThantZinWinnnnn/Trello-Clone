@@ -11,10 +11,6 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Trello Clone",
   description: "Trello Clone Project",
-  icons:{
-    icon:"/icon.ico",
-    shortcut:"/icon.ico"
-  }
 };
 
 export default function RootLayout({

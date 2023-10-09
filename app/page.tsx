@@ -7,6 +7,12 @@ import IntroNavBar from "@/components/Intro/IntroNavBar";
 import introLogo from "@/public/photos/intro-img.png";
 
 import NavigateToCreateBoradBtn from "@/components/utils/NavigateToCreateBoradBtn";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title:"Welcome Page",
+  description:"This page is the welcome or introduction page"
+}
 
 export default async function Home() {
   const session = await getServerSession();

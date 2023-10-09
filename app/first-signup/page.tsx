@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import leftLogo from "@/public/photos/left-logo.png"
 import rightLogo from "@/public/photos/right-logo.png"
 
+
 const FirstSignUpPage = () => {
   const { data: session, status } = useSession({
     required:true,

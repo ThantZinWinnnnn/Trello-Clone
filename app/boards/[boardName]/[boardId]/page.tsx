@@ -22,12 +22,15 @@ import ListSkeleton from "@/components/skeleton/ListSkeleton";
 import { Settings } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import BoardSettingBtn from "@/components/utils/BoardSettingBtn";
-
 type Params = {
   params: {
     boardId: string;
   };
 };
+
+
+
+
 const Board = ({ params: { boardId } }: Params) => {
   const path = usePathname();
   const router = useRouter();

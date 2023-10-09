@@ -11,6 +11,9 @@ import { useGetBoards } from "@/lib/hooks/board.hooks";
 import { Label } from "@/components/ui/label";
 import AssignedBoards from "@/components/Board/AssignedBoards";
 import LineSeparator from "@/components/utils/LineSeparator";
+import { Metadata } from "next";
+
+
 
 const BoardsPage = () => {
   const { data: session } = useSession({

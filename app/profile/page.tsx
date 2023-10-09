@@ -13,7 +13,7 @@ import { useBoardStore } from "@/globalState/store/zustand.store";
 const ProfilePage = () => {
   const { data: session } = useSession();
   const router = useRouter()
-  const user = session?.user; 
+  const user = session?.user as UserProps; 
   const {profileUser} = useBoardStore()
 
   const profileStates :UserProfile = {
@@ -30,12 +30,14 @@ const ProfilePage = () => {
     <section className="container pt-4 overflow-y-scroll">
       <section className="flex gap-3">
         <Avatar className="w-12 h-12">
-          <AvatarImage src={profileUser?.image!} alt={user?.name!} />
-          <AvatarFallback>{profileUser?.name!}</AvatarFallback>
+          <AvatarImage src={user?.image!} alt={user?.name!} />
+          <AvatarFallback>
+            {user?.name!}
+          </AvatarFallback>
         </Avatar>
         <p className="flex flex-col gap-1">
-          <span>{profileUser?.name}</span>
-          <span className="text-xs">{profileUser?.email}</span>
+          <span>{user?.name}</span>
+          <span className="text-xs">{user?.email}</span>
         </p>
       </section>
       <Separator className="my-10" />
@@ -55,7 +57,7 @@ const ProfilePage = () => {
           label="Name"
           connect="name"
           type="text"
-          value={profile?.name}
+          value={user?.name!}
           dispatch={dispatch}
           disabled={true}
         />
@@ -63,7 +65,7 @@ const ProfilePage = () => {
           label="Email"
           connect="email"
           type="email"
-          value={profile?.email}
+          value={user?.email!}
           dispatch={dispatch}
           disabled={true}
         />
@@ -71,7 +73,7 @@ const ProfilePage = () => {
           label="Image"
           connect="img"
           type="text"
-          value={profile?.img}
+          value={user?.image!}
           dispatch={dispatch}
           disabled={true}
         />
