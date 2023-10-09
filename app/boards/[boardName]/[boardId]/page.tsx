@@ -19,8 +19,7 @@ import { Button } from "@/components/ui/button";
 import Members from "@/components/members/Members";
 import { useSession } from "next-auth/react";
 import ListSkeleton from "@/components/skeleton/ListSkeleton";
-import { Settings } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import BoardSettingBtn from "@/components/utils/BoardSettingBtn";
 type Params = {
   params: {
@@ -28,21 +27,12 @@ type Params = {
   };
 };
 
-
-
-
 const Board = ({ params: { boardId } }: Params) => {
   const path = usePathname();
-  const router = useRouter();
   const { data: session } = useSession();
-  const { member, memberName,openSetting,setReachedSetting } = useBoardStore();
+  const { member, memberName } = useBoardStore();
   const { mutate: addMember } = useAddMember(boardId, member!);
-  const {
-    data: users,
-    isLoading: loading,
-    isError,
-    refetch,
-  } = useGetUsers(memberName);
+  const { data: users, isLoading: loading } = useGetUsers(memberName);
   const { data: lists } = useGetLists(boardId);
   const { mutate: reorderIssues } = useReorderIssues(boardId);
   const { mutate: reorderLists } = useReorderLists(boardId);
@@ -58,9 +48,7 @@ const Board = ({ params: { boardId } }: Params) => {
   const boardAdmin = boardMembers?.find(
     (member) => member?.User?.id === user?.id
   )?.isAdmin!;
-  const ListsSk = new Array(3).fill(0).map((_,i)=><ListSkeleton key={i}/>);
-  const bName = path?.split("/")[2];
-  const decodeName = decodeURIComponent(bName);
+  const ListsSk = new Array(3).fill(0).map((_, i) => <ListSkeleton key={i} />);
 
   const handleDrag = (result: DropResult) => {
     const { source: s, destination: d, type, draggableId } = result;
@@ -111,8 +99,13 @@ const Board = ({ params: { boardId } }: Params) => {
         </section>
       </section>
       <section className="flex items-center justify-between my-5">
-      <h2 className=" font-semibold text-sm 2xl:text-xl">Trello Project Board</h2>
-        <BoardSettingBtn boardId={boardId} className="text-[0.7rem] font-rubik lg:hidden"/>
+        <h2 className=" font-semibold text-sm 2xl:text-xl">
+          Trello Project Board
+        </h2>
+        <BoardSettingBtn
+          boardId={boardId}
+          className="text-[0.7rem] font-rubik lg:hidden"
+        />
       </section>
       <IssueFilterByMem boardId={boardId} />
       <DragDropContext onDragEnd={handleDrag}>
@@ -123,20 +116,19 @@ const Board = ({ params: { boardId } }: Params) => {
               ref={provided.innerRef}
               className="flex gap-4 mt-8 overflow-x-scroll"
             >
-              {
-                isLoading ? ListsSk :
-                lists?.length! > 0 &&
-                issues !== undefined &&
-                lists?.map((list, index) => (
-                  <Column
-                    key={list.id}
-                    id={list.id}
-                    column={list}
-                    index={index}
-                    issues={issues![list?.id]}
-                  />
-                ))
-              }
+              {isLoading
+                ? ListsSk
+                : lists?.length! > 0 &&
+                  issues !== undefined &&
+                  lists?.map((list, index) => (
+                    <Column
+                      key={list.id}
+                      id={list.id}
+                      column={list}
+                      index={index}
+                      issues={issues![list?.id]}
+                    />
+                  ))}
               <CreateNewList boardId={boardId} />
               {provided.placeholder}
             </div>

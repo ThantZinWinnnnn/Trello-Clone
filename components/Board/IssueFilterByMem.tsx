@@ -1,13 +1,14 @@
 "use client";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo,  useState,} from "react";
 import { Button } from "../ui/button";
 import MemberPhotos from "../utils/MemberPhotos";
 import { Input } from "../ui/input";
 import { Search } from "lucide-react";
 import { useBoardStore } from "@/globalState/store/zustand.store";
-import { useAddMember, useGetMembers } from "@/lib/hooks/member.hooks";
+import { useGetMembers } from "@/lib/hooks/member.hooks";
 import { useSession } from "next-auth/react";
 import moment from "moment";
+import UserProfileSk from "../skeleton/UserProfileSk";
 
 const IssueFilterByMem = ({ boardId }: { boardId: string }) => {
   const { data: session } = useSession();
@@ -16,6 +17,7 @@ const IssueFilterByMem = ({ boardId }: { boardId: string }) => {
   const [active, setActive] = useState<string[]>([]);
   const { data: members, isLoading } = useGetMembers(boardId);
   const currentDate = moment().format("YYYY-MM-DD");
+  const MembersSk = new Array(3).fill(0).map((_,i)=><UserProfileSk key={i}/>)
   return (
     <section className="flex flex-col sm:!flex-row sm:items-center gap-2 sm:gap-6 sm:justify-end">
       <section className="flex">

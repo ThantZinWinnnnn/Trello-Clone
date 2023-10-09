@@ -64,6 +64,7 @@ const CreateIssue = ({ listId }: { listId: string }) => {
           onSuccess: () => {
             queryClient.invalidateQueries(["issues", boardId]);
             toast.success("Issue Created");
+            dispatch({type:"reset",value:""});
             setOpenModal(false);           
           },
         }
@@ -206,12 +207,14 @@ const CreateIssue = ({ listId }: { listId: string }) => {
               <PiorityDrowdown val={form.priority} dispatch={dispatch} />
             </section>
           </section>
-          <DialogFooter className="gap-2">
+          <DialogFooter className="">
             <DialogTrigger>
               <Button
                 type="button"
                 className="px-5 bg-slate-400 hover:bg-slate-500 w-full"
-                onClick={() => setOpenModal(false)}
+                onClick={() => {
+                  dispatch({type:"reset",value:""})
+                  setOpenModal(false)}}
               >
                 Cancel
               </Button>
@@ -241,7 +244,8 @@ export type T =
   | "desc"
   | "priority"
   | "reporter"
-  | "assignee";
+  | "assignee"
+  | "reset";
 export type I = { type: T; value: string | string[] };
 
 const states: IssueState = {
@@ -270,5 +274,7 @@ const reducer = (state: IssueState, { type, value }: I) => {
       return { ...state, reporterId: value as string };
     case "assignee":
       return { ...state, assignees: value as string[] };
+    case "reset":
+      return {...state, image: "", type: "", summary: "", desc: "", priority: "", reporterId: "", assignees: []};
   }
 };

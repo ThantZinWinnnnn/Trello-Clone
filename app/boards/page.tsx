@@ -44,7 +44,6 @@ const BoardsPage = () => {
    const createdBoards = userBoards?.createdBoards?.boards
    const assignedBoards = userBoards?.assignedBoards;
    const filterAssignedBoards = assignedBoards?.filter((board)=> board.userId !== session?.user?.id);
-   console.log("userId",session?.user?.id)
   return (
     <>
     <Toaster richColors position="top-center" />

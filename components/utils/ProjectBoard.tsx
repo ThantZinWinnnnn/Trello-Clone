@@ -18,7 +18,6 @@ const   ProjectBoard = ({ boards,isLoading }:{boards:Array<BoardProps>,isLoading
   const memoizedBoards = useMemo(() => boards!, [boards]);
   const user = session?.user;
   const skeletonBoards = new Array(3).fill(0).map((_, i) => <BoardSkeleton key={i} />);
-  console.log("board",memoizedBoards)
   return (
     <main className="flex flex-col gap-2">
       <CreateNewBoardModal>
