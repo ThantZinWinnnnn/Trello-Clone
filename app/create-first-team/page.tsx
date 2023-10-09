@@ -12,12 +12,8 @@ import { Loader } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { Metadata } from "next";
 
-export const metadata:Metadata = {
-  title:"Create First Team",
-  description:"This page is the first creation of board for project"
-}
+
 
 const CreateFirstTeamPage = () => {
   const [boardName, setBoardName] = useState<string>("");
