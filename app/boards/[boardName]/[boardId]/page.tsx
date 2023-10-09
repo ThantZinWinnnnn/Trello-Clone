@@ -1,7 +1,7 @@
 "use client";
 
 import Breadcrumbs from "@/components/utils/Breadcrumbs";
-import React from "react";
+import React, { useState } from "react";
 import IssueFilterByMem from "@/components/Board/IssueFilterByMem";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import Column from "@/components/DndComponents/Column";
@@ -28,7 +28,7 @@ type Params = {
 };
 
 const Board = ({ params: { boardId } }: Params) => {
-  const path = usePathname();
+  const [openAddMemModal,setOpenAddMemModal] = useState(false);
   const { data: session } = useSession();
   const { member, memberName } = useBoardStore();
   const { mutate: addMember } = useAddMember(boardId, member!);
@@ -49,8 +49,8 @@ const Board = ({ params: { boardId } }: Params) => {
     (member) => member?.User?.id === user?.id
   )?.isAdmin!;
   const ListsSk = new Array(3).fill(0).map((_, i) => <ListSkeleton key={i} />);
-  const alreadyAddedMember = Boolean(boardMembers?.find((mem)=>mem?.User?.id === member?.id));
-
+  const alreadyAddedMember = boardMembers?.some((mem)=>mem?.id === member?.id);
+  console.log("boardMembers",boardMembers?.some((mem)=>mem?.id === member?.id),"member",member);
   const handleDrag = (result: DropResult) => {
     const { source: s, destination: d, type, draggableId } = result;
     console.log("res", s, "des", d, "type", type, "draggableId", draggableId);
@@ -90,9 +90,14 @@ const Board = ({ params: { boardId } }: Params) => {
               loading={loading}
               mutate={addMember}
               boardId={boardId}
-              beenAdded={alreadyAddedMember}
+              beenAdded={alreadyAddedMember!}
+              openModal={openAddMemModal}
+              closeModal={setOpenAddMemModal}
+              boardMembers={boardMembers}
             >
-              <Button className="bg-blue-600 hover:bg-blue-500 py-1! font-rubik dark:text-white text-[0.7rem] lg:text-xs h-8 sm:h-9">
+              <Button
+              onClick={()=>setOpenAddMemModal((prev)=>!prev)} 
+              className="bg-blue-600 hover:bg-blue-500 py-1! font-rubik dark:text-white text-[0.7rem] lg:text-xs h-8 sm:h-9">
                 Add Member
               </Button>
             </AddMemberModal>

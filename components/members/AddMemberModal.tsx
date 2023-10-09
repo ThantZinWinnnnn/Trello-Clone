@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,6 +15,8 @@ import DropdownUser from "../utils/DropdownUser";
 import { UseMutateFunction } from "@tanstack/react-query";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Toaster, toast } from "sonner";
+import { X } from "lucide-react"
+import { useSession } from "next-auth/react";
 
 const AddMemberModal: React.FC<Props> = ({
   children,
@@ -22,19 +24,29 @@ const AddMemberModal: React.FC<Props> = ({
   loading,
   mutate,
   boardId,
-  beenAdded
+  beenAdded,
+  openModal,
+  closeModal,
+  boardMembers
 }) => {
+  const {data:session} = useSession()
   const { setMemberName,setMember } = useBoardStore();
+  const user = session?.user;
   const addMemberHandler = (userId:string)=>{
     mutate({boardId,userId})
-  }
+  };
+  const excludeLoginUser = useMemo(()=>users?.filter((usr)=>usr?.email !== user?.email),[users,user])
   return (
     <>
     <Toaster richColors position="top-center" />
-    <Dialog>
+    <Dialog open={openModal}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="dark:bg-gray-700">
-        <DialogHeader>Add Member</DialogHeader>
+        <DialogHeader className="flex justify-between items-center my-3">
+          <X className="h-5 w-5 ml-auto mb-1 cursor-pointer" onClick={()=>closeModal(false)}/>
+          <p className="font-rubik">Add Member</p>
+          
+        </DialogHeader>
         <section className="flex items-center">
           <Input
             placeholder="Enter member name"
@@ -43,14 +55,17 @@ const AddMemberModal: React.FC<Props> = ({
           {/* // <Button>Search</Button> */}
         </section>
         <section className="flex flex-col">
-          {users?.map((usr) => (
+          {excludeLoginUser?.map((usr) => (
             <Button variant={'ghost'} className="flex items-center justify-start gap-2" key={usr?.id}
               onClick={()=>{
-                if(beenAdded){
+                const alreadyExist = boardMembers?.some((mem)=>mem?.User?.id === usr?.id)
+                if(alreadyExist){
                   toast.error("Member has already been added")
                 }else{
                 setMember(usr)
                 addMemberHandler(usr?.id!)
+                toast.success("Member has been added")
+                closeModal(false)
                 }
               }}
             >
@@ -83,5 +98,8 @@ interface Props {
     }
   >;
   boardId:string,
-  beenAdded:boolean
+  beenAdded:boolean,
+  openModal:boolean,
+  closeModal:(bol:boolean)=>void,
+  boardMembers:Array<MemberProps>
 }

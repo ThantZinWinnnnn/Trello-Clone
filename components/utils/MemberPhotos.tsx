@@ -22,7 +22,7 @@ const MemberPhotos:React.FC<MemberPhotosProps> = ({members,isLoading}) => {
         isLoading ? MembersSk :
         members?.map((usr) => (
           <Avatar
-            key={`${usr?.User?.id}`}
+            key={usr?.id}
             className={`
             w-7 h-7 xl:w-9 xl:h-9 hover:-translate-y-2 ring-2 ring-white cursor-pointer transition-all duration-100 hover:ring-blue-600
             ${selectedMember.includes(usr?.User?.id!) ? "ring-blue-600 -translate-y-2" : ""}
@@ -35,7 +35,7 @@ const MemberPhotos:React.FC<MemberPhotosProps> = ({members,isLoading}) => {
                 
               }else{
                   // setSelectedMember([...selectedMember, usr?.User?.id!])
-                  setSelectedMember(usr?.User?.id!)
+                  setSelectedMember(usr?.id!)
                   // diapatch(addFilterUsrId(`${usr?.id}`))
                   setMemberId(`${usr?.User?.id}`)
               }
@@ -47,8 +47,8 @@ const MemberPhotos:React.FC<MemberPhotosProps> = ({members,isLoading}) => {
         ))
       }
      {members?.length > 4 && (
-       <div className="w-9 h-9 ring-2 ring-white rounded-full bg-slate-400 z-10 flex items-center justify-center hover:-translate-y-1 cursor-pointer">
-       <p className="text-[0.75rem] font-semibold font-rubik">{members.length - 4}</p>
+       <div className="w-9 h-9 ring-2 ring-white rounded-full bg-blue-500 z-10 flex items-center justify-center hover:-translate-y-1 cursor-pointer">
+       <p className="text-[0.75rem] font-semibold font-rubik text-white">+ {members.length - 4}</p>
      </div>
      )}
     </section>
