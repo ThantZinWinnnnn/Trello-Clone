@@ -59,7 +59,12 @@ const IssueDetailComponent = ({
     param.boardId as string,
     issueUpdateType
   );
-  const { data: users, isLoading, isError, error } = useGetMembers(param.boardId as string);
+  const {
+    data: users,
+    isLoading,
+    isError,
+    error,
+  } = useGetMembers(param.boardId as string);
   const { mutate: deleteIssue } = useDeleteIssue(
     param?.boardId as string,
     listId
@@ -81,14 +86,17 @@ const IssueDetailComponent = ({
     () => users?.find((usr) => usr?.User?.id === issue?.reporterId)?.User,
     [issue?.reporterId, users]
   );
-  const toBeAssignees = useMemo(()=>users?.filter((ass)=> ass?.User?.id !== reporter?.id),[reporter?.id,users])
+  const toBeAssignees = useMemo(
+    () => users?.filter((ass) => ass?.User?.id !== reporter?.id),
+    [reporter?.id, users]
+  );
 
   return (
     <Dialog>
       <DialogTrigger className="w-full" asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-[1050px] focus-visible:border-none  dark:bg-gray-700 h-[95vh] sm:h-[90vh] overflow-y-scroll">
+      <DialogContent className="max-w-[1050px] focus-visible:border-none  dark:bg-gray-700 h-[95vh] sm:h-auto overflow-y-scroll">
         <DialogHeader>
           <DialogTitle className="text-center">Issue Detail</DialogTitle>
         </DialogHeader>

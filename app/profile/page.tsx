@@ -27,7 +27,7 @@ const ProfilePage = () => {
     
  const [profile,dispatch]= useReducer(reduer,profileStates)
   return (
-    <section className="container pt-4 overflow-y-scroll">
+    <section className="container pt-4 h-full overflow-y-scroll">
       <section className="flex gap-3">
         <Avatar className="w-12 h-12">
           <AvatarImage src={user?.image!} alt={user?.name!} />
@@ -40,7 +40,7 @@ const ProfilePage = () => {
           <span className="text-xs">{user?.email}</span>
         </p>
       </section>
-      <Separator className="my-10" />
+      <Separator className="my-4 lg:my-10" />
       <section className="max-w-[33rem] mx-auto">
         <div className="relative w-full h-24 rounded-md overflow-hidden mb-3">
           <Image
@@ -83,7 +83,7 @@ const ProfilePage = () => {
           <AvatarImage src={user?.image!} alt={user?.name!} />
           <AvatarFallback>{user?.name!}</AvatarFallback>
          </Avatar>
-         <section className="flex justify-end gap-2 mt-14">
+         <section className="flex justify-end gap-2 mt-4 lg:mt-14">
 
           <ProfileButton text="Back" onClick={()=>{router.back()}} className="" Icon={Undo2}/>
          {/* <ProfileButton text="Update" onClick={()=>{}} className="" Icon={ArrowBigUpDash}/> */}

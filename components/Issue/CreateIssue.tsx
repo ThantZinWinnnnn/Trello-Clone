@@ -207,7 +207,7 @@ const CreateIssue = ({ listId }: { listId: string }) => {
               <PiorityDrowdown val={form.priority} dispatch={dispatch} />
             </section>
           </section>
-          <DialogFooter className="">
+          <DialogFooter className="flex gap-3 items-center">
             <DialogTrigger>
               <Button
                 type="button"

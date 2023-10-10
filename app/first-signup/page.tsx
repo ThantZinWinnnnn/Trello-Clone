@@ -24,8 +24,8 @@ const FirstSignUpPage = () => {
   console.log("session",session,"status",status)
 
   return (
-    <main className="flex flex-col h-screen justify-center items-center relative dark:bg-white ">
-      <section className="w-[380px] shadow-first-card rounded-sm p-5">
+    <main className="flex flex-col h-screen justify-center items-center relative dark:bg-white w-[90%] mx-auto md:w-auto md:mx-auto">
+      <section className="w-full md:w-[380px] shadow-first-card rounded-sm p-5">
         <Logo />
         <p className="font-semibold text-center mb-5 text-sm">Create your account</p>
         <h2 className="text-slate-500 font-semibold text-xs mb-1">
@@ -50,10 +50,10 @@ const FirstSignUpPage = () => {
         <AltLogo/>
         <p className="text-[0.61rem] text-center">One account for Trello,Jira,Confluence and <span className="text-blue-700">more.</span></p>
       </section>
-       <div className="absolute left-0 bottom-0">
+       <div className="hidden lg:!block absolute left-0 bottom-0 ">
         <Image src={leftLogo} alt="left-logo" className="w-[300px] h-[297px]"/>
       </div>
-      <div className="absolute right-0 bottom-0">
+      <div className="hidden lg:!block absolute right-0 bottom-0">
         <Image src={rightLogo} alt="right-logo" className="w-[350px] h-[297px]"/>
       </div>
     </main>

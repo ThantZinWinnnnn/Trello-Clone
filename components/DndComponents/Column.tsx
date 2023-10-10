@@ -40,7 +40,7 @@ const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
   const queryIssuesByName = useMemo(
     () =>
       issues?.filter((issue) =>
-        issue?.summary.toLowerCase().includes(issueName)
+        issue?.summary.toLowerCase().includes(issueName.toLocaleLowerCase())
       ),
     [issueName, issues]
   );

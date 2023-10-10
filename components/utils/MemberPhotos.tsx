@@ -15,7 +15,7 @@ const MemberPhotos:React.FC<MemberPhotosProps> = ({members,isLoading}) => {
   const [selectedMember, setSelectedMember] = useState<string>("");
   const {setMemberId} = useBoardStore()
   const MembersSk = new Array(3).fill(0).map((_,i)=><UserProfileSk key={i}/>)
-
+  
   return (
     <section className="flex -space-x-2">
       {
@@ -25,19 +25,20 @@ const MemberPhotos:React.FC<MemberPhotosProps> = ({members,isLoading}) => {
             key={usr?.id}
             className={`
             w-7 h-7 xl:w-9 xl:h-9 hover:-translate-y-2 ring-2 ring-white cursor-pointer transition-all duration-100 hover:ring-blue-600
-            ${selectedMember.includes(usr?.User?.id!) ? "ring-blue-600 -translate-y-2" : ""}
+            ${selectedMember === usr?.id! ? "ring-blue-600 -translate-y-2" : ""}
             `}
             onClick={()=> {
-              if(selectedMember === usr?.User?.id){
+              if(selectedMember === usr?.id){
                 // setSelectedMember(selectedMember.filter(id => id !== usr?.User?.id));
                 setSelectedMember('');
                 setMemberId("")
-                
+                console.log("true")
               }else{
                   // setSelectedMember([...selectedMember, usr?.User?.id!])
                   setSelectedMember(usr?.id!)
                   // diapatch(addFilterUsrId(`${usr?.id}`))
                   setMemberId(`${usr?.User?.id}`)
+                  console.log("false")
               }
             }}
           >
