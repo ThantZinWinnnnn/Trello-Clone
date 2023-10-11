@@ -41,7 +41,7 @@ const AddMemberModal: React.FC<Props> = ({
     <Toaster richColors position="top-center" />
     <Dialog open={openModal}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="dark:bg-gray-700">
+      <DialogContent className="dark:bg-gray-700 max-h-[90vh] overflow-y-scroll">
         <DialogHeader className="flex justify-between items-center my-3">
           <X className="h-5 w-5 ml-auto mb-1 cursor-pointer" onClick={()=>closeModal(false)}/>
           <p className="font-rubik">Add Member</p>
@@ -54,7 +54,7 @@ const AddMemberModal: React.FC<Props> = ({
           />
           {/* // <Button>Search</Button> */}
         </section>
-        <section className="flex flex-col overflow-y-scroll">
+        <section className="flex flex-col">
           {excludeLoginUser?.map((usr) => (
             <Button variant={'ghost'} className="flex items-center justify-start gap-2" key={usr?.id}
               onClick={()=>{
