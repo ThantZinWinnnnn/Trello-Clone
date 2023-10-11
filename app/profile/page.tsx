@@ -27,7 +27,7 @@ const ProfilePage = () => {
     
  const [profile,dispatch]= useReducer(reduer,profileStates)
   return (
-    <section className="container pt-4 h-full overflow-y-scroll">
+    <section className="container pt-4 h-full ">
       <section className="flex gap-3">
         <Avatar className="w-12 h-12">
           <AvatarImage src={user?.image!} alt={user?.name!} />

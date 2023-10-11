@@ -11,7 +11,7 @@ const ProfileLayout = (
     {children}:{children:React.ReactNode}
 ) => {
   return (
-    <main className='dark:bg-gray-700 h-screen'>
+    <main className='dark:bg-gray-700 h-screen overflow-y-scroll'>
         <BoardNav/>
         {children}
     </main>
