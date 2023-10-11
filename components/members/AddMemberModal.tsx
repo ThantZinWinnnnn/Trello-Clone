@@ -54,7 +54,7 @@ const AddMemberModal: React.FC<Props> = ({
           />
           {/* // <Button>Search</Button> */}
         </section>
-        <section className="flex flex-col">
+        <section className="flex flex-col overflow-y-scroll">
           {excludeLoginUser?.map((usr) => (
             <Button variant={'ghost'} className="flex items-center justify-start gap-2" key={usr?.id}
               onClick={()=>{

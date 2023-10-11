@@ -19,6 +19,7 @@ const CreateFirstTeamPage = () => {
   const [boardName, setBoardName] = useState<string>("");
   const { data: session } = useSession();
   const router = useRouter();
+  const validBoardName = boardName === "";
 
   const { mutate: createBoard, isLoading } = useMutation({
     mutationFn: async ({ inputName, userId }: inputProps) => {
@@ -79,7 +80,7 @@ const CreateFirstTeamPage = () => {
                 className={`bg-blue-700 text-xs hover:bg-blue-800 rounded-sm flex items-center dark:text-white ${
                   isLoading && "cursor-not-allowed gap-6"
                 }`}
-                disabled={isLoading}
+                disabled={validBoardName || isLoading}
                 onClick={() => createBoardHandler(boardName, session?.user.id)}
               >
                 {isLoading && <Loader className="animate-spin" />}

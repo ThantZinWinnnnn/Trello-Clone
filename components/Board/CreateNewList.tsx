@@ -15,6 +15,7 @@ const CreateNewList:React.FC<CreateNewListProps> = ({boardId}) => {
     boardId
    
   }
+    const notEnterText = newList === "";
     const {mutate:createList,isLoading:creating}  = useCreateList(boardId)
     // if(isSuccess) {
     //     handleOpenListInput()
@@ -39,7 +40,7 @@ const CreateNewList:React.FC<CreateNewListProps> = ({boardId}) => {
                     setNewList("");
                     setOpenListInput(false);
                 }}
-                disabled={creating}
+                disabled={notEnterText}
             >
               {"Add list"}
             </Button>
