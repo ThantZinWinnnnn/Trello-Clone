@@ -1,38 +1,34 @@
-"use client";
 import ProfileButton from "@/components/profile/ProfileButton";
 import UserInfo from "@/components/profile/UserInfo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React, { useReducer} from "react";
-import {Undo2,ArrowBigUpDash} from "lucide-react"
+import React from "react";
+import {Undo2} from "lucide-react";
+import { getServerSession } from "next-auth";
 import { useBoardStore } from "@/globalState/store/zustand.store";
 
-const ProfilePage = () => {
-  const { data: session } = useSession();
-  const router = useRouter()
+const ProfilePage = async() => {
+  const session = await getServerSession()
   const user = session?.user as UserProps; 
-  const {profileUser} = useBoardStore()
 
-  const profileStates :UserProfile = {
-      name:profileUser?.name!  ?? "",
-      email:profileUser?.email! as string,
-      img:profileUser?.image! as string,
-  }
+  // const profileStates :UserProfile = {
+  //     name:profileUser?.name!  ?? "",
+  //     email:profileUser?.email! as string,
+  //     img:profileUser?.image! as string,
+  // }
 
   
     
     
- const [profile,dispatch]= useReducer(reduer,profileStates)
+//  const [profile,dispatch]= useReducer(reduer,profileStates)
   return (
     <section className="container pt-4 h-full ">
       <section className="flex gap-3">
         <Avatar className="w-12 h-12">
           <AvatarImage src={user?.image!} alt={user?.name!} />
-          <AvatarFallback>
-            {user?.name!}
+          <AvatarFallback className="relative w-12 h-12">
+            <Image src={user?.image!} fill alt="default user photo" style={{objectFit:'cover'}}/>
           </AvatarFallback>
         </Avatar>
         <p className="flex flex-col gap-1">
@@ -58,7 +54,7 @@ const ProfilePage = () => {
           connect="name"
           type="text"
           value={user?.name!}
-          dispatch={dispatch}
+          // dispatch={dispatch}
           disabled={true}
         />
         <UserInfo
@@ -66,7 +62,7 @@ const ProfilePage = () => {
           connect="email"
           type="email"
           value={user?.email!}
-          dispatch={dispatch}
+          // dispatch={dispatch}
           disabled={true}
         />
         < UserInfo
@@ -74,18 +70,20 @@ const ProfilePage = () => {
           connect="img"
           type="text"
           value={user?.image!}
-          dispatch={dispatch}
+          // dispatch={dispatch}
           disabled={true}
         />
         <section>
 
          <Avatar className="w-20 h-20 mx-auto">
           <AvatarImage src={user?.image!} alt={user?.name!} />
-          <AvatarFallback>{user?.name!}</AvatarFallback>
+          <AvatarFallback className="relative w-20 h-20 mx-auto">
+            <Image src={user?.image!} fill alt="default user photo" style={{objectFit:'cover'}}/>
+          </AvatarFallback>
          </Avatar>
          <section className="flex justify-end gap-2 mt-4 lg:mt-14">
 
-          <ProfileButton text="Back" onClick={()=>{router.back()}} className="" Icon={Undo2}/>
+          <ProfileButton text="Back"  className=""/>
          {/* <ProfileButton text="Update" onClick={()=>{}} className="" Icon={ArrowBigUpDash}/> */}
 
          </section>
@@ -98,25 +96,25 @@ const ProfilePage = () => {
 
 export default ProfilePage;
 
-interface UserProfile {
-    name:string,
-    email:string,
-    img:string,
-};
+// interface UserProfile {
+//     name:string,
+//     email:string,
+//     img:string,
+// };
 export type T = "name" | "email" | "img";
 export type P = {type:T,value:string}
 
-const reduer = (state:UserProfile,{type,value}:P)=>{
-    switch (type){
-        case "name":
-            return {...state,name:value};
-        case "email":
-            return {...state,email:value};
-        case "img":
-            return {...state,img:value};
-        default:
-            return state
-    }
-}
+// const reduer = (state:UserProfile,{type,value}:P)=>{
+//     switch (type){
+//         case "name":
+//             return {...state,name:value};
+//         case "email":
+//             return {...state,email:value};
+//         case "img":
+//             return {...state,img:value};
+//         default:
+//             return state
+//     }
+// }
 
 

@@ -50,7 +50,7 @@ const Board = ({ params: { boardId } }: Params) => {
   )?.isAdmin!;
   const ListsSk = new Array(3).fill(0).map((_, i) => <ListSkeleton key={i} />);
   const alreadyAddedMember = boardMembers?.some((mem)=>mem?.id === member?.id);
-  console.log("boardMembers",boardMembers?.some((mem)=>mem?.id === member?.id),"member",member);
+  // console.log("boardMembers",boardMembers?.some((mem)=>mem?.id === member?.id),"member",member);
   const handleDrag = (result: DropResult) => {
     const { source: s, destination: d, type, draggableId } = result;
     console.log("res", s, "des", d, "type", type, "draggableId", draggableId);

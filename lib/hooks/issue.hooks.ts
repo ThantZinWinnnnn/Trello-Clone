@@ -1,7 +1,6 @@
 import {
   QueryClient,
   useMutation,
-  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
@@ -168,15 +167,6 @@ const updateAssigneeLocally = (
     (assignee) => assignee?.User?.id === user?.id
   );
   const indx = tobeUpdatedIssue?.assignees?.length;
-  // tobeUpdatedIssue?.assignees?.splice(indx!, 0, {
-  //         id:value,
-  //         createdAt: "",
-  //         userId: user?.id!,
-  //         issueId,
-  //         boardId,
-  //         User: user,
-  //       })
-
   type == "add"
     ? tobeUpdatedIssue?.assignees?.splice(indx!, 0, {
         id: value,
@@ -193,10 +183,7 @@ const updateAssigneeLocally = (
   return { ...issues, [listId]: [...source, tobeUpdatedIssue] } as Issues;
 };
 
-// const issueUpdateFun = async(data:IssueUpdateProps,issueId:string)=>{
-//   const response = await axios.put(`/api/issues/${issueId}`,data);
-//   return response.data;
-// }
+
 
 const issueSuccessFun = (queryClient: QueryClient, boardId: string) => {
   queryClient.invalidateQueries(["issues", boardId]);
