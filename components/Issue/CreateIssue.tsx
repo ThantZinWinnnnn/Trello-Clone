@@ -36,6 +36,7 @@ import PiorityDrowdown from "./PiorityDropdown";
 import { useCreateIssue } from "@/lib/hooks/issue.hooks";
 import { useQueryClient } from "@tanstack/react-query";
 import DescTextArea from "./DescTextArea";
+import RichText from "./RichText";
 
 const CreateIssue = ({ listId }: { listId: string }) => {
   const queryClient = useQueryClient();
@@ -188,6 +189,7 @@ const CreateIssue = ({ listId }: { listId: string }) => {
                 Description
               </Label>
               <DescTextArea value={form.desc} dispatch={dispatch} />
+              {/* <RichText description={form.desc} dispatch={dispatch}/> */}
               {/* <InputTextEditor dispatch={dispatch} val={form.desc} /> */}
             </div>
             <div>
