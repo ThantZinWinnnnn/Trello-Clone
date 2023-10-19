@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import Members from "@/components/members/Members";
 import { useSession } from "next-auth/react";
 import ListSkeleton from "@/components/skeleton/ListSkeleton";
-import { usePathname } from "next/navigation";
+import useDebounce from "@/components/utils/useDebounce";
 import BoardSettingBtn from "@/components/utils/BoardSettingBtn";
 type Params = {
   params: {
@@ -31,8 +31,9 @@ const Board = ({ params: { boardId } }: Params) => {
   const [openAddMemModal,setOpenAddMemModal] = useState(false);
   const { data: session } = useSession();
   const { member, memberName } = useBoardStore();
+  const debounceValue = useDebounce(memberName,500)
   const { mutate: addMember } = useAddMember(boardId, member!);
-  const { data: users, isLoading: loading } = useGetUsers(memberName);
+  const { data: users, isLoading: loading } = useGetUsers(debounceValue);
   const { data: lists } = useGetLists(boardId);
   const { mutate: reorderIssues } = useReorderIssues(boardId);
   const { mutate: reorderLists } = useReorderLists(boardId);
@@ -53,7 +54,6 @@ const Board = ({ params: { boardId } }: Params) => {
   // console.log("boardMembers",boardMembers?.some((mem)=>mem?.id === member?.id),"member",member);
   const handleDrag = (result: DropResult) => {
     const { source: s, destination: d, type, draggableId } = result;
-    console.log("res", s, "des", d, "type", type, "draggableId", draggableId);
 
     if (
       !lists ||

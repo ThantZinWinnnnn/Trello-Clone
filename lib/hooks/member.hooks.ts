@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { deleteBoardLocally } from "./board.hooks";
+import { deleteBoardLocally } from "./utils.functions";
 
 export const useGetMembers = (boardId: string) => {
   return useQuery<MemberProps[]>({

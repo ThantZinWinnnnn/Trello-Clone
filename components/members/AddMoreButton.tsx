@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 import { Button } from '../ui/button'
 import { PlusIcon } from '@radix-ui/react-icons'
 
-const AddMemberButton:React.FC<ButtonProps> = ({handler}) => {
+const AddMoreButton:React.FC<ButtonProps> = ({handler}) => {
   return (
     <Button variant={'ghost'} className='flex items-center gap-2 text-blue-800'
         onClick={handler}
@@ -14,7 +14,7 @@ const AddMemberButton:React.FC<ButtonProps> = ({handler}) => {
   )
 }
 
-export default memo(AddMemberButton);
+export default memo(AddMoreButton);
 
 interface ButtonProps{
     handler:()=>void

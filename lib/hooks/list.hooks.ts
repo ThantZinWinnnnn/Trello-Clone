@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useId } from "react";
+import { updateListOrderLocally } from "./utils.functions";
 
 export const useGetLists = (boardId: string) => {
    return useQuery<Array<ListProps>>({
@@ -76,15 +77,6 @@ export const useReorderLists =(boardId:string) => {
 
 
 };
-
-
-const updateListOrderLocally = (lists: Array<ListProps>,{id,oIdx,nIdx}:orderProps ) => {
-    const sourceList = lists.slice(0);
-    const draggedList = sourceList.splice(oIdx, 1)[0];
-    sourceList.splice(nIdx, 0, draggedList);
-
-    return sourceList;
-}
 
 export const useUpdateList = (boardId: string, listId: string) => {
   const queryClient = useQueryClient();

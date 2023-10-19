@@ -22,7 +22,7 @@ import Member from "../utils/Member";
 
 //data
 import { issueType, piorityArr } from "../DummyData/data";
-import AddMemberButton from "../members/AddMemberButton";
+import AddMemberButton from "../members/AddMoreButton";
 import SearchMember from "../utils/SearchMember";
 
 import { useIssueTypeAndPriorityFun } from "../DndComponents/TodoCard";
@@ -166,12 +166,10 @@ const IssueDetailComponent = ({
                     boardId={param?.boardId as string}
                     reporter={true}
                   />
-                  {/* <Dropdown val="" dispatch={()=>void}/> */}
                 </div>
                 <div className="relative w-full">
                   <Label className="uppercase text-xs">assignees</Label>
                   <div className="flex items-center flex-wrap gap-2 w-full">
-                    {/* <Member img={imgArr[0].img} name="Kyle Tomi" /> */}
                     {issue?.assignees?.map((usr) => (
                       <Member
                         key={usr?.id}
@@ -181,20 +179,20 @@ const IssueDetailComponent = ({
                         reporter={false}
                       />
                     ))}
-                    <AddMemberButton handler={openSearchInputHandler} />
+                    <AddMemberButton handler={openSearchInputHandler}/>
                     {openSearchInput && (
                       <SearchMember
                         closeSearchHandler={openSearchInputHandler}
                         users={toBeAssignees!}
                         updateAssignee={updateAssignee}
                         boardId={param.boardId as string}
+                        assignees={issue?.assignees!}
                       />
                     )}
                   </div>
                 </div>
                 <div className="w-[200px]">
                   <Label className="uppercase text-xs">priority</Label>
-                  {/* <PiorityDrowdown/> */}
                   <IssueDetailPiority
                     val={priority}
                     setPriority={setPriority}

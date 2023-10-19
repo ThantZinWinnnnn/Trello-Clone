@@ -47,7 +47,7 @@ const CreateIssue = ({ listId }: { listId: string }) => {
   const params = useParams();
   const boardId = params.boardId as string;
   
-  console.log("form", form, "id", boardId);
+  // console.log("form", form, "id", boardId);
   const getAllRequiredValues =
     form.image !== "" &&
     form.summary !== "" &&

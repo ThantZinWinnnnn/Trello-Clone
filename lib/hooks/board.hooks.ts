@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { Session } from "next-auth";
+import { deleteBoardLocally } from "./utils.functions";
 
 export const useGetBoards = (session: Session | null) => {
   return useQuery<GetUserBoardsProps>({
@@ -49,49 +50,4 @@ export const useDeleteBoard = (userId:string) => {
       }
   })
 }
-const updateRemoveOrLeaveBoard = (
-  oldUserBoards: GetUserBoardsProps,
-  action: "delete" | "leave",
-  boardId: string
-) => {
-  const oldCreatedBoards = oldUserBoards?.createdBoards;
-  const oldAssignedBoards = oldUserBoards?.assignedBoards
-  // const { createdBoards, assignedBoards } = oldUserBoards;
-  const updatedDeletedBoards = oldUserBoards?.createdBoards?.boards?.filter((board) => board?.id !== boardId);
-  const updatedLeavedBoards = oldUserBoards?.assignedBoards?.filter((board) => board?.id !== boardId);
-   if(action === "delete"){
-    return {
-        createdBoards:{
-            boards:updatedDeletedBoards
-        },
-        assignedBoards:oldAssignedBoards
-    } as GetUserBoardsProps
-   }else if(action === "leave"){
-    return {
-        createdBoards:oldCreatedBoards,
-        assignedBoards:updatedLeavedBoards
-       } as GetUserBoardsProps
-   }
-  
-  
-};
 
-export const deleteBoardLocally = (oldUserBoards: GetUserBoardsProps, boardId: string,action:"remove" | "leave") => {
-  const oldCreatedBoards = oldUserBoards?.createdBoards;
-  const oldAssignedBoards = oldUserBoards?.assignedBoards;
-  const updatedDeletedBoards = oldCreatedBoards?.boards?.filter((board) => board?.id !== boardId);
-  const updatedLeavedBoards = oldAssignedBoards?.filter((board) => board?.id !== boardId);
-  if(action === "remove"){
-    return {
-        createdBoards:{
-            boards:updatedDeletedBoards
-        },
-        assignedBoards:oldAssignedBoards
-    } as GetUserBoardsProps
-   }else if(action === "leave"){
-    return {
-        createdBoards:oldCreatedBoards,
-        assignedBoards:updatedLeavedBoards
-       } as GetUserBoardsProps
-   }
-}

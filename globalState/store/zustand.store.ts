@@ -32,7 +32,9 @@ interface BoardState{
     removeORLeaveBoard:"removed" | "leave" | "",
     setRemoveOrLeaveBoard:(status:"removed" | "leave")=>void,
     sort:string,
-    setSort:(sort:string)=>void
+    setSort:(sort:string)=>void,
+    assignee:UserProps | null,
+    setAssignee:(usr:UserProps)=>void
 };
 
 export const useBoardStore = create<BoardState>()((set)=>({
@@ -52,6 +54,7 @@ export const useBoardStore = create<BoardState>()((set)=>({
     reachedSetting:false,
     removeORLeaveBoard:"",
     sort:"alpha",
+    assignee:null,
     setIssueName:(val:string)=>set(({issueName:val})),
     setMemberId:(id:string)=>set(({memberId:id})),
     setChangedListId:(listId:string)=>set(({changedListId:listId})),
@@ -67,5 +70,6 @@ export const useBoardStore = create<BoardState>()((set)=>({
     setOpenSetting:((bool:boolean)=>set(({openSetting:bool}))),
     setReachedSetting:((bool:boolean)=>set(({reachedSetting:bool}))),
     setRemoveOrLeaveBoard:((st:"removed" | "leave")=>set(({removeORLeaveBoard:st}))),
-    setSort:((sort:string)=>set(({sort:sort})))
+    setSort:((sort:string)=>set(({sort:sort}))),
+    setAssignee:((usr:UserProps)=>set(({assignee:usr})))
 }))
