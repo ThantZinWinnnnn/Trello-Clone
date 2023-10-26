@@ -31,7 +31,7 @@ const SearchMember: React.FC<SearchMemberProps> = ({
       users?.filter((user) =>
         assignees?.some((assignee) => assignee?.User?.id === user?.User?.id)
       ),
-    [users,assignees]
+    [users, assignees]
   );
   const updatedUsrs = input === "" ? removeAlreadyAssignMember : filteredUsrs;
 
