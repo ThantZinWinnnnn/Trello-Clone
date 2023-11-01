@@ -26,7 +26,7 @@ const ToolBar = ({editor}:Props) => {
         <Toggle
             size={"sm"}
             pressed={editor.isActive("heading")}
-            onPressedChange={()=>editor.chain().focus().toggleHeading({ level: 2 }).run()}
+            onPressedChange={()=>editor.chain().focus().toggleHeading({ level: 4 }).run()}
         >
             <Heading2 className='w-4 h-4'/>
         </Toggle>
@@ -51,7 +51,7 @@ const ToolBar = ({editor}:Props) => {
         >
             <Strikethrough className='w-4 h-4'/>
         </Toggle>
-        <Toggle
+        {/* <Toggle
             size={"sm"}
             pressed={editor.isActive("bulletList")}
             onPressedChange={()=>editor.chain().focus().toggleBulletList().run()}
@@ -64,7 +64,7 @@ const ToolBar = ({editor}:Props) => {
             onPressedChange={()=>editor.chain().focus().toggleOrderedList().run()}
         >
             <ListOrdered className='w-4 h-4'/>
-        </Toggle>
+        </Toggle> */}
     </section>
   )
 }

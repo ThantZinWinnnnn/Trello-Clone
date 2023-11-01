@@ -36,6 +36,7 @@ import { useUpdateAssignee, useDeleteIssue } from "@/lib/hooks/issue.hooks";
 import IssueDetailPiority from "../Issue/IssueDetailPiority";
 import { useBoardStore } from "@/globalState/store/zustand.store";
 import { useGetMembers } from "@/lib/hooks/member.hooks";
+import ReadOnlyRichText from "../Issue/ReadOnlyRichText";
 
 const IssueDetailComponent = ({
   children,
@@ -129,12 +130,13 @@ const IssueDetailComponent = ({
                   <Label htmlFor="desc" className="text-xs">
                     Description
                   </Label>
-                  <p
+                  {/* <p
                     id="desc"
                     className="text-base font-semibold tracking-wide leading-6"
                   >
                     {issue?.desc}
-                  </p>
+                  </p> */}
+                  <ReadOnlyRichText description={issue?.desc}/>
                 </div>
 
                 <section className="flex flex-col gap-6">

@@ -188,8 +188,8 @@ const CreateIssue = ({ listId }: { listId: string }) => {
               <Label htmlFor="description" className="text-xs font-medium">
                 Description
               </Label>
-              <DescTextArea value={form.desc} dispatch={dispatch} />
-              {/* <RichText description={form.desc} dispatch={dispatch}/> */}
+              {/* <DescTextArea value={form.desc} dispatch={dispatch} /> */}
+              <RichText description={form.desc} dispatch={dispatch}/>
               {/* <InputTextEditor dispatch={dispatch} val={form.desc} /> */}
             </div>
             <div>
@@ -210,7 +210,7 @@ const CreateIssue = ({ listId }: { listId: string }) => {
             </section>
           </section>
           <DialogFooter className="flex gap-3 items-center">
-            <DialogTrigger>
+            <DialogTrigger className="w-full sm:w-auto">
               <Button
                 type="button"
                 className="px-5 bg-slate-400 hover:bg-slate-500 w-full"
@@ -224,7 +224,7 @@ const CreateIssue = ({ listId }: { listId: string }) => {
 
             <Button
               type="button"
-              className="px-6 bg-blue-600 hover:bg-blue-700 dark:text-white"
+              className="px-6 bg-blue-600 hover:bg-blue-700 dark:text-white w-full sm:w-auto"
               onClick={createIssueHandler}
               disabled={!getAllRequiredValues}
             >

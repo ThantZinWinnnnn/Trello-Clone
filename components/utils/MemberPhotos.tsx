@@ -47,11 +47,11 @@ const MemberPhotos:React.FC<MemberPhotosProps> = ({members,isLoading}) => {
           </Avatar>
         ))
       }
-     {members?.length > 4 && (
+     {/* {members?.length > 4 && (
        <div className="w-9 h-9 ring-2 ring-white rounded-full bg-blue-500 z-10 flex items-center justify-center hover:-translate-y-1 cursor-pointer">
        <p className="text-[0.75rem] font-semibold font-rubik text-white">+ {members.length - 4}</p>
      </div>
-     )}
+     )} */}
     </section>
   );
 };
