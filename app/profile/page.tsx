@@ -11,16 +11,12 @@ import { useBoardStore } from "@/globalState/store/zustand.store";
 const ProfilePage = async() => {
   const session = await getServerSession()
   const user = session?.user as UserProps; 
-
   // const profileStates :UserProfile = {
   //     name:profileUser?.name!  ?? "",
   //     email:profileUser?.email! as string,
   //     img:profileUser?.image! as string,
   // }
 
-  
-    
-    
 //  const [profile,dispatch]= useReducer(reduer,profileStates)
   return (
     <section className="container pt-4 h-full ">
