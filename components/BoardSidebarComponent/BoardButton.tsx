@@ -15,7 +15,7 @@ const BoardButton:React.FC<BoardButtonProps> = ({
               router.push("/boards");
             }}
             variant={"ghost"}
-            className={`flex items-center justify-start gap-2 2xl:gap-7 text-base  w-[95%] text-black bg-transparent px-2 hover:bg-blue-600 hover:text-white py-2 rounded-sm cursor-pointer dark:text-white`}
+            className={`flex items-center justify-start gap-2 2xl:gap-4 text-base  w-[95%] text-black bg-transparent px-2 hover:bg-blue-600 hover:text-white py-2 rounded-sm cursor-pointer dark:text-white`}
           >
             <span>
               <svg

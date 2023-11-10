@@ -74,7 +74,7 @@ const BoardSidebarComponent = () => {
   // console.log("sort", sort);
   // console.log('path',pathname.includes('trelloprojectboard'))
   return (
-    <section className="hidden lg:!flex flex-col justify-between  w-[280px] lg:w-[280px] xl:w-[250px] border-r-[1px] border-gray-300 h-[calc(100vh-48px)] opacity-95 bg-[#F4F5F7] p-2 dark:bg-gray-700">
+    <section className="hidden lg:!flex flex-col justify-between  w-[280px] lg:w-[450px] xl:w-[320px] border-r-[1px] border-gray-300 h-[calc(100vh-48px)] opacity-95 bg-[#F4F5F7] p-2 dark:bg-gray-700">
       <section className="">
         <h1 className="text-sm 2xl:text-xl font-semibold text-center">
           Trello Workspace

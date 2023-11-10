@@ -21,17 +21,17 @@ const FirstSignUpPage = async () => {
     <main className="flex flex-col h-screen justify-center items-center relative dark:bg-white w-[90%] mx-auto md:w-auto md:mx-auto">
       <section className="w-full md:w-[380px] shadow-first-card rounded-sm p-5">
         <Logo />
-        <p className="font-semibold text-center mb-5 text-sm">
+        <p className="font-semibold text-center mb-5 text-sm dark:text-slate-500">
           Create your account
         </p>
         <h2 className="text-slate-500 font-semibold text-xs mb-1">
           Gmail address
         </h2>
-        <p className="text-xs font-semibold">{session?.user?.email}</p>
+        <p className="text-xs font-semibold dark:text-slate-400">{session?.user?.email}</p>
         <h3 className="text-slate-500 font-semibold text-xs mb-1 mt-3">
           Full Name
         </h3>
-        <p className="text-xs font-semibold">{session?.user?.name}</p>
+        <p className="text-xs font-semibold dark:text-slate-400">{session?.user?.name}</p>
         <p className="text-[0.64rem] font-semibold text-gray-400 mt-2">
           By creating an account, I accept the Atlassian{" "}
           <span className="text-blue-700">Cloud Terms of Service</span>
@@ -44,7 +44,7 @@ const FirstSignUpPage = async () => {
         </p>
         <Separator />
         <AltLogo />
-        <p className="text-[0.61rem] text-center">
+        <p className="text-[0.61rem] text-center dark:text-black">
           One account for Trello,Jira,Confluence and{" "}
           <span className="text-blue-700">more.</span>
         </p>
