@@ -71,8 +71,6 @@ const BoardSidebarComponent = () => {
       : sort === "date"
       ? sortedByDateBoards
       : userAllBoards;
-  // console.log("sort", sort);
-  // console.log('path',pathname.includes('trelloprojectboard'))
   return (
     <section className="hidden lg:!flex flex-col justify-between  w-[280px] lg:w-[450px] xl:w-[320px] border-r-[1px] border-gray-300 h-[calc(100vh-48px)] opacity-95 bg-[#F4F5F7] p-2 dark:bg-gray-700">
       <section className="">
@@ -133,9 +131,7 @@ const BoardSidebarComponent = () => {
           </section>
         </section>
       </section>
-      {openSetting ? (
-        <BoardSettingBtn boardId={boardId}/>
-      ) : null}
+      {openSetting ? <BoardSettingBtn boardId={boardId} /> : null}
     </section>
   );
 };

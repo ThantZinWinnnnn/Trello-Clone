@@ -15,7 +15,6 @@ const FirstSignUpPage = async () => {
   if (!session?.user) {
     redirect("/login?callbackUrl=/first-signup");
   }
-  // console.log("session",session,"status",status)
 
   return (
     <main className="flex flex-col h-screen justify-center items-center relative dark:bg-white w-[90%] mx-auto md:w-auto md:mx-auto">
@@ -27,11 +26,15 @@ const FirstSignUpPage = async () => {
         <h2 className="text-slate-500 font-semibold text-xs mb-1">
           Gmail address
         </h2>
-        <p className="text-xs font-semibold dark:text-slate-400">{session?.user?.email}</p>
+        <p className="text-xs font-semibold dark:text-slate-400">
+          {session?.user?.email}
+        </p>
         <h3 className="text-slate-500 font-semibold text-xs mb-1 mt-3">
           Full Name
         </h3>
-        <p className="text-xs font-semibold dark:text-slate-400">{session?.user?.name}</p>
+        <p className="text-xs font-semibold dark:text-slate-400">
+          {session?.user?.name}
+        </p>
         <p className="text-[0.64rem] font-semibold text-gray-400 mt-2">
           By creating an account, I accept the Atlassian{" "}
           <span className="text-blue-700">Cloud Terms of Service</span>

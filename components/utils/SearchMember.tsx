@@ -34,7 +34,6 @@ const SearchMember: React.FC<SearchMemberProps> = ({
     [users, assignees]
   );
   const updatedUsrs = input === "" ? users : filteredUsrs;
-  console.log("ass",updatedUsrs)
 
   const updateAssigneeHandler = (usr: UserProps) => {
     setUser(usr);

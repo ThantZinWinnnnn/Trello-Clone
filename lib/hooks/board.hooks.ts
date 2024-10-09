@@ -10,7 +10,6 @@ export const useGetBoards = (session: Session | null) => {
       const response = await axios.get(
         `/api/board?userId=${session?.user?.id}`
       );
-      console.log("response", response);
       return response.data;
     },
   });
@@ -26,28 +25,33 @@ export const useGetDetailBoard = (boardId: string) => {
   });
 };
 
-export const useDeleteBoard = (userId:string) => {
+export const useDeleteBoard = (userId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-      mutationFn:async(id:string)=>{
-          const response = await axios.delete(`/api/board?boardId=${id}`);
-          return response.data;
-      },
-      onMutate:async(boardId)=>{
-          await queryClient.cancelQueries(['boards',userId])
-          const previousUserBoards = await queryClient.getQueryData(['boards',userId]);
-          queryClient.setQueryData(["boards",userId],(oldUserBoards:GetUserBoardsProps | undefined)=>
-          deleteBoardLocally(oldUserBoards!,boardId,"remove"));                   
-          return {
-              previousUserBoards
-          }
-      },
-      onError:(error,data,context)=>{
-         queryClient.setQueryData(["boards",userId],context?.previousUserBoards);
-      },
-      onSuccess:()=>{
-          queryClient.invalidateQueries(["boards",userId]);
-      }
-  })
-}
-
+    mutationFn: async (id: string) => {
+      const response = await axios.delete(`/api/board?boardId=${id}`);
+      return response.data;
+    },
+    onMutate: async (boardId) => {
+      await queryClient.cancelQueries(["boards", userId]);
+      const previousUserBoards = await queryClient.getQueryData([
+        "boards",
+        userId,
+      ]);
+      queryClient.setQueryData(
+        ["boards", userId],
+        (oldUserBoards: GetUserBoardsProps | undefined) =>
+          deleteBoardLocally(oldUserBoards!, boardId, "remove")
+      );
+      return {
+        previousUserBoards,
+      };
+    },
+    onError: (error, data, context) => {
+      queryClient.setQueryData(["boards", userId], context?.previousUserBoards);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["boards", userId]);
+    },
+  });
+};

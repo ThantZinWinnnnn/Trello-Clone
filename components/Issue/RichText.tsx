@@ -23,7 +23,6 @@ export default function RichText({
     },
     onUpdate: ({ editor }) => {
       dispatch({ type: "desc", value: editor.getHTML() });
-      console.log(editor.getHTML());
     },
   });
 

@@ -13,14 +13,12 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async session({ token, session }) {
-      // console.log("token",token,"session",session)
       const user = await prisma.user.findUnique({
         where: {
           email: token?.email!,
         },
       });
       session.user = user!;
-      // console.log("updatedSession", session);
       return session;
     },
   },

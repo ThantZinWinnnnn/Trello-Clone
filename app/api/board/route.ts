@@ -25,7 +25,6 @@ export const GET = async (req: NextRequest) => {
         },
       }),
     ]);
-    // console.log("boards",{ownBoards:createdBoards,assign:assignedBoards})
     return NextResponse.json({
       createdBoards,
       assignedBoards,

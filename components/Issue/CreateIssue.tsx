@@ -46,8 +46,7 @@ const CreateIssue = ({ listId }: { listId: string }) => {
   const { mutate: createIssue, isLoading } = useCreateIssue();
   const params = useParams();
   const boardId = params.boardId as string;
-  
-  // console.log("form", form, "id", boardId);
+
   const getAllRequiredValues =
     form.image !== "" &&
     form.summary !== "" &&
@@ -65,15 +64,14 @@ const CreateIssue = ({ listId }: { listId: string }) => {
           onSuccess: () => {
             queryClient.invalidateQueries(["issues", boardId]);
             toast.success("Issue Created");
-            dispatch({type:"reset",value:""});
-            setOpenModal(false);           
+            dispatch({ type: "reset", value: "" });
+            setOpenModal(false);
           },
         }
       );
-    }else{
+    } else {
       toast.error("Please fill the all fields values");
     }
-    
 
     // toast.error("Error Creating Issue");
   };
@@ -189,7 +187,7 @@ const CreateIssue = ({ listId }: { listId: string }) => {
                 Description
               </Label>
               {/* <DescTextArea value={form.desc} dispatch={dispatch} /> */}
-              <RichText description={form.desc} dispatch={dispatch}/>
+              <RichText description={form.desc} dispatch={dispatch} />
               {/* <InputTextEditor dispatch={dispatch} val={form.desc} /> */}
             </div>
             <div>
@@ -215,8 +213,9 @@ const CreateIssue = ({ listId }: { listId: string }) => {
                 type="button"
                 className="px-5 bg-slate-400 hover:bg-slate-500 w-full"
                 onClick={() => {
-                  dispatch({type:"reset",value:""})
-                  setOpenModal(false)}}
+                  dispatch({ type: "reset", value: "" });
+                  setOpenModal(false);
+                }}
               >
                 Cancel
               </Button>
@@ -277,6 +276,15 @@ const reducer = (state: IssueState, { type, value }: I) => {
     case "assignee":
       return { ...state, assignees: value as string[] };
     case "reset":
-      return {...state, image: "", type: "", summary: "", desc: "", priority: "", reporterId: "", assignees: []};
+      return {
+        ...state,
+        image: "",
+        type: "",
+        summary: "",
+        desc: "",
+        priority: "",
+        reporterId: "",
+        assignees: [],
+      };
   }
 };
