@@ -88,7 +88,7 @@ const CreateIssue = ({ listId }: { listId: string }) => {
           <PlusIcon className="text-white" />
         </Button>
 
-        <DialogContent className="dark:bg-gray-700 h-[90vh] my-auto w-[90%] mx-auto sm:mx-0 sm:w-auto overflow-y-scroll rounded-md px-2 sm:px-4">
+        <DialogContent className="dark:bg-gray-700 !h-[90vh] my-auto !w-[90%] mx-auto sm:mx-0 sm:w-auto overflow-y-scroll rounded-md px-2 sm:px-4">
           <DialogHeader>
             <DialogTitle className="text-base font-normal ">
               Create Issue
