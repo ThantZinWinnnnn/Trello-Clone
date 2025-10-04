@@ -38,15 +38,20 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
 
 export const PUT = async (req: NextRequest) => {
   try {
-    const body :orderProps = await req.json();
+    const body: orderProps = await req.json();
 
-    const {id,oIdx,nIdx,boardId}  = body;
+    const { id, oIdx, nIdx, boardId } = body;
 
-    await sameColumnReorder({id,oIdx,nIdx},{boardId},prisma,"list")
+    const result = await sameColumnReorder(
+      { id, oIdx, nIdx },
+      { boardId },
+      prisma.list
+    );
+    return NextResponse.json(result);
   } catch (error) {
-    badRequest("Error Found in updating Lists", 400);
+    return badRequest("Error Found in updating Lists", 400);
   }
-}
+};
 
 export const PATCH = async(req:NextRequest)=>{
   try {

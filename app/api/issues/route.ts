@@ -77,11 +77,12 @@ export const PUT = async (req: NextRequest) => {
       d: { dId, nIdx },
     } = body;
 
-    await (sId === dId
-      ? sameColumnReorder({ id, oIdx, nIdx }, { listId: sId }, prisma, "issue")
-      : diffColumnReorder(body, prisma));
+    const result = await (sId === dId
+      ? sameColumnReorder({ id, oIdx, nIdx }, { listId: sId }, prisma.issue)
+      : diffColumnReorder(body));
+    return NextResponse.json(result);
   } catch (error) {
-    badRequest("Invalid request for updating Issue Order", 400);
+    return badRequest("Invalid request for updating Issue Order", 400);
   }
 };
 
