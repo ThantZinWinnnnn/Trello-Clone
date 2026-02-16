@@ -2,9 +2,9 @@
 import React, { useState } from "react";
 
 //profileArr
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { useBoardStore } from "@/globalState/store/zustand.store";
-import UserProfileSk from "../skeleton/UserProfileSk";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useBoardStore } from "@/shared/state/zustand.store";
+import UserProfileSk from "@/components/skeleton/UserProfileSk";
 
 type MemberPhotosProps = {
   members: Array<MemberProps>;

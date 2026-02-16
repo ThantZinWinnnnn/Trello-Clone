@@ -6,10 +6,10 @@ import { redirect } from "next/navigation";
 //components
 import ProjectBoard from "@/components/utils/ProjectBoard";
 import { Toaster, toast } from "sonner";
-import { useBoardStore } from "@/globalState/store/zustand.store";
-import { useGetBoards } from "@/lib/hooks/board.hooks";
+import { useBoardStore } from "@/shared/state/zustand.store";
+import { useGetBoards } from "@/features/board/hooks/board.hooks";
 import { Label } from "@/components/ui/label";
-import AssignedBoards from "@/components/Board/AssignedBoards";
+import AssignedBoards from "@/features/board/components/AssignedBoards";
 import LineSeparator from "@/components/utils/LineSeparator";
 import { Metadata } from "next";
 
@@ -47,7 +47,7 @@ const BoardsPage = () => {
   return (
     <>
     <Toaster richColors position="top-center" />
-    <main className="p-3 h-full">
+    <main className="p-3 h-full overflow-y-auto">
       <ProjectBoard boards={createdBoards!} isLoading={isLoading}/>
       {
         filterAssignedBoards?.length ? (

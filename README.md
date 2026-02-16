@@ -1,4 +1,4 @@
-# Trello-Clone
+# BoardForge
 
 <br>
 
@@ -49,4 +49,4 @@ I am a frontend web developer prioritizing Next.js, TypeScript, and UI libraries
 ```
 
 ## Contribution
-I actively contribute to my trello open-source project by raising issues, fixing bugs, and encouraging collaboration through open pull requests, fostering a welcoming environment for anyone interested in contributing.
+I actively contribute to my BoardForge open-source project by raising issues, fixing bugs, and encouraging collaboration through open pull requests, fostering a welcoming environment for anyone interested in contributing.

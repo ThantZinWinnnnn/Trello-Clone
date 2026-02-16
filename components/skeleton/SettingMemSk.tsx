@@ -1,7 +1,7 @@
 import React from 'react'
-import { Badge } from '../ui/badge'
+import { Badge } from '@/components/ui/badge'
 import UserProfileSk from './UserProfileSk'
-import { Skeleton } from '../ui/skeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const SettingMemSk = () => {
   return (

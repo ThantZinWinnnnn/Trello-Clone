@@ -2,9 +2,9 @@
 import React, { memo, useMemo } from 'react'
 
 //profile Arr
-import { imgArr } from '../DummyData/data'
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { useBoardStore } from '@/globalState/store/zustand.store';
+import { imgArr } from '@/components/DummyData/data'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useBoardStore } from '@/shared/state/zustand.store';
 
 
 const CardMember:React.FC<CardMemberProps> = ({members}) => {

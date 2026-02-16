@@ -3,9 +3,9 @@ import Breadcrumbs from "@/components/utils/Breadcrumbs";
 import React, { useState } from "react";
 
 import { Separator } from "@/components/ui/separator";
-import { useDeleteBoard, useGetDetailBoard } from "@/lib/hooks/board.hooks";
+import { useDeleteBoard, useGetDetailBoard } from "@/features/board/hooks/board.hooks";
 import { useParams, useRouter } from "next/navigation";
-import BoardInfo from "@/components/setting/BoardInfo";
+import BoardInfo from "@/features/board/settings/BoardInfo";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import ConfirmModal from "@/components/utils/ConfirmModal";
-import { useGetMembers, useRemoveMember } from "@/lib/hooks/member.hooks";
+import { useGetMembers, useRemoveMember } from "@/features/member/hooks/member.hooks";
 import SettingMemSk from "@/components/skeleton/SettingMemSk";
 
 const CurrentProjectSettingsPage = () => {
@@ -118,7 +118,7 @@ const CurrentProjectSettingsPage = () => {
         <BoardInfo
           label="GitHub Repository"
           connection="repo"
-          value={"https://github.com/Micheal-Winn/Trello-Clone"}
+          value={"https://github.com/Micheal-Winn/BoardForge"}
           onChange={() => console.log("hi")}
           disabled={false}
           isLoading={false}

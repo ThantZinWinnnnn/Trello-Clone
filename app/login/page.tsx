@@ -1,22 +1,41 @@
 import React from "react";
 //components
-import Authenticate from "@/components/auth/Authenticate";
-import Logo from "@/components/auth/Logo";
+import Authenticate from "@/features/auth/components/Authenticate";
+import Logo from "@/features/auth/components/Logo";
 import leftLogo from "@/public/photos/left-logo.png";
 import rightLogo from "@/public/photos/right-logo.png";
 import Image from "next/image";
-import { Separator } from "@/components/ui/separator";
 import LineSeparator from "@/components/utils/LineSeparator";
 import { Metadata } from "next";
+import { SITE_NAME, SITE_URL, toJsonLd } from "@/lib/seo";
 
-export const metadata:Metadata = {
-  title:"Login Page",
-  description:"This page is authentication for Trello Clone"
-}
+export const metadata: Metadata = {
+  title: "Login",
+  description: "Sign in to BoardForge to manage your boards and tasks.",
+  alternates: {
+    canonical: "/login",
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 const page = () => {
+  const loginJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: `${SITE_NAME} Login`,
+    url: `${SITE_URL}/login`,
+    description: "Authentication page for BoardForge.",
+  };
+
   return (
     <main className="flex flex-col items-center justify-center h-screen bg-white relative dark:bg-gray-500">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLd(loginJsonLd) }}
+      />
       <section className="w-[400px] flex flex-col gap-14 items-center justify-center">
         <Logo />
         <Authenticate />

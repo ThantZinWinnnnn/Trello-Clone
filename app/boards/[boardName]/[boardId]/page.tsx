@@ -1,22 +1,20 @@
 "use client";
 
 import Breadcrumbs from "@/components/utils/Breadcrumbs";
-import React, { useState } from "react";
-import IssueFilterByMem from "@/components/Board/IssueFilterByMem";
+import React, { useMemo, useState } from "react";
+import IssueFilterByMem from "@/features/board/components/IssueFilterByMem";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
-import Column from "@/components/DndComponents/Column";
-import CreateNewList from "@/components/Board/CreateNewList";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { useReorderIssues } from "@/lib/hooks/issue.hooks";
-import { useReorderLists } from "@/lib/hooks/list.hooks";
-import { useGetLists } from "@/lib/hooks/list.hooks";
-import AddMemberModal from "@/components/members/AddMemberModal";
-import { useBoardStore } from "@/globalState/store/zustand.store";
-import { useAddMember, useGetMembers } from "@/lib/hooks/member.hooks";
-import { useGetUsers } from "@/lib/hooks/user.hooks";
+import Column from "@/features/issue/dnd/Column";
+import CreateNewList from "@/features/board/components/CreateNewList";
+import { useGetIssues, useReorderIssues } from "@/features/issue/hooks/issue.hooks";
+import { useReorderLists } from "@/features/board/hooks/list.hooks";
+import { useGetLists } from "@/features/board/hooks/list.hooks";
+import AddMemberModal from "@/features/member/components/AddMemberModal";
+import { useBoardStore } from "@/shared/state/zustand.store";
+import { useAddMember, useGetMembers } from "@/features/member/hooks/member.hooks";
+import { useGetUsers } from "@/features/user/hooks/user.hooks";
 import { Button } from "@/components/ui/button";
-import Members from "@/components/members/Members";
+import Members from "@/features/member/components/Members";
 import { useSession } from "next-auth/react";
 import ListSkeleton from "@/components/skeleton/ListSkeleton";
 import useDebounce from "@/components/utils/useDebounce";
@@ -30,27 +28,28 @@ type Params = {
 const Board = ({ params: { boardId } }: Params) => {
   const [openAddMemModal,setOpenAddMemModal] = useState(false);
   const { data: session } = useSession();
-  const { member, memberName } = useBoardStore();
+  const { memberName } = useBoardStore();
   const debounceValue = useDebounce(memberName,500)
-  const { mutate: addMember } = useAddMember(boardId, member!);
-  const { data: users, isLoading: loading } = useGetUsers(debounceValue);
+  const { mutate: addMember } = useAddMember(boardId);
+  const {
+    data: users = [],
+    isLoading: isUsersLoading,
+    isFetching: isUsersFetching,
+    isError: isUsersError,
+  } = useGetUsers(debounceValue, boardId);
   const { data: lists } = useGetLists(boardId);
   const { mutate: reorderIssues } = useReorderIssues(boardId);
   const { mutate: reorderLists } = useReorderLists(boardId);
   const { data: boardMembers } = useGetMembers(boardId);
-  const { data: issues, isLoading } = useQuery<Issues>({
-    queryKey: ["issues", boardId],
-    queryFn: async () => {
-      const response = await axios.get(`/api/issues?boardId=${boardId}`);
-      return response.data;
-    },
-  });
+  const { data: issues, isLoading } = useGetIssues(boardId);
   const user = session?.user;
-  const boardAdmin = boardMembers?.find(
-    (member) => member?.User?.id === user?.id
-  )?.isAdmin!;
+  const boardAdmin = useMemo(
+    () =>
+      boardMembers?.find((member) => member?.User?.id === user?.id)?.isAdmin ??
+      false,
+    [boardMembers, user?.id]
+  );
   const ListsSk = new Array(3).fill(0).map((_, i) => <ListSkeleton key={i} />);
-  const alreadyAddedMember = boardMembers?.some((mem)=>mem?.id === member?.id);
   const handleDrag = (result: DropResult) => {
     const { source: s, destination: d, type, draggableId } = result;
 
@@ -78,24 +77,25 @@ const Board = ({ params: { boardId } }: Params) => {
   };
 
   return (
-    <main className="p-3 w-full pl-4 xl:pl-10 overflow-y-scroll">
+    <main className="p-3 w-full min-w-0 h-full pl-4 xl:pl-10 overflow-auto">
       <section className="flex flex-col sm:!flex-row sm:justify-between sm:items-center gap-4">
         <Breadcrumbs />
         <section className="flex  gap-2 items-center">
           {/* to hidden add member btn when login user is not equal to board admin */}
           {boardAdmin ? (
             <AddMemberModal
-              users={users!}
-              loading={loading}
+              users={users}
               mutate={addMember}
               boardId={boardId}
-              beenAdded={alreadyAddedMember!}
               openModal={openAddMemModal}
               closeModal={setOpenAddMemModal}
-              boardMembers={boardMembers}
+              boardMembers={boardMembers ?? []}
+              isUsersLoading={isUsersLoading}
+              isUsersFetching={isUsersFetching}
+              isUsersError={isUsersError}
             >
               <Button
-              onClick={()=>setOpenAddMemModal((prev)=>!prev)} 
+              onClick={() => setOpenAddMemModal(true)} 
               className="bg-blue-600 hover:bg-blue-500 py-1! font-rubik dark:text-white text-[0.7rem] lg:text-xs h-8 sm:h-9">
                 Add Member
               </Button>
@@ -106,7 +106,7 @@ const Board = ({ params: { boardId } }: Params) => {
       </section>
       <section className="flex items-center justify-between my-5">
         <h2 className=" font-semibold text-sm 2xl:text-xl">
-          Trello Project Board
+          BoardForge Project Board
         </h2>
         <BoardSettingBtn
           boardId={boardId}
@@ -120,7 +120,7 @@ const Board = ({ params: { boardId } }: Params) => {
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
-              className="flex gap-4 mt-8 overflow-x-scroll"
+              className="flex w-max gap-4 mt-8 pb-2"
             >
               {isLoading
                 ? ListsSk

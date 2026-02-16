@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
-import { Button } from '../ui/button';
-import { useBoardStore } from '@/globalState/store/zustand.store';
+import { Button } from '@/components/ui/button';
+import { useBoardStore } from '@/shared/state/zustand.store';
 import { usePathname, useRouter } from 'next/navigation';
 import { Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';

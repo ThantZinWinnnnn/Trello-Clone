@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React from 'react'
 import { SlashIcon } from '@radix-ui/react-icons';
 import { useSession } from 'next-auth/react';
-import { useBoardStore } from '@/globalState/store/zustand.store';
+import { useBoardStore } from '@/shared/state/zustand.store';
 import { usePathname } from 'next/navigation';
 
 

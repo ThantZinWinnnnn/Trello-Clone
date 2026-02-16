@@ -1,16 +1,16 @@
 "use client";
 import React, { useMemo, useState } from "react";
 
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 
 //data
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 //icon
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { UseMutateFunction } from "@tanstack/react-query";
-import { useBoardStore } from "@/globalState/store/zustand.store";
+import { useBoardStore } from "@/shared/state/zustand.store";
 
 const SearchMember: React.FC<SearchMemberProps> = ({
   closeSearchHandler,
@@ -21,19 +21,29 @@ const SearchMember: React.FC<SearchMemberProps> = ({
 }) => {
   const [input, setInput] = useState("");
   const { setUser, setIssueUpdateType } = useBoardStore();
+  const normalizedInput = input.toLowerCase();
   const filteredUsrs = useMemo(
     () =>
-      users?.filter((usr) => usr?.User?.name?.toLowerCase().includes(input)),
-    [users, input]
+      users?.filter((usr) =>
+        usr?.User?.name?.toLowerCase().includes(normalizedInput)
+      ),
+    [users, normalizedInput]
   );
-  const removeAlreadyAssignMember = useMemo(
+  const removeAlreadyAssignedMember = useMemo(
     () =>
       users?.filter((user) =>
-        assignees?.some((assignee) => assignee?.User?.id === user?.User?.id)
+        !assignees?.some((assignee) => assignee?.User?.id === user?.User?.id)
       ),
     [users, assignees]
   );
-  const updatedUsrs = input === "" ? users : filteredUsrs;
+  const updatedUsers =
+    input === ""
+      ? removeAlreadyAssignedMember
+      : filteredUsrs?.filter((usr) =>
+          removeAlreadyAssignedMember?.some(
+            (member) => member.User?.id === usr.User?.id
+          )
+        );
 
   const updateAssigneeHandler = (usr: UserProps) => {
     setUser(usr);
@@ -57,7 +67,7 @@ const SearchMember: React.FC<SearchMemberProps> = ({
       </div>
 
       <div className="flex flex-col ">
-        {updatedUsrs?.map((user) => (
+        {updatedUsers?.map((user) => (
           <Button
             variant={"ghost"}
             key={user?.User?.id}
@@ -82,7 +92,7 @@ interface SearchMemberProps {
   closeSearchHandler: () => void;
   users: MemberProps[];
   updateAssignee: UseMutateFunction<
-    any,
+    unknown,
     unknown,
     IssueUpdateProps,
     {

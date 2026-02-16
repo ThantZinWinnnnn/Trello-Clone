@@ -1,6 +1,6 @@
 import React from 'react'
 import UserProfileSk from './UserProfileSk'
-import { Skeleton } from '../ui/skeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const CommentSk = () => {
   return (

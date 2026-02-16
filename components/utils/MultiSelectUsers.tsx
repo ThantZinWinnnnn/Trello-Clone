@@ -3,11 +3,11 @@
 import * as React from "react";
 import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
-import { I } from "../Issue/CreateIssue";
+import { I } from "@/features/issue/components/CreateIssue";
 
 
 const MultiSelectUsers: React.FC<MultiSelectUsersProps> = function ({

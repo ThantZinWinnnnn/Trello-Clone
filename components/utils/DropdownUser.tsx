@@ -1,5 +1,5 @@
 import React, { Dispatch, memo, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Select,
   SelectContent,
@@ -8,8 +8,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "../ui/input";
-import { I } from "../Issue/CreateIssue";
+import { Input } from "@/components/ui/input";
+import { I } from "@/features/issue/components/CreateIssue";
 import { UseMutateFunction } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 

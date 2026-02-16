@@ -29,7 +29,6 @@ interface GetUserBoardsProps {
 }
 type inputProps = {
   inputName:string,
-  userId:string | undefined | null
 }
 interface CreateBoardProps {
   name: string;
@@ -246,4 +245,3 @@ type UpdateUserProps = {
   name:string,
   image:string,
 }
-

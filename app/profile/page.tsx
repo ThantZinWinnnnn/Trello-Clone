@@ -1,15 +1,13 @@
-import ProfileButton from "@/components/profile/ProfileButton";
-import UserInfo from "@/components/profile/UserInfo";
+import ProfileButton from "@/features/profile/components/ProfileButton";
+import UserInfo from "@/features/profile/components/UserInfo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import React from "react";
-import {Undo2} from "lucide-react";
-import { getServerSession } from "next-auth";
-import { useBoardStore } from "@/globalState/store/zustand.store";
+import { getAuthSession } from "@/lib/next-auth";
 
 const ProfilePage = async() => {
-  const session = await getServerSession()
+  const session = await getAuthSession()
   const user = session?.user as UserProps; 
   // const profileStates :UserProfile = {
   //     name:profileUser?.name!  ?? "",
@@ -112,5 +110,3 @@ export type P = {type:T,value:string}
 //             return state
 //     }
 // }
-
-

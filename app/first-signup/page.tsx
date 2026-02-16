@@ -1,23 +1,49 @@
 import React from "react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
+import { Metadata } from "next";
+import { getAuthSession } from "@/lib/next-auth";
 
-import AltLogo from "@/components/firstSignUp/AltLogo";
-import Logo from "@/components/firstSignUp/Logo";
+import AltLogo from "@/features/onboarding/first-signup-components/AltLogo";
+import Logo from "@/features/onboarding/first-signup-components/Logo";
 import { Separator } from "@/components/ui/separator";
 import leftLogo from "@/public/photos/left-logo.png";
 import rightLogo from "@/public/photos/right-logo.png";
 import NavigateToCreateBoardButton from "./NavigateToCreateBoardButton";
+import { SITE_NAME, SITE_URL, toJsonLd } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "First Sign Up",
+  description: "Complete the first sign-up flow for your BoardForge account.",
+  alternates: {
+    canonical: "/first-signup",
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 const FirstSignUpPage = async () => {
-  const session = await getServerSession();
+  const session = await getAuthSession();
   if (!session?.user) {
     redirect("/login?callbackUrl=/first-signup");
   }
 
+  const firstSignupJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: `${SITE_NAME} First Sign Up`,
+    url: `${SITE_URL}/first-signup`,
+    description: "Initial onboarding page for first-time users.",
+  };
+
   return (
     <main className="flex flex-col h-screen justify-center items-center relative dark:bg-white w-[90%] mx-auto md:w-auto md:mx-auto">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLd(firstSignupJsonLd) }}
+      />
       <section className="w-full md:w-[380px] shadow-first-card rounded-sm p-5">
         <Logo />
         <p className="font-semibold text-center mb-5 text-sm dark:text-slate-500">
@@ -48,7 +74,7 @@ const FirstSignUpPage = async () => {
         <Separator />
         <AltLogo />
         <p className="text-[0.61rem] text-center dark:text-black">
-          One account for Trello,Jira,Confluence and{" "}
+          One account for BoardForge,Jira,Confluence and{" "}
           <span className="text-blue-700">more.</span>
         </p>
       </section>

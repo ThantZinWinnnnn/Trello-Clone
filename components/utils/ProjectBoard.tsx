@@ -1,14 +1,14 @@
 "use client"
 import Link from "next/link";
 import React, { useMemo, memo, useState } from "react";
-import { Button } from "../ui/button";
-import CreateNewBoardModal from "../Board/CreateNewBoardModal";
-import { useBoardStore } from "@/globalState/store/zustand.store";
+import { Button } from "@/components/ui/button";
+import CreateNewBoardModal from "@/features/board/components/CreateNewBoardModal";
+import { useBoardStore } from "@/shared/state/zustand.store";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Label } from "../ui/label";
-import { Separator } from "../ui/separator";
-import BoardSkeleton from "../skeleton/BoardSkeleton";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import BoardSkeleton from "@/components/skeleton/BoardSkeleton";
 import LineSeparator from "./LineSeparator";
 
 const   ProjectBoard = ({ boards,isLoading }:{boards:Array<BoardProps>,isLoading:boolean}) => {
