@@ -1,6 +1,12 @@
 import prisma from "@/lib/prisma";
 import { getAuthSession } from "@/lib/next-auth";
 import { NextResponse } from "next/server";
+import {
+  AppBoardRole,
+  BoardPermission,
+  deriveBoardRole,
+  hasBoardPermission,
+} from "@/modules/shared/rbac";
 
 export const badRequest = (message: string, status = 400) =>
   NextResponse.json({ message }, { status });
@@ -37,34 +43,99 @@ export const sanitizeHtml = (value: string) =>
 export const sanitizePlainText = (value: string) =>
   sanitizeHtml(value).replace(/<[^>]*>/g, "").trim();
 
-export const requireBoardMember = async (boardId: string, userId: string) => {
-  const member = await prisma.member.findFirst({
-    where: {
-      boardId,
-      userId,
-    },
-    select: {
-      id: true,
-      isAdmin: true,
-    },
+export type BoardAccessContext = {
+  boardId: string;
+  userId: string;
+  role: AppBoardRole;
+  memberId: string | null;
+  isOwner: boolean;
+  isAdmin: boolean;
+};
+
+export const getBoardAccessContext = async (
+  boardId: string,
+  userId: string
+): Promise<BoardAccessContext | null> => {
+  const [board, member] = await Promise.all([
+    prisma.board.findUnique({
+      where: { id: boardId },
+      select: { id: true, userId: true },
+    }),
+    prisma.member.findFirst({
+      where: { boardId, userId },
+      select: { id: true, isAdmin: true, role: true },
+    }),
+  ]);
+
+  if (!board) {
+    return null;
+  }
+
+  const isOwner = board.userId === userId;
+  if (!isOwner && !member) {
+    return null;
+  }
+
+  const role = deriveBoardRole({
+    isOwner,
+    role: member?.role ?? null,
+    isAdmin: member?.isAdmin,
   });
 
-  return member;
+  return {
+    boardId,
+    userId,
+    role,
+    memberId: member?.id ?? null,
+    isOwner,
+    isAdmin: role === "OWNER" || role === "ADMIN",
+  };
+};
+
+export const requireBoardPermission = async (
+  boardId: string,
+  userId: string,
+  permission: BoardPermission
+) => {
+  const access = await getBoardAccessContext(boardId, userId);
+  if (!access) {
+    return null;
+  }
+
+  if (!hasBoardPermission(access.role, permission)) {
+    return null;
+  }
+
+  return access;
+};
+
+export const requireBoardMember = async (boardId: string, userId: string) => {
+  const access = await requireBoardPermission(boardId, userId, "board:read");
+  if (!access) {
+    return null;
+  }
+
+  return {
+    id: access.memberId ?? access.userId,
+    isAdmin: access.isAdmin,
+    role: access.role,
+  };
 };
 
 export const requireBoardAdmin = async (boardId: string, userId: string) => {
-  const member = await prisma.member.findFirst({
-    where: {
-      boardId,
-      userId,
-      isAdmin: true,
-    },
-    select: {
-      id: true,
-    },
-  });
+  const access = await getBoardAccessContext(boardId, userId);
+  if (!access) {
+    return null;
+  }
 
-  return member;
+  if (!access.isAdmin) {
+    return null;
+  }
+
+  return {
+    id: access.memberId ?? access.userId,
+    role: access.role,
+  };
 };
 
 export const sameColumnReorder = async (

@@ -67,9 +67,12 @@ interface UserProps {
 };
 type ProfileUserProps = Partial<UserProps> 
 
+type BoardRole = "OWNER" | "ADMIN" | "MEMBER" | "VIEWER";
+
 interface MemberProps{
   id:string | null,
   isAdmin:boolean | null,
+  role?: BoardRole | null,
   createdAt:string | null,
   User:UserProps
 }
@@ -77,6 +80,7 @@ interface MemberProps{
 interface BoardMemberProps{
   id:string | null,
   isAdmin:boolean | null,
+  role?: BoardRole | null,
   boardId:string,
   createdAt:string | null,
   userId:string,
@@ -163,6 +167,7 @@ interface dndOrderProps {
 interface ReorderIssue extends dndOrderProps {
   id: string;
   boardId?: string;
+  expectedUpdatedAt?: string;
 }
 
 interface List {
@@ -224,7 +229,8 @@ interface CommentProps{
 
 interface AddMember{
   boardId:string,
-  userId:string
+  userId:string,
+  role?: Exclude<BoardRole, "OWNER">
 }
 
 interface RemoveMember extends AddMember {
@@ -244,4 +250,42 @@ type UpdateUserProps = {
   id:string,
   name:string,
   image:string,
+}
+
+interface AuditEventItem {
+  id: string;
+  actionType: string;
+  entityType: string;
+  entityId: string;
+  boardId: string;
+  metadata: Record<string, unknown> | null;
+  createdAt: string;
+  actor: {
+    id: string;
+    name: string | null;
+    email: string | null;
+    image: string | null;
+  } | null;
+}
+
+type AttachmentScanStatus = "PENDING" | "CLEAN" | "INFECTED" | "FAILED";
+
+interface AttachmentItem {
+  id: string;
+  boardId: string;
+  issueId: string | null;
+  commentId: string | null;
+  fileName: string;
+  contentType: string;
+  fileSize: number;
+  storageKey: string;
+  scanStatus: AttachmentScanStatus;
+  createdAt: string;
+  updatedAt: string;
+  uploader: {
+    id: string;
+    name: string | null;
+    image: string | null;
+    email: string | null;
+  };
 }

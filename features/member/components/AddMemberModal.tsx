@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -31,6 +31,7 @@ const AddMemberModal: React.FC<Props> = ({
 }) => {
   const {data:session} = useSession()
   const { memberName, setMemberName } = useBoardStore();
+  const [selectedRole, setSelectedRole] = useState<Exclude<BoardRole, "OWNER">>("MEMBER");
   const user = session?.user;
   const addMemberHandler = (selectedUser: UserProps) => {
     if (!selectedUser?.id) {
@@ -38,7 +39,7 @@ const AddMemberModal: React.FC<Props> = ({
       return;
     }
 
-    mutate({ boardId, userId: selectedUser.id, user: selectedUser });
+    mutate({ boardId, userId: selectedUser.id, user: selectedUser, role: selectedRole });
   };
   const addableUsers = useMemo(
     () =>
@@ -85,6 +86,20 @@ const AddMemberModal: React.FC<Props> = ({
             onChange={(e) => setMemberName(e.target.value)}
           />
           {/* // <Button>Search</Button> */}
+        </section>
+        <section className="mt-2">
+          <label className="text-xs text-slate-500">Assign role</label>
+          <select
+            className="mt-1 w-full rounded-md border border-slate-300 bg-white p-2 text-xs dark:bg-gray-800"
+            value={selectedRole}
+            onChange={(e) =>
+              setSelectedRole(e.target.value as Exclude<BoardRole, "OWNER">)
+            }
+          >
+            <option value="MEMBER">Member</option>
+            <option value="ADMIN">Admin</option>
+            <option value="VIEWER">Viewer</option>
+          </select>
         </section>
         <section className="flex flex-col">
           {isUsersLoading || isUsersFetching ? (

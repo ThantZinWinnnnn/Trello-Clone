@@ -19,8 +19,8 @@ export const useGetMembers = (boardId: string) => {
 export const useAddMember = (boardId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ boardId, userId }: AddMemberMutationInput) => {
-      const response = await axios.post(`/api/members`, { boardId, userId });
+    mutationFn: async ({ boardId, userId, role }: AddMemberMutationInput) => {
+      const response = await axios.post(`/api/members`, { boardId, userId, role });
       return response.data;
     },
     onMutate: async (data) => {
@@ -32,7 +32,7 @@ export const useAddMember = (boardId: string) => {
       queryClient.setQueryData(
         ["members", boardId],
         (oldMemberes: MemberProps[] | undefined) =>
-          addMemberLocally(oldMemberes ?? [], data.user)
+          addMemberLocally(oldMemberes ?? [], data.user, data.role ?? "MEMBER")
       );
       return {
         previousMembers,
@@ -47,12 +47,17 @@ export const useAddMember = (boardId: string) => {
   });
 };
 
-const addMemberLocally = (members: MemberProps[], user: UserProps) => {
+const addMemberLocally = (
+  members: MemberProps[],
+  user: UserProps,
+  role: Exclude<BoardRole, "OWNER">
+) => {
   const newMember: MemberProps = {
     User: user,
     id: `temp-${user?.id ?? Date.now()}`,
     createdAt: new Date().toISOString(),
-    isAdmin: false,
+    isAdmin: role === "ADMIN",
+    role,
   };
   return [...members, newMember];
 };
@@ -100,6 +105,50 @@ export const useRemoveMember = (boardId: string,userId:string) => {
 
 const removeMemberLocally = (members: MemberProps[], userId: string) => {
   return members.filter((member) => member?.User?.id !== userId);
+};
+
+type UpdateMemberRoleInput = {
+  boardId: string;
+  memberId: string;
+  role: Exclude<BoardRole, "OWNER">;
+};
+
+export const useUpdateMemberRole = (boardId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: UpdateMemberRoleInput) => {
+      const response = await axios.patch("/api/members", data);
+      return response.data;
+    },
+    onMutate: async ({ memberId, role }) => {
+      await queryClient.cancelQueries({ queryKey: ["members", boardId] });
+      const previousMembers = queryClient.getQueryData<MemberProps[]>([
+        "members",
+        boardId,
+      ]);
+
+      queryClient.setQueryData(["members", boardId], (oldMembers: MemberProps[] | undefined) =>
+        (oldMembers ?? []).map((member) =>
+          member.id === memberId
+            ? {
+                ...member,
+                role,
+                isAdmin: role === "ADMIN",
+              }
+            : member
+        )
+      );
+
+      return { previousMembers };
+    },
+    onError: (_error, _data, context) => {
+      queryClient.setQueryData(["members", boardId], context?.previousMembers);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["members", boardId] });
+    },
+  });
 };
 
 // export const useDeleteMember = 

@@ -6,11 +6,13 @@ import {
   getAuthenticatedUserId,
   internalServerError,
   isNonEmptyString,
-  requireBoardAdmin,
+  requireBoardPermission,
   tooManyRequests,
   unauthorized,
 } from "@/modules/shared/api.utils";
 import { isRateLimited } from "@/modules/shared/rate-limit";
+import { AuditActionType, EntityType } from "@prisma/client";
+import { logAuditEvent } from "@/modules/shared/audit-events";
 
 export const GET = async () => {
   try {
@@ -88,6 +90,18 @@ export const POST = async (req: NextRequest) => {
         boardId: newBoard.id,
         userId,
         isAdmin: true,
+        role: "OWNER",
+      },
+    });
+
+    await logAuditEvent({
+      actorId: userId,
+      actionType: AuditActionType.CREATE,
+      entityType: EntityType.BOARD,
+      entityId: newBoard.id,
+      boardId: newBoard.id,
+      metadata: {
+        name: newBoard.name,
       },
     });
 
@@ -112,15 +126,26 @@ export const DELETE = async (req: NextRequest) => {
       return badRequest("boardId is required");
     }
 
-    const canDelete = await requireBoardAdmin(boardId, userId);
+    const canDelete = await requireBoardPermission(boardId, userId, "board:delete");
 
     if (!canDelete) {
-      return forbidden("Only board admins can delete boards");
+      return forbidden("Only board owners can delete boards");
     }
 
     const deletedBoard = await prisma.board.delete({
       where: {
         id: boardId,
+      },
+    });
+
+    await logAuditEvent({
+      actorId: userId,
+      actionType: AuditActionType.DELETE,
+      entityType: EntityType.BOARD,
+      entityId: boardId,
+      boardId,
+      metadata: {
+        name: deletedBoard.name,
       },
     });
 

@@ -1,9 +1,7 @@
 "use client";
-import React, { memo,  useState,} from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import MemberPhotos from "@/components/utils/MemberPhotos";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
 import { useBoardStore } from "@/shared/state/zustand.store";
 import { useGetMembers } from "@/features/member/hooks/member.hooks";
 import { useSession } from "next-auth/react";
@@ -11,22 +9,27 @@ import UserProfileSk from "@/components/skeleton/UserProfileSk";
 
 const IssueFilterByMem = ({ boardId }: { boardId: string }) => {
   const { data: session } = useSession();
-  const { issueName, setIssueName, setMemberId, setCurrentDate } =
-    useBoardStore();
+  const { setIssueName, setMemberId, setCurrentDate } = useBoardStore();
   const [active, setActive] = useState<string[]>([]);
   const { data: members, isLoading } = useGetMembers(boardId);
   const currentDate = new Date().toISOString();
-  const MembersSk = new Array(3).fill(0).map((_,i)=><UserProfileSk key={i}/>)
+  const MembersSk = new Array(3).fill(0).map((_, i) => <UserProfileSk key={i} />);
+
+  useEffect(() => {
+    // Ensure no stale issue-name filter remains after removing board search UI.
+    setIssueName("");
+  }, [setIssueName]);
+
   return (
-    <section className="flex flex-col sm:!flex-row sm:items-center gap-2 sm:gap-6 sm:justify-end">
-      <section className="flex">
+    <section className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+      <section className="flex flex-wrap items-center gap-1">
       {((active.includes("1") && active.includes("2")) ||
         active.includes("1") ||
         active.includes("2")) && (
         <>
           <Button
             variant={"ghost"}
-            className="text-[0.7rem] xl:text-xs font-rubik"
+            className="h-8 rounded-full border border-slate-200 bg-white px-3 text-[0.7rem] font-medium text-slate-600 hover:text-blue-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
             onClick={() => {
               setMemberId("");
               setCurrentDate("");
@@ -35,13 +38,15 @@ const IssueFilterByMem = ({ boardId }: { boardId: string }) => {
           >
             Clear All
           </Button>
-          <div className="h-7 w-[1px] bg-slate-400"></div>
+          <div className="mx-1 h-5 w-px bg-slate-300 dark:bg-slate-600"></div>
         </>
       )}
       <Button
         variant={"ghost"}
-        className={`text-[0.7rem] xl:text-xs font-rubik ${
-          active.includes("1") && "text-blue-600"
+        className={`h-8 rounded-full border px-3 text-[0.7rem] font-medium transition ${
+          active.includes("1")
+            ? "border-blue-300 bg-blue-50 text-blue-700 dark:border-blue-400/60 dark:bg-blue-500/20 dark:text-blue-200"
+            : "border-slate-200 bg-white text-slate-600 hover:text-blue-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
         }`}
         onClick={() => {
           if (active.includes("1")) {
@@ -58,8 +63,10 @@ const IssueFilterByMem = ({ boardId }: { boardId: string }) => {
       </Button>
       <Button
         variant={"ghost"}
-        className={`text-[0.7rem] xl:text-xs font-rubik ${
-          active.includes("2") && "text-blue-600"
+        className={`h-8 rounded-full border px-3 text-[0.7rem] font-medium transition ${
+          active.includes("2")
+            ? "border-blue-300 bg-blue-50 text-blue-700 dark:border-blue-400/60 dark:bg-blue-500/20 dark:text-blue-200"
+            : "border-slate-200 bg-white text-slate-600 hover:text-blue-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
         }`}
         onClick={() => {
           if (active.includes("2")) {
@@ -75,20 +82,8 @@ const IssueFilterByMem = ({ boardId }: { boardId: string }) => {
         Only My Issues
       </Button>
       </section>
-      <section className="flex flex-col sm:!flex-row gap-2 sm:items-center">
-      <MemberPhotos members={members!} isLoading={isLoading} />
-      <div className="relative w-[200px]">
-        <Input
-          type="text"
-          placeholder="Search..."
-          className="pl-10 py-1! text-xs"
-          value={issueName}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            setIssueName(e.target.value);
-          }}
-        />
-        <Search className="absolute top-3 left-3" size={15} />
-      </div>
+      <section className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <MemberPhotos members={members!} isLoading={isLoading} />
       </section>
     </section>
   );

@@ -11,77 +11,120 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum BoardRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+enum EntityType {
+  BOARD
+  LIST
+  ISSUE
+  COMMENT
+  MEMBER
+  ATTACHMENT
+}
+
+enum AuditActionType {
+  CREATE
+  UPDATE
+  DELETE
+  MOVE
+  ROLE_CHANGED
+  ASSIGN
+  UNASSIGN
+  UPLOAD
+}
+
+enum ScanStatus {
+  PENDING
+  CLEAN
+  INFECTED
+  FAILED
+}
+
 model User {
-  id            String     @id @default(uuid())
-  name          String?
-  email         String?    @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  boards        Board[]
-  members       Member[]
-  issues        Issue[]
-  assignees     Assignee[]
-  commments     Comment[]
+  id                  String       @id @default(uuid())
+  name                String?
+  email               String?      @unique
+  emailVerified       DateTime?
+  image               String?
+  accounts            Account[]
+  sessions            Session[]
+  boards              Board[]
+  members             Member[]
+  issues              Issue[]
+  assignees           Assignee[]
+  commments           Comment[]
+  auditEvents         AuditEvent[] @relation("AuditActor")
+  uploadedAttachments Attachment[]
 }
 
 model Board {
-  id        String     @id @default(uuid())
-  name      String
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  userId    String
-  User      User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  members   Member[]
-  lists     List[]
-  assignees Assignee[]
+  id          String       @id @default(uuid())
+  name        String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  userId      String
+  User        User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  members     Member[]
+  lists       List[]
+  assignees   Assignee[]
+  auditEvents AuditEvent[]
+  attachments Attachment[]
 
   @@index([userId])
 }
 
 model Member {
-  id        String   @id @default(uuid())
-  isAdmin   Boolean  @default(false)
-  createdAt DateTime @default(now())
+  id        String    @id @default(uuid())
+  isAdmin   Boolean   @default(false)
+  role      BoardRole @default(MEMBER)
+  createdAt DateTime  @default(now())
   boardId   String
-  Board     Board?   @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  Board     Board?    @relation(fields: [boardId], references: [id], onDelete: Cascade)
   userId    String
-  User      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  User      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([boardId])
   @@index([userId])
+  @@index([role])
 }
 
 model List {
-  id        String   @id @default(uuid())
-  name      String   @default("unnamed list")
-  order     Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  boardId   String
-  Board     Board?   @relation(fields: [boardId], references: [id], onDelete: Cascade)
-  issues    Issue[]
+  id          String       @id @default(uuid())
+  name        String       @default("unnamed list")
+  order       Int
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  boardId     String
+  Board       Board?       @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  issues      Issue[]
+  auditEvents AuditEvent[]
 
   @@index([boardId])
 }
 
 model Issue {
-  id         String     @id @default(uuid())
-  order      Int
-  image      String
-  type       String
-  summary    String
-  desc       String
-  priority   String
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  reporterId String
-  User       User?      @relation(fields: [reporterId], references: [id], onDelete: Cascade)
-  List       List?      @relation(fields: [listId], references: [id])
-  listId     String?
-  assignees  Assignee[]
-  comments   Comment[]
+  id          String       @id @default(uuid())
+  order       Int
+  image       String
+  type        String
+  summary     String
+  desc        String
+  priority    String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  reporterId  String
+  User        User?        @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  List        List?        @relation(fields: [listId], references: [id])
+  listId      String?
+  assignees   Assignee[]
+  comments    Comment[]
+  auditEvents AuditEvent[]
+  attachments Attachment[]
 
   @@index([reporterId])
   @@index([listId])
@@ -103,16 +146,66 @@ model Assignee {
 }
 
 model Comment {
-  id        String   @id @default(uuid())
-  desc      String   @db.Char(200)
-  createdAt DateTime @default(now())
-  issueId   String
-  Issue     Issue?   @relation(fields: [issueId], references: [id], onDelete: Cascade)
-  userId    String
-  User      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          String       @id @default(uuid())
+  desc        String       @db.Char(200)
+  createdAt   DateTime     @default(now())
+  issueId     String
+  Issue       Issue?       @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  userId      String
+  User        User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  auditEvents AuditEvent[]
+  attachments Attachment[]
 
   @@index([issueId])
   @@index([userId])
+}
+
+model AuditEvent {
+  id         String          @id @default(cuid())
+  actorId    String?
+  actor      User?           @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+  actionType AuditActionType
+  entityType EntityType
+  entityId   String
+  boardId    String
+  board      Board           @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  issueId    String?
+  issue      Issue?          @relation(fields: [issueId], references: [id], onDelete: SetNull)
+  listId     String?
+  list       List?           @relation(fields: [listId], references: [id], onDelete: SetNull)
+  commentId  String?
+  comment    Comment?        @relation(fields: [commentId], references: [id], onDelete: SetNull)
+  metadata   Json?
+  createdAt  DateTime        @default(now())
+
+  @@index([boardId, createdAt(sort: Desc)])
+  @@index([entityType, entityId, createdAt(sort: Desc)])
+  @@index([actorId, createdAt(sort: Desc)])
+  @@index([actionType, createdAt(sort: Desc)])
+}
+
+model Attachment {
+  id          String     @id @default(cuid())
+  boardId     String
+  board       Board      @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  issueId     String?
+  issue       Issue?     @relation(fields: [issueId], references: [id], onDelete: SetNull)
+  commentId   String?
+  comment     Comment?   @relation(fields: [commentId], references: [id], onDelete: SetNull)
+  uploaderId  String
+  uploader    User       @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+  fileName    String
+  contentType String
+  fileSize    Int
+  storageKey  String
+  scanStatus  ScanStatus @default(PENDING)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([boardId, createdAt(sort: Desc)])
+  @@index([issueId, createdAt(sort: Desc)])
+  @@index([commentId, createdAt(sort: Desc)])
+  @@index([uploaderId, createdAt(sort: Desc)])
 }
 
 model Account {

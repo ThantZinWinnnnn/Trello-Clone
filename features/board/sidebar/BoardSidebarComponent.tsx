@@ -1,25 +1,14 @@
 "use client";
+
 import React, { memo } from "react";
-// to remove below import to button array components
-import { useRouter, usePathname, redirect, useParams } from "next/navigation";
-
-//icon
-import {
-  HeartIcon,
-  PlusIcon,
-  DotsHorizontalIcon,
-  LayoutIcon,
-} from "@radix-ui/react-icons";
-
-//components
+import { useRouter, redirect, useParams } from "next/navigation";
+import { DotsHorizontalIcon, LayoutIcon } from "@radix-ui/react-icons";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import BoardSortDropdown from "./BoardSortDropdown";
-import Link from "next/link";
 import { useBoardStore } from "@/shared/state/zustand.store";
 import { useSession } from "next-auth/react";
 import { useGetBoards } from "@/features/board/hooks/board.hooks";
-import { Settings } from "lucide-react";
 import BoardButton from "./BoardButton";
 import BoardNameSk from "@/components/skeleton/BoardNameSk";
 import { compareByUpdatedAt, sortFun } from "@/shared/utils/util";
@@ -32,17 +21,12 @@ const BoardSidebarComponent = () => {
       redirect("/login");
     },
   });
-  const {
-    data: userBoards,
-    isLoading,
-    isSuccess,
-    isFetching,
-    isError,
-  } = useGetBoards(session);
+
+  const { data: userBoards, isLoading } = useGetBoards(session);
   const router = useRouter();
   const params = useParams();
+
   const {
-    boards,
     setBoardName,
     setOpenSetting,
     openSetting,
@@ -50,14 +34,14 @@ const BoardSidebarComponent = () => {
     setReachedSetting,
     sort,
   } = useBoardStore();
+
   const boardId = params.boardId as string;
-  const createdBoards = userBoards?.createdBoards?.boards! ?? [];
+  const createdBoards = userBoards?.createdBoards?.boards ?? [];
   const assignedBoards = userBoards?.assignedBoards ?? [];
-  const filteredAssignedBoards = assignedBoards?.filter(
+  const filteredAssignedBoards = assignedBoards.filter(
     (board) => board?.userId !== session?.user?.id
   );
-  const userAllBoards = [...createdBoards!, ...filteredAssignedBoards!];
-  const skArr = new Array(3).fill(0);
+  const userAllBoards = [...createdBoards, ...filteredAssignedBoards];
 
   const sortedByAlphaBoards = [...userAllBoards].sort((a, b) => sortFun(a, b));
   const sortedByDateBoards = [...userAllBoards].sort(compareByUpdatedAt);
@@ -68,46 +52,53 @@ const BoardSidebarComponent = () => {
       : sort === "date"
       ? sortedByDateBoards
       : userAllBoards;
-  return (
-    <section className="hidden lg:!flex flex-col justify-between  w-[280px] lg:w-[450px] xl:w-[320px] border-r-[1px] border-gray-300 h-[calc(100vh-48px)] opacity-95 bg-[#F4F5F7] p-2 dark:bg-gray-700">
-      <section className="">
-        <h1 className="text-sm 2xl:text-xl font-semibold text-center">
-          BoardForge Workspace
-        </h1>
-        <Separator className="my-4 dark:bg-white" />
-        <section className="pl-5 flex flex-col space-y-3">
-          <BoardButton
-            setOpenSetting={setOpenSetting}
-            setReachedSetting={setReachedSetting}
-            btnText="Create Boards"
-          />
-          {/* <Link
-            href={"/highlights"}
-            className="flex items-center gap-7 text-base w-[95%] text-black hover:bg-blue-600 hover:text-white py-2 px-2 rounded-sm cursor-pointer"
-          >
-            <HeartIcon className="w-5 h-5" />
-            <p className="font-medium">HighLights</p>
-          </Link> */}
-        </section>
-        <Separator className="my-6 dark:bg-white" />
-        {/* to make boards array */}
 
-        <section>
-          <div className="w-full px-2 flex justify-between items-center">
-            <p className="text-sm 2xl:text-base">Your boards</p>
-            <div className="flex items-center gap-3 group relative">
-              <BoardSortDropdown>
-                <DotsHorizontalIcon className="w-4 h-4 cursor-pointer" />
-              </BoardSortDropdown>
-            </div>
+  const skeletonRows = new Array(4).fill(0);
+
+  return (
+    <aside className="boardforge-panel hidden h-full w-[300px] shrink-0 flex-col justify-between p-3 lg:flex xl:w-[320px]">
+      <section>
+        <header className="px-2 pb-2">
+          <p className="text-sm font-semibold tracking-wide text-slate-900 dark:text-slate-100">
+            BoardForge Workspace
+          </p>
+          <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-300">
+            {updatedBoards.length} active board{updatedBoards.length === 1 ? "" : "s"}
+          </p>
+        </header>
+
+        <Separator className="my-3" />
+
+        <BoardButton
+          setOpenSetting={setOpenSetting}
+          setReachedSetting={setReachedSetting}
+          btnText="Create Boards"
+        />
+
+        <Separator className="my-4" />
+
+        <div className="px-1">
+          <div className="flex items-center justify-between px-1">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+              Your Boards
+            </p>
+            <BoardSortDropdown>
+              <button
+                type="button"
+                className="rounded-md border border-slate-200 bg-white p-1.5 text-slate-500 transition hover:border-blue-300 hover:text-blue-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300"
+              >
+                <DotsHorizontalIcon className="h-4 w-4" />
+              </button>
+            </BoardSortDropdown>
           </div>
-          <section className="pt-4 flex flex-col gap-2">
+
+          <section className="mt-3 flex flex-col gap-1.5">
             {isLoading
-              ? skArr.map((_, i) => <BoardNameSk key={i} />)
-              : updatedBoards?.map((board) => (
+              ? skeletonRows.map((_, i) => <BoardNameSk key={i} />)
+              : updatedBoards.map((board) => (
                   <Button
                     key={board.id}
-                    variant={"ghost"}
+                    variant="ghost"
                     onClick={() => {
                       setProfileUser(session?.user!);
                       setBoardName(board?.name);
@@ -115,21 +106,28 @@ const BoardSidebarComponent = () => {
                       setReachedSetting(false);
                       router.push(`/boards/${board?.name}/${board.id}`);
                     }}
-                    className={`hover:bg-slate-300 hover:text-blue-700 w-full ${
-                      boardId === board.id && "bg-slate-300 text-blue-700"
-                    } flex justify-start`}
+                    className={`h-10 justify-start rounded-lg border px-2 text-left transition ${
+                      boardId === board.id
+                        ? "border-blue-300 bg-blue-50 text-blue-700 dark:border-blue-400/60 dark:bg-blue-500/20 dark:text-blue-200"
+                        : "border-transparent bg-transparent text-slate-700 hover:border-slate-200 hover:bg-white/80 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-800"
+                    }`}
                   >
-                    <LayoutIcon className="w-5 h-5 mr-2" />
-                    <span className="text-[0.7rem] font-rubik 2xl:text-sm overflow-hidden text-ellipsis">
+                    <LayoutIcon className="mr-2 h-4 w-4 shrink-0" />
+                    <span className="max-w-[220px] truncate text-xs font-medium 2xl:text-sm">
                       {board.name}
                     </span>
                   </Button>
                 ))}
           </section>
-        </section>
+        </div>
       </section>
-      {openSetting ? <BoardSettingBtn boardId={boardId} /> : null}
-    </section>
+
+      {openSetting ? (
+        <div className="px-1 pt-3">
+          <BoardSettingBtn boardId={boardId} className="mb-0 w-full justify-center" />
+        </div>
+      ) : null}
+    </aside>
   );
 };
 

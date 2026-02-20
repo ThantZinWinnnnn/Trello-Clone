@@ -5,13 +5,15 @@ import {
   getAuthenticatedUserId,
   internalServerError,
   isNonEmptyString,
-  requireBoardMember,
+  requireBoardPermission,
   sameColumnReorder,
   tooManyRequests,
   unauthorized,
 } from "@/modules/shared/api.utils";
 import { isRateLimited } from "@/modules/shared/rate-limit";
 import prisma from "@/lib/prisma";
+import { logAuditEvent } from "@/modules/shared/audit-events";
+import { AuditActionType, EntityType } from "@prisma/client";
 
 export const GET = async (req: NextRequest) => {
   try {
@@ -31,8 +33,8 @@ export const GET = async (req: NextRequest) => {
       return badRequest("boardId is required");
     }
 
-    const member = await requireBoardMember(boardId, userId);
-    if (!member) {
+    const access = await requireBoardPermission(boardId, userId, "board:read");
+    if (!access) {
       return forbidden("You do not have access to this board");
     }
 
@@ -72,8 +74,8 @@ export const POST = async (req: NextRequest) => {
       return badRequest("List name must be 100 characters or fewer");
     }
 
-    const member = await requireBoardMember(boardId, userId);
-    if (!member) {
+    const access = await requireBoardPermission(boardId, userId, "list:create");
+    if (!access) {
       return forbidden("You do not have access to this board");
     }
 
@@ -83,6 +85,19 @@ export const POST = async (req: NextRequest) => {
         name: listName,
         order: count + 1,
         boardId,
+      },
+    });
+
+    await logAuditEvent({
+      actorId: userId,
+      actionType: AuditActionType.CREATE,
+      entityType: EntityType.LIST,
+      entityId: newList.id,
+      boardId,
+      listId: newList.id,
+      metadata: {
+        name: newList.name,
+        order: newList.order,
       },
     });
 
@@ -115,8 +130,8 @@ export const PUT = async (req: NextRequest) => {
       return badRequest("Invalid reorder payload");
     }
 
-    const member = await requireBoardMember(boardId, userId);
-    if (!member) {
+    const access = await requireBoardPermission(boardId, userId, "list:update");
+    if (!access) {
       return forbidden("You do not have access to this board");
     }
 
@@ -129,7 +144,26 @@ export const PUT = async (req: NextRequest) => {
       return badRequest("Invalid listId for the given board");
     }
 
-    return sameColumnReorder({ id, oIdx, nIdx }, { boardId }, "list");
+    const response = await sameColumnReorder(
+      { id, oIdx, nIdx },
+      { boardId },
+      "list"
+    );
+
+    await logAuditEvent({
+      actorId: userId,
+      actionType: AuditActionType.MOVE,
+      entityType: EntityType.LIST,
+      entityId: id,
+      boardId,
+      listId: id,
+      metadata: {
+        fromIndex: oIdx,
+        toIndex: nIdx,
+      },
+    });
+
+    return response;
   } catch {
     return internalServerError("Error while updating list order");
   }
@@ -159,21 +193,38 @@ export const PATCH = async (req: NextRequest) => {
 
     const list = await prisma.list.findUnique({
       where: { id: listId },
-      select: { boardId: true },
+      select: { boardId: true, name: true },
     });
 
     if (!list?.boardId) {
       return badRequest("Invalid listId");
     }
 
-    const member = await requireBoardMember(list.boardId, userId);
-    if (!member) {
+    const access = await requireBoardPermission(list.boardId, userId, "list:update");
+    if (!access) {
       return forbidden("You do not have access to this board");
     }
 
     const updatedList = await prisma.list.update({
       where: { id: listId },
       data: { name: name.trim() },
+    });
+
+    await logAuditEvent({
+      actorId: userId,
+      actionType: AuditActionType.UPDATE,
+      entityType: EntityType.LIST,
+      entityId: listId,
+      boardId: list.boardId,
+      listId,
+      metadata: {
+        before: {
+          name: list.name,
+        },
+        after: {
+          name: updatedList.name,
+        },
+      },
     });
 
     return NextResponse.json(updatedList);
@@ -198,20 +249,33 @@ export const DELETE = async (req: NextRequest) => {
 
     const list = await prisma.list.findUnique({
       where: { id: listId },
-      select: { boardId: true },
+      select: { id: true, boardId: true, name: true, order: true },
     });
 
     if (!list?.boardId) {
       return badRequest("Invalid listId");
     }
 
-    const member = await requireBoardMember(list.boardId, userId);
-    if (!member) {
+    const access = await requireBoardPermission(list.boardId, userId, "list:delete");
+    if (!access) {
       return forbidden("You do not have access to this board");
     }
 
     const deletedList = await prisma.list.delete({
       where: { id: listId },
+    });
+
+    await logAuditEvent({
+      actorId: userId,
+      actionType: AuditActionType.DELETE,
+      entityType: EntityType.LIST,
+      entityId: deletedList.id,
+      boardId: list.boardId,
+      listId: deletedList.id,
+      metadata: {
+        name: list.name,
+        order: list.order,
+      },
     });
 
     return NextResponse.json(deletedList);

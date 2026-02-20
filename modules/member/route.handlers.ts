@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { AuditActionType, EntityType } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import {
   badRequest,
@@ -6,12 +7,33 @@ import {
   getAuthenticatedUserId,
   internalServerError,
   isNonEmptyString,
-  requireBoardAdmin,
-  requireBoardMember,
+  requireBoardPermission,
   tooManyRequests,
   unauthorized,
 } from "@/modules/shared/api.utils";
+import {
+  AppBoardRole,
+  hasBoardPermission,
+  normalizeRoleToAdminFlag,
+} from "@/modules/shared/rbac";
 import { isRateLimited } from "@/modules/shared/rate-limit";
+import { logAuditEvent } from "@/modules/shared/audit-events";
+
+const MANAGEABLE_ROLES = new Set<AppBoardRole>([
+  "ADMIN",
+  "MEMBER",
+  "VIEWER",
+]);
+
+const resolveMemberRole = (
+  role: unknown
+): Exclude<AppBoardRole, "OWNER"> => {
+  if (role === "ADMIN" || role === "MEMBER" || role === "VIEWER") {
+    return role;
+  }
+
+  return "MEMBER";
+};
 
 export const GET = async (req: NextRequest) => {
   try {
@@ -31,19 +53,17 @@ export const GET = async (req: NextRequest) => {
       return badRequest("boardId is required");
     }
 
-    const member = await requireBoardMember(boardId, authUserId);
-    if (!member) {
+    const access = await requireBoardPermission(boardId, authUserId, "board:read");
+    if (!access) {
       return forbidden("You do not have access to this board");
     }
 
     const members = await prisma.member.findMany({
-      where: {
-        boardId,
-      },
-      include: {
-        User: true,
-      },
+      where: { boardId },
+      include: { User: true },
+      orderBy: [{ role: "asc" }, { createdAt: "asc" }],
     });
+
     return NextResponse.json(members);
   } catch {
     return internalServerError("Error while fetching members");
@@ -63,13 +83,14 @@ export const POST = async (req: NextRequest) => {
 
     const body: AddMember = await req.json();
     const { boardId, userId } = body;
+    const role = resolveMemberRole(body?.role);
 
     if (!isNonEmptyString(boardId) || !isNonEmptyString(userId)) {
       return badRequest("boardId and userId are required");
     }
 
-    const admin = await requireBoardAdmin(boardId, authUserId);
-    if (!admin) {
+    const access = await requireBoardPermission(boardId, authUserId, "board:read");
+    if (!access || !hasBoardPermission(access.role, "member:manage")) {
       return forbidden("Only board admins can add members");
     }
 
@@ -95,6 +116,8 @@ export const POST = async (req: NextRequest) => {
       data: {
         boardId,
         userId,
+        role,
+        isAdmin: normalizeRoleToAdminFlag(role),
       },
     });
 
@@ -103,9 +126,104 @@ export const POST = async (req: NextRequest) => {
       data: { updatedAt: new Date() },
     });
 
+    await logAuditEvent({
+      actorId: authUserId,
+      actionType: AuditActionType.CREATE,
+      entityType: EntityType.MEMBER,
+      entityId: member.id,
+      boardId,
+      metadata: {
+        targetUserId: userId,
+        role,
+      },
+    });
+
     return NextResponse.json(member);
   } catch {
     return internalServerError("Error while adding member");
+  }
+};
+
+export const PATCH = async (req: NextRequest) => {
+  try {
+    const authUserId = await getAuthenticatedUserId();
+    if (!authUserId) {
+      return unauthorized();
+    }
+
+    const body = await req.json();
+    const boardId = body?.boardId;
+    const memberId = body?.memberId;
+    const role = resolveMemberRole(body?.role);
+
+    if (!isNonEmptyString(boardId) || !isNonEmptyString(memberId)) {
+      return badRequest("boardId and memberId are required");
+    }
+
+    if (!MANAGEABLE_ROLES.has(role)) {
+      return badRequest("Invalid role");
+    }
+
+    const access = await requireBoardPermission(boardId, authUserId, "board:read");
+    if (!access || !hasBoardPermission(access.role, "member:manage")) {
+      return forbidden("Only board admins can change member roles");
+    }
+
+    const [targetMember, board] = await Promise.all([
+      prisma.member.findUnique({
+        where: { id: memberId },
+        select: {
+          id: true,
+          userId: true,
+          boardId: true,
+          role: true,
+          isAdmin: true,
+        },
+      }),
+      prisma.board.findUnique({
+        where: { id: boardId },
+        select: { userId: true },
+      }),
+    ]);
+
+    if (!targetMember || targetMember.boardId !== boardId) {
+      return badRequest("Invalid memberId for board");
+    }
+
+    if (board?.userId === targetMember.userId) {
+      return badRequest("Board owner role cannot be changed");
+    }
+
+    const updatedMember = await prisma.member.update({
+      where: { id: memberId },
+      data: {
+        role,
+        isAdmin: normalizeRoleToAdminFlag(role),
+      },
+    });
+
+    await logAuditEvent({
+      actorId: authUserId,
+      actionType: AuditActionType.ROLE_CHANGED,
+      entityType: EntityType.MEMBER,
+      entityId: updatedMember.id,
+      boardId,
+      metadata: {
+        targetUserId: updatedMember.userId,
+        before: {
+          role: targetMember.role,
+          isAdmin: targetMember.isAdmin,
+        },
+        after: {
+          role: updatedMember.role,
+          isAdmin: updatedMember.isAdmin,
+        },
+      },
+    });
+
+    return NextResponse.json(updatedMember);
+  } catch {
+    return internalServerError("Error while updating member role");
   }
 };
 
@@ -127,32 +245,50 @@ export const DELETE = async (req: NextRequest) => {
       return badRequest("boardId, userId and memberId are required");
     }
 
-    const actingMember = await requireBoardMember(boardId, authUserId);
-    if (!actingMember) {
+    const access = await requireBoardPermission(boardId, authUserId, "board:read");
+    if (!access) {
       return forbidden("You do not have access to this board");
     }
 
     const isSelfLeave = authUserId === userId;
-    if (!actingMember.isAdmin && !isSelfLeave) {
+    if (!isSelfLeave && !hasBoardPermission(access.role, "member:manage")) {
       return forbidden("Only board admins can remove other members");
     }
 
-    const targetMember = await prisma.member.findUnique({
-      where: { id: memberId },
-      select: {
-        isAdmin: true,
-      },
-    });
+    const [targetMember, board] = await Promise.all([
+      prisma.member.findUnique({
+        where: { id: memberId },
+        select: {
+          id: true,
+          role: true,
+          isAdmin: true,
+          userId: true,
+          boardId: true,
+        },
+      }),
+      prisma.board.findUnique({
+        where: { id: boardId },
+        select: { userId: true },
+      }),
+    ]);
 
-    if (!targetMember) {
+    if (!targetMember || targetMember.boardId !== boardId) {
       return badRequest("Invalid memberId");
     }
 
-    if (targetMember.isAdmin) {
+    if (board?.userId === targetMember.userId) {
+      return badRequest("Board owner cannot be removed");
+    }
+
+    const targetIsAdmin = normalizeRoleToAdminFlag(
+      targetMember.role ?? (targetMember.isAdmin ? "ADMIN" : "MEMBER")
+    );
+
+    if (targetIsAdmin) {
       const adminCount = await prisma.member.count({
         where: {
           boardId,
-          isAdmin: true,
+          OR: [{ role: "ADMIN" }, { role: "OWNER" }, { isAdmin: true }],
         },
       });
 
@@ -171,6 +307,18 @@ export const DELETE = async (req: NextRequest) => {
     await prisma.board.update({
       where: { id: boardId },
       data: { updatedAt: new Date() },
+    });
+
+    await logAuditEvent({
+      actorId: authUserId,
+      actionType: AuditActionType.DELETE,
+      entityType: EntityType.MEMBER,
+      entityId: memberId,
+      boardId,
+      metadata: {
+        targetUserId: userId,
+        role: targetMember.role,
+      },
     });
 
     return NextResponse.json({ success: true });

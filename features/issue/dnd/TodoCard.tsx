@@ -35,40 +35,38 @@ const TodoCard: React.FC<todoCardProps> = ({
       {...draggableProps}
       {...draggableHandleProps}
       ref={innerRef}
-      className={`bg-white rounded-sm  drop-shadow-md space-y-3 overflow-hidden`}
+      className={`boardforge-card bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-md overflow-hidden transition hover:-translate-y-0.5 hover:shadow-lg hover:bg-slate-50/80 dark:hover:bg-slate-700/40`}
     >
-      <section className="hover:bg-slate-200/50">
-        <IssueDetailComponent issue={todo} listId={listId} indx={index}>
-          <section>
-            <section className="relative h-[80px] 2xl:h-[100px] overflow-hidden">
-              <Image
-                src={todo.image ? `${todo.image}` : "/photos/board-bg.jpeg"}
-                // src={"/photos/board-bg.jpeg"}
-                fill
-                alt="todo bg"
-                className="object-cover"
-                style={{ objectFit: "contain" }}
-              />
-            </section>
-            <section className="flex items-center justify-between px-2 lg:py-1 2xl:py-3">
-              <h2 className="text-[0.7rem] font-rubik xl:text-xs font-medium dark:text-black">
-                {todo?.summary}
-              </h2>
-            </section>
-            <section className="flex items-center justify-between p-1 xl:p-2">
-              <div className="flex items-center gap-1">
-                <issue.Icon
-                  className={`w-5 h-5 p-1 rounded-sm text-white ${issue?.issueCat?.color}`}
-                />
-                <issue.PiorityIcon
-                  className={`w-4 h-4 ${issue?.priority?.color}`}
-                />
-              </div>
-              <CardMember members={todo?.assignees} />
-            </section>
+      <IssueDetailComponent issue={todo} listId={listId} indx={index}>
+        <section className="w-full text-left outline-none">
+          <section className="relative h-[88px] overflow-hidden border-b border-slate-200/80 bg-slate-100/70 dark:border-slate-600 dark:bg-slate-700/60 2xl:h-[108px]">
+            <Image
+              src={todo.image ? `${todo.image}` : "/photos/board-bg.jpeg"}
+              // src={"/photos/board-bg.jpeg"}
+              fill
+              alt="todo bg"
+              className="object-cover"
+              style={{ objectFit: "contain" }}
+            />
           </section>
-        </IssueDetailComponent>
-      </section>
+          <section className="flex items-center justify-between px-2 py-2">
+            <h2 className="line-clamp-2 text-[0.78rem] font-semibold leading-5 text-slate-800 dark:text-slate-100 xl:text-sm">
+              {todo?.summary}
+            </h2>
+          </section>
+          <section className="flex items-center justify-between border-t border-slate-200/80 px-2 py-2 dark:border-slate-600">
+            <div className="flex items-center gap-1">
+              <issue.Icon
+                className={`w-5 h-5 p-1 rounded-sm text-white ${issue?.issueCat?.color}`}
+              />
+              <issue.PiorityIcon
+                className={`w-4 h-4 ${issue?.priority?.color}`}
+              />
+            </div>
+            <CardMember members={todo?.assignees} />
+          </section>
+        </section>
+      </IssueDetailComponent>
     </div>
   );
 };

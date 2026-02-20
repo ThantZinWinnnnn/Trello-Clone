@@ -1,51 +1,84 @@
 "use client";
+
 import React, { memo } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, UserX } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { UseMutateFunction } from "@tanstack/react-query";
 
+type UpdateRoleFn = (input: {
+  boardId: string;
+  memberId: string;
+  role: Exclude<BoardRole, "OWNER">;
+}) => void;
+
 const MemberInfoBtn: React.FC<MemberInfoBtnProps> = ({
-  imgUrl,
-  name,
-  isAdmin,
-  userId,
-  adminId,
-  bId,
-  mId,
-  mutate,
+  boardId,
+  member,
+  currentUserId,
+  canManageMembers,
+  removeMember,
+  updateRole,
 }) => {
-  const { data: session } = useSession();
-  const admin = session?.user?.id === adminId;
+  const isCurrentUser = currentUserId === member.userId;
+  const memberRole = member.role ?? (member.isAdmin ? "ADMIN" : "MEMBER");
+  const isOwner = memberRole === "OWNER";
+  const canRemove = !isOwner && (isCurrentUser || canManageMembers);
+  const canChangeRole = canManageMembers && !isOwner;
+
   return (
-    <section className="flex items-center justify-between w-full">
-      <section className="flex gap-2 items-center">
+    <section className="flex items-center justify-between w-full gap-2">
+      <section className="flex gap-2 items-center min-w-0">
         <Avatar className="w-7 h-7">
-          <AvatarImage src={imgUrl} alt={name} />
-          <AvatarFallback>{name}</AvatarFallback>
+          <AvatarImage src={member.image} alt={member.name} />
+          <AvatarFallback>{member.name}</AvatarFallback>
         </Avatar>
-        <span className="text-xs font-medium">
-          {name} <span className="ml-2">{isAdmin && "(Admin)"}</span>
+        <span className="text-xs font-medium truncate">
+          {member.name}
+          <span className="ml-2 text-slate-500">({memberRole})</span>
         </span>
       </section>
-      {(session?.user?.id === userId || admin) && (
-        <Button
-          variant={"ghost"}
-          disabled={isAdmin!}
-          className="text-xs flex gap-1 items-center hover:text-red-600"
-          onClick={() => {
-            mutate({ boardId: bId!, userId, memberId: mId! });
-          }}
-        >
-          {admin ? (
-            <UserX className="w-3 h-3" />
-          ) : (
-            <ExternalLink className="w-3 h-3" />
-          )}
-          {admin ? "Remove" : "Leave"}
-        </Button>
-      )}
+
+      <section className="flex items-center gap-2">
+        {canChangeRole ? (
+          <select
+            className="rounded-md border border-slate-300 bg-white px-2 py-1 text-[11px] dark:bg-gray-800"
+            value={memberRole}
+            onChange={(event) =>
+              updateRole({
+                boardId,
+                memberId: member.memberId,
+                role: event.target.value as Exclude<BoardRole, "OWNER">,
+              })
+            }
+          >
+            <option value="ADMIN">Admin</option>
+            <option value="MEMBER">Member</option>
+            <option value="VIEWER">Viewer</option>
+          </select>
+        ) : null}
+
+        {canRemove ? (
+          <Button
+            variant={"ghost"}
+            className="text-xs flex gap-1 items-center hover:text-red-600"
+            onClick={() => {
+              removeMember({
+                boardId,
+                userId: member.userId,
+                memberId: member.memberId,
+              });
+            }}
+          >
+            {isCurrentUser ? (
+              <ExternalLink className="w-3 h-3" />
+            ) : (
+              <UserX className="w-3 h-3" />
+            )}
+            {isCurrentUser ? "Leave" : "Remove"}
+          </Button>
+        ) : null}
+      </section>
     </section>
   );
 };
@@ -53,14 +86,18 @@ const MemberInfoBtn: React.FC<MemberInfoBtnProps> = ({
 export default memo(MemberInfoBtn);
 
 interface MemberInfoBtnProps {
-  imgUrl: string;
-  name: string;
-  isAdmin: boolean;
-  userId: string;
-  adminId: string;
-  bId?: string;
-  mId?: string;
-  mutate: UseMutateFunction<
+  boardId: string;
+  currentUserId: string;
+  canManageMembers: boolean;
+  member: {
+    memberId: string;
+    userId: string;
+    name: string;
+    image: string;
+    role?: BoardRole | null;
+    isAdmin?: boolean | null;
+  };
+  removeMember: UseMutateFunction<
     any,
     unknown,
     RemoveMember,
@@ -68,4 +105,5 @@ interface MemberInfoBtnProps {
       previousMembers: unknown;
     }
   >;
+  updateRole: UpdateRoleFn;
 }

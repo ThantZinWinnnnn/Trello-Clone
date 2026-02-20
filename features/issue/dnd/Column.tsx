@@ -2,8 +2,7 @@
 import React, { memo, useMemo, useState } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import TodoCard from "./TodoCard";
-import { Pencil2Icon } from "@radix-ui/react-icons";
-import { PenSquare, XCircle, X, Trash2 } from "lucide-react";
+import { PenSquare, X, Trash2 } from "lucide-react";
 
 //components
 import CreateIssue from "@/features/issue/components/CreateIssue";
@@ -19,9 +18,16 @@ interface ColumnProps {
   index: number;
   column: ListProps;
   issues: Array<DndIssueProps>;
+  readOnly?: boolean;
 }
 
-const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
+const Column: React.FC<ColumnProps> = ({
+  id,
+  index,
+  column,
+  issues,
+  readOnly = false,
+}) => {
   const params = useParams();
   const [edit, setEdit] = useState(false);
   const [listName, setListName] = useState(column?.name);
@@ -65,88 +71,95 @@ const Column: React.FC<ColumnProps> = ({ id, index, column, issues }) => {
     memberId.length > 0
       ? filterIssues
       : issueName !== ""
-      ? queryIssuesByName
-      : currentDate !== ""
-      ? updatedIssues
-      : issues;
+        ? queryIssuesByName
+        : currentDate !== ""
+          ? updatedIssues
+          : issues;
 
   return (
-    <Draggable draggableId={id} index={index!} key={id}>
+    <Draggable draggableId={id} index={index!} key={id} isDragDisabled={readOnly}>
       {(provided) => (
         <div
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
-          className="min-h-[80px]"
+          className="min-h-[80px] w-[280px] shrink-0 border border-slate-200 dark:border-slate-600 rounded-md"
         >
           {/* render droppable components */}
-          <Droppable droppableId={id} type="card">
+          <Droppable droppableId={id} type="card" isDropDisabled={readOnly}>
             {(provided, snapshot) => (
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className={`flex flex-col gap-2 p-2 rounded-md shadow-sm w-[250px] 2xl:w-[300px] ${
-                  snapshot.isDraggingOver ? "bg-gray-200" : "bg-[#F4F5F7]"
-                }`}
+                className={`boardforge-column flex min-h-[140px] flex-col gap-3 p-3 transition ${snapshot.isDraggingOver ? "ring-2 ring-blue-300" : ""
+                  }`}
               >
-                <div className="flex justify-between items-center">
+                <div className="flex items-center justify-between gap-2">
                   {edit ? (
                     <Input
                       value={listName}
                       onChange={(e) => setListName(e.target.value)}
                       onKeyDown={updateListHandler}
+                      className="h-8 rounded-md border-slate-200 bg-white text-sm dark:border-slate-600 dark:bg-slate-800"
                     />
                   ) : (
-                    <h1 className="dark:text-black text-sm xl:text-base">
+                    <h1 className="max-w-[180px] truncate text-sm font-semibold text-slate-800 dark:text-slate-100 xl:text-base">
                       {column?.name}
                     </h1>
                   )}
-                  <div className="flex gap-1 items-center">
+                  <div className="flex items-center gap-1">
                     {!edit ? (
-                      <span className="text-slate-500 font-normal px-2 py-1 rounded-full bg-slate-300 text-xs">
+                      <span className="rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
                         {userIssues?.length ?? 0}
                       </span>
                     ) : (
-                      <span onClick={deleteListHandler}>
-                        <Trash2 className="h-5 w-5 text-red-600 ml-3" />
-                      </span>
+                      <button
+                        type="button"
+                        onClick={deleteListHandler}
+                        className="rounded-md p-1 text-red-600 transition hover:bg-red-50 dark:hover:bg-red-500/10"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
                     )}
-                    <Button
-                      variant={"ghost"}
-                      className="dark:hover:bg-transparent"
-                      onClick={() => setEdit(!edit)}
-                    >
-                      {edit ? (
-                        <X className="h-5 w-5 dark:text-black dark:hover:text-blue-600" />
-                      ) : (
-                        <PenSquare className="h-5 w-5 hover:text-blue-600 dark:text-black dark:hover:text-blue-600" />
-                      )}
-                    </Button>
+                    {readOnly ? null : (
+                      <Button
+                        variant={"ghost"}
+                        className="h-7 w-7 p-0 text-slate-500 hover:bg-slate-100 hover:text-blue-700 dark:text-slate-300 dark:hover:bg-slate-700"
+                        onClick={() => setEdit(!edit)}
+                      >
+                        {edit ? (
+                          <X className="h-4 w-4" />
+                        ) : (
+                          <PenSquare className="h-4 w-4" />
+                        )}
+                      </Button>
+                    )}
                   </div>
                 </div>
-                <CreateIssue listId={column?.id} />
-                <div className="space-y-3">
+                {readOnly ? null : <CreateIssue listId={column?.id} />}
+                <div className="space-y-2.5">
                   {userIssues?.length > 0
                     ? userIssues?.map((issue, index) => (
-                        <Draggable
-                          draggableId={issue?.id}
-                          index={index}
-                          key={issue?.id}
-                        >
-                          {(provided) => (
-                            <TodoCard
-                              key={issue?.id}
-                              draggableProps={provided?.draggableProps}
-                              draggableHandleProps={provided?.dragHandleProps}
-                              innerRef={provided?.innerRef}
-                              todo={issue}
-                              index={index}
-                              id={issue?.id}
-                              listId={column?.id}
-                            />
-                          )}
-                        </Draggable>
-                      ))
+                      <Draggable
+                        draggableId={issue?.id}
+                        index={index}
+                        key={issue?.id}
+                        isDragDisabled={readOnly}
+                      >
+                        {(provided) => (
+                          <TodoCard
+                            key={issue?.id}
+                            draggableProps={provided?.draggableProps}
+                            draggableHandleProps={provided?.dragHandleProps}
+                            innerRef={provided?.innerRef}
+                            todo={issue}
+                            index={index}
+                            id={issue?.id}
+                            listId={column?.id}
+                          />
+                        )}
+                      </Draggable>
+                    ))
                     : null}
                   {provided.placeholder}
                 </div>

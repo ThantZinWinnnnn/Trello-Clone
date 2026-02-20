@@ -15,6 +15,7 @@ import Image from "next/image";
 import ConfirmModal from "@/components/utils/ConfirmModal";
 import { useGetMembers, useRemoveMember } from "@/features/member/hooks/member.hooks";
 import SettingMemSk from "@/components/skeleton/SettingMemSk";
+import ActivityTimeline from "@/features/audit/components/ActivityTimeline";
 
 const CurrentProjectSettingsPage = () => {
 
@@ -123,6 +124,7 @@ const CurrentProjectSettingsPage = () => {
           disabled={false}
           isLoading={false}
         />
+        <ActivityTimeline boardId={boardId} title="Board Activity Timeline" />
         {/* <p className="text-[0.6rem] sm:text-xs text-red-600 my-2">
           Note : This settings can be changed only by Admin
         </p> */}

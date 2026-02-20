@@ -34,6 +34,17 @@
     --ring: 215 20.2% 65.1%;
  
     --radius: 0.5rem;
+
+    --forge-bg-a: 246 250 255;
+    --forge-bg-b: 236 247 244;
+    --forge-panel: 255 255 255;
+    --forge-border: 206 220 242;
+    --forge-text: 16 24 40;
+    --forge-muted: 96 110 134;
+    --forge-accent: 16 104 236;
+    --forge-accent-strong: 12 76 173;
+    --forge-soft: 237 244 255;
+    --forge-shadow: 20 44 79;
   }
  
   .dark {
@@ -65,6 +76,17 @@
     --destructive-foreground: 0 85.7% 97.3%;
  
     --ring: 217.2 32.6% 17.5%;
+
+    --forge-bg-a: 14 24 42;
+    --forge-bg-b: 16 29 48;
+    --forge-panel: 24 36 58;
+    --forge-border: 64 83 114;
+    --forge-text: 230 238 250;
+    --forge-muted: 157 171 196;
+    --forge-accent: 87 152 255;
+    --forge-accent-strong: 62 126 233;
+    --forge-soft: 34 48 76;
+    --forge-shadow: 7 14 26;
   }
 }
  
@@ -100,6 +122,52 @@ body{
   margin:0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.boardforge-shell {
+  background:
+    radial-gradient(80rem 80rem at -10% -15%, rgba(var(--forge-accent), 0.12), transparent 55%),
+    radial-gradient(70rem 70rem at 110% -20%, rgba(24, 190, 142, 0.11), transparent 50%),
+    linear-gradient(
+      145deg,
+      rgb(var(--forge-bg-a)) 0%,
+      rgb(var(--forge-bg-b)) 52%,
+      rgb(var(--forge-bg-a)) 100%
+    );
+  color: rgb(var(--forge-text));
+}
+
+.boardforge-topbar {
+  background: rgba(var(--forge-panel), 0.84);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(var(--forge-border), 0.8);
+}
+
+.boardforge-panel {
+  background: rgba(var(--forge-panel), 0.88);
+  border: 1px solid rgba(var(--forge-border), 0.85);
+  box-shadow: 0 10px 30px rgba(var(--forge-shadow), 0.08);
+  border-radius: 14px;
+}
+
+.boardforge-column {
+  background: rgba(var(--forge-panel), 0.9);
+  border: 1px solid rgba(var(--forge-border), 0.9);
+  box-shadow: 0 8px 22px rgba(var(--forge-shadow), 0.06);
+  border-radius: 14px;
+}
+
+.boardforge-card {
+  background: rgba(var(--forge-panel), 0.98);
+  border: 2px solid rgba(var(--forge-border), 1);
+  box-shadow:
+    0 10px 24px rgba(var(--forge-shadow), 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+  border-radius: 12px;
+}
+
+.boardforge-muted {
+  color: rgb(var(--forge-muted));
 }
 
 @media (min-width: 1024px) {

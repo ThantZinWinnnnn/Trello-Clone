@@ -6,12 +6,15 @@ import {
   getAuthenticatedUserId,
   internalServerError,
   isNonEmptyString,
-  requireBoardMember,
+  requireBoardPermission,
   sanitizePlainText,
   tooManyRequests,
   unauthorized,
 } from "@/modules/shared/api.utils";
 import { isRateLimited } from "@/modules/shared/rate-limit";
+import { logAuditEvent } from "@/modules/shared/audit-events";
+import { AuditActionType, EntityType } from "@prisma/client";
+import { hasBoardPermission } from "@/modules/shared/rbac";
 
 const MAX_COMMENT_LENGTH = 200;
 
@@ -49,8 +52,8 @@ export const GET = async (req: NextRequest) => {
       return badRequest("Invalid issueId");
     }
 
-    const member = await requireBoardMember(boardId, authUserId);
-    if (!member) {
+    const access = await requireBoardPermission(boardId, authUserId, "board:read");
+    if (!access) {
       return forbidden("You do not have access to this board");
     }
 
@@ -109,8 +112,12 @@ export const POST = async (req: NextRequest) => {
       return badRequest("Invalid issueId");
     }
 
-    const member = await requireBoardMember(boardId, authUserId);
-    if (!member) {
+    const access = await requireBoardPermission(
+      boardId,
+      authUserId,
+      "comment:create"
+    );
+    if (!access) {
       return forbidden("You do not have access to this board");
     }
 
@@ -119,6 +126,19 @@ export const POST = async (req: NextRequest) => {
         desc,
         issueId,
         userId: authUserId,
+      },
+    });
+
+    await logAuditEvent({
+      actorId: authUserId,
+      actionType: AuditActionType.CREATE,
+      entityType: EntityType.COMMENT,
+      entityId: comment.id,
+      boardId,
+      issueId,
+      commentId: comment.id,
+      metadata: {
+        desc: comment.desc,
       },
     });
 
@@ -155,11 +175,36 @@ export const PUT = async (req: NextRequest) => {
       where: { id: commentId },
       select: {
         userId: true,
+        issueId: true,
+        desc: true,
+        Issue: {
+          select: {
+            List: {
+              select: {
+                boardId: true,
+              },
+            },
+          },
+        },
       },
     });
 
     if (!comment) {
       return badRequest("Invalid commentId");
+    }
+
+    const boardId = comment.Issue?.List?.boardId;
+    if (!isNonEmptyString(boardId)) {
+      return badRequest("Invalid comment board relation");
+    }
+
+    const updateAccess = await requireBoardPermission(
+      boardId,
+      authUserId,
+      "comment:update"
+    );
+    if (!updateAccess) {
+      return forbidden("You do not have permission to update comments");
     }
 
     if (comment.userId !== authUserId) {
@@ -169,6 +214,24 @@ export const PUT = async (req: NextRequest) => {
     const updatedComment = await prisma.comment.update({
       where: { id: commentId },
       data: { desc },
+    });
+
+    await logAuditEvent({
+      actorId: authUserId,
+      actionType: AuditActionType.UPDATE,
+      entityType: EntityType.COMMENT,
+      entityId: updatedComment.id,
+      boardId,
+      issueId: comment.issueId,
+      commentId: updatedComment.id,
+      metadata: {
+        before: {
+          desc: comment.desc,
+        },
+        after: {
+          desc: updatedComment.desc,
+        },
+      },
     });
 
     return NextResponse.json(updatedComment);
@@ -194,7 +257,10 @@ export const DELETE = async (req: NextRequest) => {
     const comment = await prisma.comment.findUnique({
       where: { id: commentId },
       select: {
+        id: true,
         userId: true,
+        issueId: true,
+        desc: true,
         Issue: {
           select: {
             List: {
@@ -216,18 +282,36 @@ export const DELETE = async (req: NextRequest) => {
       return badRequest("Invalid comment board relation");
     }
 
-    const member = await requireBoardMember(boardId, authUserId);
-    if (!member) {
+    const deleteAccess = await requireBoardPermission(
+      boardId,
+      authUserId,
+      "comment:delete"
+    );
+    if (!deleteAccess) {
       return forbidden("You do not have access to this board");
     }
 
     const isCommentOwner = comment.userId === authUserId;
-    if (!isCommentOwner && !member.isAdmin) {
+    const canManageMembers = hasBoardPermission(deleteAccess.role, "member:manage");
+    if (!isCommentOwner && !canManageMembers) {
       return forbidden("Only admins or the comment author can delete this comment");
     }
 
     const deletedComment = await prisma.comment.delete({
       where: { id: commentId },
+    });
+
+    await logAuditEvent({
+      actorId: authUserId,
+      actionType: AuditActionType.DELETE,
+      entityType: EntityType.COMMENT,
+      entityId: deletedComment.id,
+      boardId,
+      issueId: comment.issueId,
+      commentId: deletedComment.id,
+      metadata: {
+        desc: comment.desc,
+      },
     });
 
     return NextResponse.json(deletedComment);

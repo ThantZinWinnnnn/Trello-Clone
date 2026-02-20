@@ -30,13 +30,13 @@ const BoardLayout = ({
   };
 
   return (
-    <main className='overflow-hidden dark:bg-gray-700 '>
+    <main className='boardforge-shell overflow-hidden'>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: toJsonLd(boardsJsonLd) }}
         />
         <BoardNav/>
-        <section className='flex h-[calc(100vh-48px)] pb-5 sm:pb-0 overflow-hidden'>
+        <section className='flex h-[calc(100vh-64px)] gap-3 overflow-hidden p-3 sm:p-4'>
           <BoardSidebarComponent/>
           {children}
         </section>

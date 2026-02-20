@@ -23,18 +23,18 @@ const CreateNewList:React.FC<CreateNewListProps> = ({boardId}) => {
     // if(isError) toast.error("Error creating list please try again")
 
   return (
-    <section>
+    <section className="w-[280px] shrink-0">
         <Toaster richColors position="top-center"/>
       {openListInput ? (
-        <div className="flex flex-col gap-2 w-[250px]">
+        <div className="boardforge-column flex flex-col gap-3 p-3">
           <Input
             value={newList}
-            className="w-full dark:bg-gray-500"
+            className="h-9 rounded-lg border-slate-200 bg-white text-sm dark:border-slate-600 dark:bg-slate-800"
             onChange={(e) => setNewList(e.target.value)}
             placeholder="Enter list title..."
           />
           <div className="flex justify-between items-center">
-            <Button className="text-xs bg-blue-600 hover:bg-blue-700 px-6 dark:text-white"
+            <Button className="h-8 rounded-lg bg-blue-600 px-5 text-xs font-semibold hover:bg-blue-700 dark:text-white"
                 onClick={()=>{
                     createList(body)
                     setNewList("");
@@ -42,19 +42,19 @@ const CreateNewList:React.FC<CreateNewListProps> = ({boardId}) => {
                 }}
                 disabled={notEnterText}
             >
-              {"Add list"}
+              {creating ? "Adding..." : "Add list"}
             </Button>
-            <Button variant={"outline"} onClick={handleOpenListInput} className="dark:bg-gray-700">
+            <Button variant={"outline"} onClick={handleOpenListInput} className="h-8 rounded-lg border-slate-200 bg-white dark:border-slate-600 dark:bg-slate-800">
               <Cross1Icon className="w-4 h-4" />
             </Button>
           </div>
         </div>
       ) : (
         <Button
-          className="bg-[#F4F5F7] text-xs text-black hover:bg-gray-200"
+          className="boardforge-column h-11 w-full justify-start border-dashed bg-transparent px-4 text-xs font-semibold text-slate-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:text-slate-100 dark:hover:bg-slate-700"
           onClick={handleOpenListInput}
         >
-          Create  List
+          + Create New List
         </Button>
       )}
     </section>

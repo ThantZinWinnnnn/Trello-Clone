@@ -1,1 +1,1 @@
-export { GET, POST, DELETE } from "@/modules/member/route.handlers";
+export { GET, POST, PATCH, DELETE } from "@/modules/member/route.handlers";

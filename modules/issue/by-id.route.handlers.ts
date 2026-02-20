@@ -7,11 +7,14 @@ import {
   internalServerError,
   isNonEmptyString,
   requireBoardMember,
+  requireBoardPermission,
   sanitizeHtml,
   tooManyRequests,
   unauthorized,
 } from "@/modules/shared/api.utils";
 import { isRateLimited } from "@/modules/shared/rate-limit";
+import { logAuditEvent } from "@/modules/shared/audit-events";
+import { AuditActionType, EntityType } from "@prisma/client";
 
 const allowedIssueFields = new Set(["listId", "summary", "desc", "priority", "type"]);
 
@@ -37,6 +40,12 @@ export const PUT = async (
     const issue = await prisma.issue.findUnique({
       where: { id: issueId },
       select: {
+        id: true,
+        listId: true,
+        summary: true,
+        desc: true,
+        priority: true,
+        type: true,
         List: {
           select: {
             boardId: true,
@@ -46,12 +55,16 @@ export const PUT = async (
     });
 
     const boardId = issue?.List?.boardId;
-    if (!isNonEmptyString(boardId)) {
+    if (!issue || !isNonEmptyString(boardId)) {
       return badRequest("Invalid issueId");
     }
 
-    const member = await requireBoardMember(boardId, authUserId);
-    if (!member) {
+    const readAccess = await requireBoardPermission(
+      boardId,
+      authUserId,
+      "board:read"
+    );
+    if (!readAccess) {
       return forbidden("You do not have access to this board");
     }
 
@@ -63,6 +76,15 @@ export const PUT = async (
     }
 
     if (type === "listId") {
+      const moveAccess = await requireBoardPermission(
+        boardId,
+        authUserId,
+        "issue:move"
+      );
+      if (!moveAccess) {
+        return forbidden("You do not have permission to move issues");
+      }
+
       const nextList = await prisma.list.findFirst({
         where: { id: value, boardId },
         select: { id: true },
@@ -77,10 +99,34 @@ export const PUT = async (
         where: { id: issueId },
         data: { listId: value, order: count + 1, updatedAt: new Date() },
       });
+
+      await logAuditEvent({
+        actorId: authUserId,
+        actionType: AuditActionType.MOVE,
+        entityType: EntityType.ISSUE,
+        entityId: issueId,
+        boardId,
+        issueId,
+        listId: value,
+        metadata: {
+          fromListId: issue.listId,
+          toListId: value,
+        },
+      });
+
       return NextResponse.json(updatedList);
     }
 
     if (type === "addAssignes") {
+      const updateAccess = await requireBoardPermission(
+        boardId,
+        authUserId,
+        "issue:update"
+      );
+      if (!updateAccess) {
+        return forbidden("You do not have permission to update issues");
+      }
+
       const assigneeMember = await requireBoardMember(boardId, value);
       if (!assigneeMember) {
         return badRequest("Assignee must be a board member");
@@ -111,10 +157,32 @@ export const PUT = async (
         data: { updatedAt: new Date() },
       });
 
+      await logAuditEvent({
+        actorId: authUserId,
+        actionType: AuditActionType.ASSIGN,
+        entityType: EntityType.ISSUE,
+        entityId: issueId,
+        boardId,
+        issueId,
+        listId: issue.listId,
+        metadata: {
+          assignedUserId: value,
+        },
+      });
+
       return NextResponse.json(createdAssignee);
     }
 
     if (type === "remvoeAssignee") {
+      const updateAccess = await requireBoardPermission(
+        boardId,
+        authUserId,
+        "issue:update"
+      );
+      if (!updateAccess) {
+        return forbidden("You do not have permission to update issues");
+      }
+
       const removedAssignees = await prisma.assignee.deleteMany({
         where: {
           issueId,
@@ -127,11 +195,33 @@ export const PUT = async (
         data: { updatedAt: new Date() },
       });
 
+      await logAuditEvent({
+        actorId: authUserId,
+        actionType: AuditActionType.UNASSIGN,
+        entityType: EntityType.ISSUE,
+        entityId: issueId,
+        boardId,
+        issueId,
+        listId: issue.listId,
+        metadata: {
+          unassignedUserId: value,
+        },
+      });
+
       return NextResponse.json(removedAssignees);
     }
 
     if (!allowedIssueFields.has(type)) {
       return badRequest("Unsupported issue update type");
+    }
+
+    const updateAccess = await requireBoardPermission(
+      boardId,
+      authUserId,
+      "issue:update"
+    );
+    if (!updateAccess) {
+      return forbidden("You do not have permission to update issues");
     }
 
     if (type === "summary" && value.trim().length > 200) {
@@ -143,6 +233,25 @@ export const PUT = async (
       data: {
         [type]: type === "desc" ? sanitizeHtml(value) : value,
         updatedAt: new Date(),
+      },
+    });
+
+    await logAuditEvent({
+      actorId: authUserId,
+      actionType: AuditActionType.UPDATE,
+      entityType: EntityType.ISSUE,
+      entityId: issueId,
+      boardId,
+      issueId,
+      listId: issue.listId,
+      metadata: {
+        field: type,
+        before: {
+          [type]: issue[type as keyof typeof issue] ?? null,
+        },
+        after: {
+          [type]: value,
+        },
       },
     });
 
