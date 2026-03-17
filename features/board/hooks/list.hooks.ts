@@ -3,16 +3,16 @@ import axios from "axios";
 import { updateListOrderLocally } from "@/shared/lib/react-query-optimistic";
 
 export const useGetLists = (boardId: string) => {
-   return useQuery<Array<ListProps>>({
-        queryKey: ["lists", boardId],
-        queryFn: async () => {
-          const response = await axios.get(
-            `/api/lists?boardId=${encodeURIComponent(boardId)}`
-          );
-          return response.data;
-        },
-        enabled: Boolean(boardId),
-      })
+  return useQuery<Array<ListProps>>({
+    queryKey: ["lists", boardId],
+    queryFn: async () => {
+      const response = await axios.get(
+        `/api/lists?boardId=${encodeURIComponent(boardId)}`
+      );
+      return response.data;
+    },
+    enabled: Boolean(boardId),
+  })
 };
 
 export const useCreateList = (boardId: string) => {
@@ -41,7 +41,7 @@ export const useCreateList = (boardId: string) => {
           },
         ]
       );
-      return{
+      return {
         previousLists
       }
     },
@@ -54,27 +54,27 @@ export const useCreateList = (boardId: string) => {
   });
 };
 
-export const useReorderLists =(boardId:string) => {
-    const  queryClient = useQueryClient();
-    return useMutation({
-        mutationFn:async(data:orderProps)=>{
-            const response = await axios.put('/api/lists',data);
-            return response.data;
-        },
-        onMutate:async(data)=>{
-            const {id,oIdx,nIdx} = data;
-            await queryClient.cancelQueries({queryKey:["lists",boardId]});
-            const previouseLists = await queryClient.getQueryData(["lists",boardId]);
-            queryClient.setQueryData(["lists",boardId],(oldLists:Array<ListProps> | undefined)=>updateListOrderLocally(oldLists!,{id,oIdx,nIdx}));
-            return {
-                previouseLists
-            }
-        },  
-        onError:(error,data,context)=>{
-            queryClient.setQueryData(["lists", boardId],context?.previouseLists);
-        },
-        onSettled:()=>queryClient.invalidateQueries(["lists",boardId])
-    });
+export const useReorderLists = (boardId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: orderProps) => {
+      const response = await axios.put('/api/lists', data);
+      return response.data;
+    },
+    onMutate: async (data) => {
+      const { id, oIdx, nIdx } = data;
+      await queryClient.cancelQueries({ queryKey: ["lists", boardId] });
+      const previouseLists = await queryClient.getQueryData(["lists", boardId]);
+      queryClient.setQueryData(["lists", boardId], (oldLists: Array<ListProps> | undefined) => updateListOrderLocally(oldLists!, { id, oIdx, nIdx }));
+      return {
+        previouseLists
+      }
+    },
+    onError: (error, data, context) => {
+      queryClient.setQueryData(["lists", boardId], context?.previouseLists);
+    },
+    onSettled: () => queryClient.invalidateQueries(["lists", boardId])
+  });
 
 
 };
@@ -82,17 +82,17 @@ export const useReorderLists =(boardId:string) => {
 export const useUpdateList = (boardId: string, listId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn:async(data:UpdateListName)=>{
-      const response = await axios.patch('/api/lists',data);
+    mutationFn: async (data: UpdateListName) => {
+      const response = await axios.patch('/api/lists', data);
       return response.data;
     },
     onMutate: async (data) => {
-      const {listId,name} = data;
+      const { listId, name } = data;
       await queryClient.cancelQueries({ queryKey: ["lists", boardId] });
       const previousLists = await queryClient.getQueryData(["lists", boardId]);
-      queryClient.setQueryData(['lists',boardId],(oldLists:Array<ListProps> | undefined)=>{
-        return oldLists?.map((list)=>{
-          if(list?.id === listId){
+      queryClient.setQueryData(['lists', boardId], (oldLists: Array<ListProps> | undefined) => {
+        return oldLists?.map((list) => {
+          if (list?.id === listId) {
             return {
               ...list,
               name
@@ -109,7 +109,7 @@ export const useUpdateList = (boardId: string, listId: string) => {
     onError: (error, data, context) => {
       queryClient.setQueryData(["lists", boardId], context?.previousLists);
     },
-    onSuccess:()=>{
+    onSuccess: () => {
       queryClient.invalidateQueries(["lists", boardId])
     }
   });
@@ -118,24 +118,24 @@ export const useUpdateList = (boardId: string, listId: string) => {
 export const useDeleteList = (boardId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn:async(listId:string)=>{
+    mutationFn: async (listId: string) => {
       const response = await axios.delete(`/api/lists?listId=${listId}`);
       return response.data;
     },
-    onMutate:async(listId)=>{
+    onMutate: async (listId) => {
       await queryClient.cancelQueries(["lists", boardId]);
       const previousLists = await queryClient.getQueryData(["lists", boardId]);
-      queryClient.setQueryData(["lists", boardId],(oldLists:Array<ListProps> | undefined)=>{
-        return oldLists?.filter((list)=>list?.id !== listId);
+      queryClient.setQueryData(["lists", boardId], (oldLists: Array<ListProps> | undefined) => {
+        return oldLists?.filter((list) => list?.id !== listId);
       });
       return {
         previousLists
       }
     },
-    onError:(error,data,context)=>{
-      queryClient.setQueryData(["lists", boardId],context?.previousLists);
+    onError: (error, data, context) => {
+      queryClient.setQueryData(["lists", boardId], context?.previousLists);
     },
-    onSuccess:()=>{
+    onSuccess: () => {
       queryClient.invalidateQueries(["lists", boardId])
     }
   })

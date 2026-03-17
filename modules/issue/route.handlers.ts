@@ -127,10 +127,10 @@ export const POST = async (req: NextRequest) => {
 
     const normalizedAssignees = Array.isArray(assignees)
       ? Array.from(
-          new Set(
-            assignees.filter((value): value is string => isNonEmptyString(value))
-          )
+        new Set(
+          assignees.filter((value): value is string => isNonEmptyString(value))
         )
+      )
       : [];
 
     if (normalizedAssignees.length > 0) {
@@ -164,9 +164,9 @@ export const POST = async (req: NextRequest) => {
     if (normalizedAssignees.length > 0) {
       await prisma.assignee.createMany({
         data: normalizedAssignees.map((userId) => ({
-            userId,
-            issueId: issue.id,
-            boardId,
+          userId,
+          issueId: issue.id,
+          boardId,
         })),
       });
     }

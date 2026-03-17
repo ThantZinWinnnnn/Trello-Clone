@@ -62,7 +62,7 @@ const addMemberLocally = (
   return [...members, newMember];
 };
 
-export const useRemoveMember = (boardId: string,userId:string) => {
+export const useRemoveMember = (boardId: string, userId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: RemoveMember) => {
@@ -70,15 +70,15 @@ export const useRemoveMember = (boardId: string,userId:string) => {
       return response.data;
     },
     onMutate: async (data) => {
-      const {boardId,userId,memberId} = data;
+      const { boardId, userId, memberId } = data;
       await queryClient.cancelQueries(["members", boardId]);
       const previousMembers = await queryClient.getQueryData([
         "members",
         boardId,
       ]);
-      const previousUserBoards = await queryClient.getQueryData(["boards",userId]);
-      queryClient.setQueryData(['boards',userId],(oldUserBoards:GetUserBoardsProps | undefined)=>
-        oldUserBoards ? deleteBoardLocally(oldUserBoards,boardId,"leave") : oldUserBoards
+      const previousUserBoards = await queryClient.getQueryData(["boards", userId]);
+      queryClient.setQueryData(['boards', userId], (oldUserBoards: GetUserBoardsProps | undefined) =>
+        oldUserBoards ? deleteBoardLocally(oldUserBoards, boardId, "leave") : oldUserBoards
       );
       queryClient.setQueryData(
         ["members", boardId],
@@ -91,13 +91,13 @@ export const useRemoveMember = (boardId: string,userId:string) => {
       }
     },
     onError: (_, data, context) => {
-      queryClient.setQueryData(["boards",userId],context?.previousUserBoards);
+      queryClient.setQueryData(["boards", userId], context?.previousUserBoards);
       queryClient.setQueryData(["members", boardId], context?.previousMembers);
     },
     onSuccess: () => {
       Promise.all([
         queryClient.invalidateQueries(["members", boardId]),
-        queryClient.invalidateQueries(["issues",boardId])
+        queryClient.invalidateQueries(["issues", boardId])
       ])
     }
   });
@@ -132,10 +132,10 @@ export const useUpdateMemberRole = (boardId: string) => {
         (oldMembers ?? []).map((member) =>
           member.id === memberId
             ? {
-                ...member,
-                role,
-                isAdmin: role === "ADMIN",
-              }
+              ...member,
+              role,
+              isAdmin: role === "ADMIN",
+            }
             : member
         )
       );

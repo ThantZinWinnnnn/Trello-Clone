@@ -29,12 +29,12 @@ type Params = {
 };
 
 const Board = ({ params: { boardId } }: Params) => {
-  const [openAddMemModal,setOpenAddMemModal] = useState(false);
+  const [openAddMemModal, setOpenAddMemModal] = useState(false);
   const [conflictNotice, setConflictNotice] = useState<string | null>(null);
   const { data: session } = useSession();
   const { statusText } = useBoardRealtime(boardId);
   const { memberName } = useBoardStore();
-  const debounceValue = useDebounce(memberName,500)
+  const debounceValue = useDebounce(memberName, 500)
   const { mutate: addMember } = useAddMember(boardId);
   const {
     data: users = [],
@@ -175,17 +175,17 @@ const Board = ({ params: { boardId } }: Params) => {
                 {isLoading
                   ? ListsSk
                   : lists?.length! > 0 &&
-                    issues !== undefined &&
-                    lists?.map((list, index) => (
-                      <Column
-                        key={list.id}
-                        id={list.id}
-                        column={list}
-                        index={index}
-                        issues={issues![list?.id]}
-                        readOnly={!canReorderBoard}
-                      />
-                    ))}
+                  issues !== undefined &&
+                  lists?.map((list, index) => (
+                    <Column
+                      key={list.id}
+                      id={list.id}
+                      column={list}
+                      index={index}
+                      issues={issues![list?.id]}
+                      readOnly={!canReorderBoard}
+                    />
+                  ))}
                 {canCreateList ? <CreateNewList boardId={boardId} /> : null}
                 {provided.placeholder}
               </div>

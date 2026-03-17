@@ -37,9 +37,6 @@ import IssueDetailPiority from "@/features/issue/components/IssueDetailPiority";
 import { useBoardStore } from "@/shared/state/zustand.store";
 import { useGetMembers } from "@/features/member/hooks/member.hooks";
 import ReadOnlyRichText from "@/features/issue/components/ReadOnlyRichText";
-import ActivityTimeline from "@/features/audit/components/ActivityTimeline";
-import IssueAttachments from "@/features/attachment/components/IssueAttachments";
-
 const IssueDetailComponent = ({
   children,
   issue,
@@ -140,7 +137,7 @@ const IssueDetailComponent = ({
                   >
                     {issue?.desc}
                   </p> */}
-                  <ReadOnlyRichText description={issue?.desc}/>
+                  <ReadOnlyRichText description={issue?.desc} />
                 </div>
 
                 <section className="flex flex-col gap-6">
@@ -149,13 +146,6 @@ const IssueDetailComponent = ({
                     <CreateComment session={session ?? null} issueId={issue?.id} />
                   </section>
                   <Comments issueId={issue?.id} />
-                  <IssueAttachments boardId={param.boardId as string} issueId={issue.id} />
-                  <ActivityTimeline
-                    boardId={param.boardId as string}
-                    entityId={issue.id}
-                    entityType="ISSUE"
-                    title="Card Activity"
-                  />
                 </section>
               </section>
               <section className="w-full sm:w-[35%] flex flex-col gap-6">
@@ -192,7 +182,7 @@ const IssueDetailComponent = ({
                         reporter={false}
                       />
                     ))}
-                    <AddMemberButton handler={openSearchInputHandler}/>
+                    <AddMemberButton handler={openSearchInputHandler} />
                     {openSearchInput && (
                       <SearchMember
                         closeSearchHandler={openSearchInputHandler}
