@@ -48,45 +48,54 @@
   }
  
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
- 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
- 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
- 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
- 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
- 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
- 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
- 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
- 
+    /* Background: #0F1419 */
+    --background: 210 25% 8%;
+    --foreground: 214 32% 96%;
+
+    /* Muted surfaces */
+    --muted: 215 22% 18%;
+    --muted-foreground: 215 16% 65%;
+
+    /* Popover: slightly darker than card */
+    --popover: 212 28% 10%;
+    --popover-foreground: 214 32% 96%;
+
+    /* Card: #1A202C */
+    --card: 218 26% 14%;
+    --card-foreground: 214 32% 96%;
+
+    /* Border: #334155 */
+    --border: 215 25% 27%;
+    --input: 215 25% 27%;
+
+    /* Primary: #3B82F6 blue */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary: dark surface */
+    --secondary: 218 26% 18%;
+    --secondary-foreground: 214 32% 96%;
+
+    /* Accent: hover surface #263449 */
+    --accent: 218 26% 21%;
+    --accent-foreground: 214 32% 96%;
+
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 85.7% 97.3%;
- 
-    --ring: 217.2 32.6% 17.5%;
 
-    --forge-bg-a: 14 24 42;
-    --forge-bg-b: 16 29 48;
-    --forge-panel: 24 36 58;
-    --forge-border: 64 83 114;
-    --forge-text: 230 238 250;
-    --forge-muted: 157 171 196;
-    --forge-accent: 87 152 255;
-    --forge-accent-strong: 62 126 233;
-    --forge-soft: 34 48 76;
-    --forge-shadow: 7 14 26;
+    --ring: 217 91% 60%;
+
+    /* Forge design tokens — RGB values */
+    --forge-bg-a:   15  20  25;   /* #0F1419 */
+    --forge-bg-b:   18  25  34;   /* slightly lighter base */
+    --forge-panel:  26  32  44;   /* #1A202C */
+    --forge-border: 51  65  85;   /* #334155 */
+    --forge-text:  241 245 249;   /* #F1F5F9 */
+    --forge-muted: 148 163 184;   /* #94A3B8 */
+    --forge-accent:  59 130 246;  /* #3B82F6 */
+    --forge-accent-strong: 37 99 235;
+    --forge-soft:   38  52  73;   /* #263449 — hover state */
+    --forge-shadow:  8  12  20;
   }
 }
  
@@ -127,7 +136,7 @@ body{
 .boardforge-shell {
   background:
     radial-gradient(80rem 80rem at -10% -15%, rgba(var(--forge-accent), 0.12), transparent 55%),
-    radial-gradient(70rem 70rem at 110% -20%, rgba(24, 190, 142, 0.11), transparent 50%),
+    radial-gradient(70rem 70rem at 110% -20%, rgba(236, 72, 153, 0.08), transparent 50%),
     linear-gradient(
       145deg,
       rgb(var(--forge-bg-a)) 0%,
@@ -145,9 +154,6 @@ body{
 
 .boardforge-panel {
   background: rgba(var(--forge-panel), 0.88);
-  border: 1px solid rgba(var(--forge-border), 0.85);
-  box-shadow: 0 10px 30px rgba(var(--forge-shadow), 0.08);
-  border-radius: 14px;
 }
 
 .boardforge-column {

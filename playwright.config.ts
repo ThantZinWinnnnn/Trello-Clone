@@ -1,6 +1,8 @@
 import { defineConfig } from "@playwright/test";
 
 const baseURL = process.env.E2E_BASE_URL ?? "http://127.0.0.1:3000";
+const traceMode =
+  process.env.PW_TRACE_MODE ?? (process.env.CI ? "off" : "retain-on-failure");
 
 export default defineConfig({
   testDir: "./e2e",
@@ -9,7 +11,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   use: {
     baseURL,
-    trace: "retain-on-failure",
+    trace: traceMode as "off" | "on" | "on-first-retry" | "on-all-retries" | "retain-on-failure",
   },
   webServer: process.env.PW_SKIP_WEBSERVER
     ? undefined

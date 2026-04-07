@@ -47,14 +47,22 @@ const BoardsPage = () => {
   return (
     <>
     <Toaster richColors position="top-center" />
-    <main className="p-3 h-full overflow-y-auto">
-      <ProjectBoard boards={createdBoards!} isLoading={isLoading}/>
+    <main className="p-4 sm:p-6 lg:p-8 h-full overflow-y-auto w-full max-w-6xl mx-auto">
+      <div className="mb-8">
+        <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white mb-6">
+          Created Boards
+        </h2>
+        <ProjectBoard boards={createdBoards!} isLoading={isLoading}/>
+      </div>
+      
       {
         filterAssignedBoards?.length ? (
-          <section>
-            <LineSeparator/>
-              <Label className="mb-5">Assigned Boards</Label>
-              <AssignedBoards boards={filterAssignedBoards!} isLoading={isLoading}/>
+          <section className="mt-12">
+            <LineSeparator className="mb-8" />
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white mb-6">
+              Assigned Boards
+            </h2>
+            <AssignedBoards boards={filterAssignedBoards!} isLoading={isLoading}/>
           </section>
         ):
         null

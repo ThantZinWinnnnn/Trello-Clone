@@ -50,13 +50,13 @@ const BoardSidebarComponent = () => {
     sort === "alpha"
       ? sortedByAlphaBoards
       : sort === "date"
-      ? sortedByDateBoards
-      : userAllBoards;
+        ? sortedByDateBoards
+        : userAllBoards;
 
   const skeletonRows = new Array(4).fill(0);
 
   return (
-    <aside className="boardforge-panel hidden h-full w-[300px] shrink-0 flex-col justify-between p-3 lg:flex xl:w-[320px]">
+    <aside className="boardforge-panel hidden h-full w-[300px] shrink-0 flex-col justify-between p-3 lg:flex xl:w-[320px] border-r border-slate-200 dark:border-slate-700/60">
       <section>
         <header className="px-2 pb-2">
           <p className="text-sm font-semibold tracking-wide text-slate-900 dark:text-slate-100">
@@ -96,28 +96,27 @@ const BoardSidebarComponent = () => {
             {isLoading
               ? skeletonRows.map((_, i) => <BoardNameSk key={i} />)
               : updatedBoards.map((board) => (
-                  <Button
-                    key={board.id}
-                    variant="ghost"
-                    onClick={() => {
-                      setProfileUser(session?.user!);
-                      setBoardName(board?.name);
-                      setOpenSetting(true);
-                      setReachedSetting(false);
-                      router.push(`/boards/${board?.name}/${board.id}`);
-                    }}
-                    className={`h-10 justify-start rounded-lg border px-2 text-left transition ${
-                      boardId === board.id
-                        ? "border-blue-300 bg-blue-50 text-blue-700 dark:border-blue-400/60 dark:bg-blue-500/20 dark:text-blue-200"
-                        : "border-transparent bg-transparent text-slate-700 hover:border-slate-200 hover:bg-white/80 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-800"
+                <Button
+                  key={board.id}
+                  variant="ghost"
+                  onClick={() => {
+                    setProfileUser(session?.user!);
+                    setBoardName(board?.name);
+                    setOpenSetting(true);
+                    setReachedSetting(false);
+                    router.push(`/boards/${board?.name}/${board.id}`);
+                  }}
+                  className={`h-10 justify-start rounded-lg border px-2 text-left transition ${boardId === board.id
+                      ? "border-blue-300 bg-blue-50 text-blue-700 dark:border-blue-400/60 dark:bg-blue-500/20 dark:text-blue-200"
+                      : "border-transparent bg-transparent text-slate-700 hover:border-slate-200 hover:bg-white/80 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-800"
                     }`}
-                  >
-                    <LayoutIcon className="mr-2 h-4 w-4 shrink-0" />
-                    <span className="max-w-[220px] truncate text-xs font-medium 2xl:text-sm">
-                      {board.name}
-                    </span>
-                  </Button>
-                ))}
+                >
+                  <LayoutIcon className="mr-2 h-4 w-4 shrink-0" />
+                  <span className="max-w-[220px] truncate text-xs font-medium 2xl:text-sm">
+                    {board.name}
+                  </span>
+                </Button>
+              ))}
           </section>
         </div>
       </section>

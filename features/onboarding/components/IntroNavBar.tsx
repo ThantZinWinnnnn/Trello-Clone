@@ -1,13 +1,11 @@
 import React from 'react'
-//components
-import intorLogo from "@/public/photos/intro-logo.png"
-import Image from 'next/image'
+import Logo from "@/features/auth/components/Logo"
 
 const IntroNavBar = () => {
   return (
-    <section className='w-full bg-blue-700 py-2 pl-14'>
-        <Image src={intorLogo} alt='intro Logo' className='w-[90px] h-[33px]'/>
-    </section>
+    <header className='w-full absolute top-0 left-0 z-50 p-6 sm:p-8 flex items-center justify-start bg-transparent'>
+        <Logo />
+    </header>
   )
 }
 

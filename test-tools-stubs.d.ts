@@ -10,9 +10,3 @@ declare module "vitest" {
 declare module "vitest/config" {
   export const defineConfig: any;
 }
-
-declare module "@playwright/test" {
-  export const test: any;
-  export const expect: any;
-  export const defineConfig: any;
-}

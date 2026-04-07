@@ -19,7 +19,7 @@ import { useSession } from "next-auth/react";
 import ListSkeleton from "@/components/skeleton/ListSkeleton";
 import useDebounce from "@/components/utils/useDebounce";
 import BoardSettingBtn from "@/components/utils/BoardSettingBtn";
-import { useBoardRealtime } from "@/features/realtime/hooks/useBoardRealtime";
+
 import axios from "axios";
 import { hasBoardPermission } from "@/modules/shared/rbac";
 type Params = {
@@ -32,7 +32,7 @@ const Board = ({ params: { boardId } }: Params) => {
   const [openAddMemModal, setOpenAddMemModal] = useState(false);
   const [conflictNotice, setConflictNotice] = useState<string | null>(null);
   const { data: session } = useSession();
-  const { statusText } = useBoardRealtime(boardId);
+
   const { memberName } = useBoardStore();
   const debounceValue = useDebounce(memberName, 500)
   const { mutate: addMember } = useAddMember(boardId);
@@ -116,9 +116,6 @@ const Board = ({ params: { boardId } }: Params) => {
               BoardForge Project Board
             </h2>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-600 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
-                {statusText}
-              </span>
               {conflictNotice ? (
                 <span className="rounded-full border border-amber-300 bg-amber-50 px-2.5 py-1 text-[11px] font-medium text-amber-700 dark:border-amber-400/70 dark:bg-amber-500/10 dark:text-amber-300">
                   {conflictNotice}

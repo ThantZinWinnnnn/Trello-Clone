@@ -1,39 +1,15 @@
 import { expect, test } from "@playwright/test";
+import { addAuthCookiesToContext, resolveBaseURL } from "./support/auth";
 
 const authCookie = process.env.E2E_AUTH_COOKIE;
-
-const parseCookieHeader = (header: string) => {
-  return header
-    .split(";")
-    .map((part) => part.trim())
-    .filter(Boolean)
-    .map((cookie) => {
-      const [name, ...rest] = cookie.split("=");
-      return {
-        name,
-        value: rest.join("="),
-      };
-    })
-    .filter((cookie) => cookie.name && cookie.value);
-};
 
 test.describe("board collaboration flow", () => {
   test.skip(!authCookie, "Set E2E_AUTH_COOKIE to run authenticated e2e flow");
 
-  test("create board -> add issue -> move issue -> audit/realtime/search", async ({ request, page, baseURL }: any) => {
+  test("create board -> add issue -> move issue -> audit/realtime/search", async ({ request, page }) => {
     const cookieHeader = authCookie as string;
-    if (baseURL) {
-      const host = new URL(baseURL);
-      const cookies = parseCookieHeader(cookieHeader).map((cookie) => ({
-        ...cookie,
-        domain: host.hostname,
-        path: "/",
-        httpOnly: true,
-        secure: host.protocol === "https:",
-        sameSite: "Lax" as const,
-      }));
-      await page.context().addCookies(cookies);
-    }
+    const baseURL = resolveBaseURL(test.info().project.use.baseURL);
+    await addAuthCookiesToContext(page.context(), cookieHeader, baseURL);
 
     await page.goto("/boards");
 

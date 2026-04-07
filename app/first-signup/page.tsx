@@ -5,6 +5,8 @@ import { getAuthSession } from "@/lib/next-auth";
 import Link from "next/link";
 import { Mail, User } from "lucide-react";
 import { SITE_NAME, SITE_URL, toJsonLd } from "@/lib/seo";
+import Logo from "@/features/auth/components/Logo";
+import FirstSignupAction from "@/features/onboarding/components/FirstSignupAction";
 
 export const metadata: Metadata = {
   title: "Welcome to BoardForge",
@@ -35,68 +37,62 @@ const FirstSignUpPage = async () => {
   };
 
   return (
-    <main className="boardforge-shell min-h-screen flex items-center justify-center p-4">
+    <main className="relative min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 overflow-hidden">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toJsonLd(firstSignupJsonLd) }}
       />
-      
-      <div className="w-full max-w-[420px] boardforge-panel p-8 flex flex-col items-center">
-        {/* Modern Logo Area */}
-        <div className="mb-8 flex items-center justify-center gap-2">
-          <div className="w-8 h-8 rounded bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <div className="w-4 h-4 border-2 border-white rounded-sm" />
+
+      {/* Background decorations matching the login aesthetic */}
+      <div className="absolute top-0 w-full h-full bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))]"></div>
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-400/20 dark:bg-blue-600/10 blur-[120px]"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-400/20 dark:bg-indigo-600/10 blur-[120px]"></div>
+
+      <section className="relative z-10 w-full max-w-[420px] px-6 py-10 flex flex-col items-center">
+        <div className="mb-10">
+          <Logo />
+        </div>
+
+        <div className="w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/60 dark:border-slate-800/60 shadow-xl shadow-slate-200/40 dark:shadow-none p-8 rounded-2xl flex flex-col items-center transition-all duration-300">
+          <div className="text-center mb-8">
+            <h1 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-white mb-2">
+              Welcome aboard
+            </h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Let&apos;s confirm your details to set up your workspace.
+            </p>
           </div>
-          <span className="text-2xl font-bold tracking-tight text-slate-800 dark:text-white">
-            BoardForge
-          </span>
-        </div>
 
-        <div className="text-center mb-8">
-          <h1 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
-            Welcome aboard
-          </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Let&apos;s confirm your details to set up your workspace.
-          </p>
-        </div>
+          {/* User Profile Card - Premium Edition */}
+          <div className="w-full bg-slate-50/50 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-700/50 rounded-xl p-4 mb-8 transition-colors hover:bg-slate-100/50 dark:hover:bg-slate-800/60">
+            <div className="flex items-center gap-4">
+              {image ? (
+                <img
+                  src={image}
+                  alt={name || "User"}
+                  className="w-12 h-12 rounded-full ring-2 ring-white dark:ring-slate-800 shadow-sm object-cover"
+                />
+              ) : (
+                <div className="w-12 h-12 rounded-full ring-2 ring-white dark:ring-slate-800 shadow-sm bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+                  <User className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                </div>
+              )}
 
-        {/* User Profile Card */}
-        <div className="w-full bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl p-4 mb-8">
-          <div className="flex items-center gap-4 mb-4">
-            {image ? (
-              <img src={image} alt={name || "User"} className="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-700 object-cover" />
-            ) : (
-              <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                <User className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-              </div>
-            )}
-            
-            <div className="flex-1 min-w-0">
-              <h2 className="text-sm font-semibold text-slate-900 dark:text-white truncate">
-                {name || "User"}
-              </h2>
-              <div className="flex items-center gap-1.5 mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-                <Mail className="w-3.5 h-3.5" />
-                <span className="truncate">{email}</span>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                  {name || "User"}
+                </h2>
+                <div className="flex items-center gap-1.5 mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                  <Mail className="w-3 h-3" />
+                  <span className="truncate">{email}</span>
+                </div>
               </div>
             </div>
           </div>
+
+          <FirstSignupAction />
         </div>
-
-        <Link href="/create-first-team" className="w-full">
-          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm py-2.5 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98]">
-            Complete setup & continue
-          </button>
-        </Link>
-
-        <p className="text-xs text-center text-slate-400 dark:text-slate-500 mt-6 max-w-[280px]">
-          By continuing, you agree to our{" "}
-          <a href="#" className="text-blue-600 dark:text-blue-400 hover:underline">Terms of Service</a>{" "}
-          and{" "}
-          <a href="#" className="text-blue-600 dark:text-blue-400 hover:underline">Privacy Policy</a>.
-        </p>
-      </div>
+      </section>
     </main>
   );
 };

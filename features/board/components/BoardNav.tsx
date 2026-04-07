@@ -4,6 +4,7 @@ import ThemeDropdown from "@/features/onboarding/components/ThemeDropdown";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getAuthSession } from "@/lib/next-auth";
+import Logo from "@/features/auth/components/Logo";
 import { Sparkles } from "lucide-react";
 
 const BoardNav = async () => {
@@ -12,21 +13,10 @@ const BoardNav = async () => {
   const userInitial = user?.name?.trim().charAt(0)?.toUpperCase() ?? "U";
 
   return (
-    <header className="boardforge-topbar flex h-16 items-center justify-between px-4 sm:px-6">
-      <Link href="/boards" className="flex items-center gap-3">
-        <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-blue-600 to-cyan-500 text-sm font-extrabold text-white shadow-sm">
-          BF
-        </span>
-        <div>
-          <p className="text-lg font-semibold leading-none text-slate-900 dark:text-slate-100">
-            BoardForge
-          </p>
-          <p className="mt-1 flex items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-slate-300">
-            <Sparkles className="h-3 w-3" />
-            Collaborative planning workspace
-          </p>
-        </div>
-      </Link>
+    <header className="fixed top-0 inset-x-0 z-50 flex h-16 items-center justify-between px-4 sm:px-6 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-800/50">
+      <div className="flex items-center gap-3">
+        <Logo />
+      </div>
 
       <nav className="flex items-center gap-3 sm:gap-4">
         <ThemeDropdown />
