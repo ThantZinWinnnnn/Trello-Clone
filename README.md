@@ -11,36 +11,32 @@ BoardForge is a Trello-style project management app built with Next.js App Route
 
 ## Folder Structure (Current)
 ```text
-app/
-  api/...
-  boards/...                # board routes
-features/
-  attachment/
-  audit/
-  board/
-  comment/
-  issue/
-  member/
-  realtime/
-modules/
-  attachment/
-  audit/
-  board/
-  comment/
-  issue/
-  list/
-  member/
-  shared/                   # rbac, api utils, realtime, rate limit
-shared/
-  lib/
-  state/
-  utils/
-prisma/
-  schema.prisma
-  seed.ts
-docs/
-  ARCHITECTURE.md
-  FEATURE_REPORT.md
+.
+├── app/
+│   ├── api/...
+│   └── boards/...                # board routes
+├── features/                     # UI and hooks by domain
+│   ├── audit/
+│   ├── board/
+│   ├── comment/
+│   ├── issue/
+│   ├── member/
+│   └── realtime/
+├── modules/                      # Server and domain logic
+│   ├── audit/
+│   ├── board/
+│   ├── comment/
+│   ├── issue/
+│   ├── list/
+│   ├── member/
+│   └── shared/                   # rbac, api utils, realtime, rate limit
+├── shared/                       # Cross-cutting client utilities
+│   ├── lib/
+│   ├── state/
+│   └── utils/
+└── prisma/
+    ├── schema.prisma
+    └── seed.ts
 ```
 
 ## Environment Variables
@@ -53,21 +49,6 @@ NEXTAUTH_SECRET="..."
 NEXTAUTH_URL="http://localhost:3000"
 GOOGLE_CLIENT_ID="..."
 GOOGLE_CLIENT_SECRET="..."
-
-# SEO
-NEXT_PUBLIC_SITE_URL="http://localhost:3000"
-
-# Realtime: sse | ws | pusher | none
-REALTIME_TRANSPORT="sse"
-
-# Attachments
-ATTACHMENT_SIGNING_SECRET="replace-me"
-LOCAL_UPLOAD_DIR=".uploads"
-ATTACHMENT_SCAN_MODE="clean"             # clean | infected | failed
-
-# Optional demo seed
-DEMO_BOARD_ID="00000000-0000-0000-0000-000000000001"
-DEMO_BOARD_NAME="BoardForge Demo Board"
 ```
 
 ## Local Development
@@ -114,24 +95,12 @@ npm run test:e2e
 - Client hook: `useBoardRealtime(boardId)`
 - Events are emitted from audit writes.
 
-## Signed Uploads (Dev)
-1. Request signed upload token via `POST /api/attachments` (`action=createUpload`)
-2. Upload bytes to `PUT /api/attachments/upload?token=...`
-3. Finalize metadata via `POST /api/attachments` (`action=finalizeUpload`)
-4. Download via authenticated route `GET /api/attachments/[attachmentId]`
-
 ## Security Highlights
 - Server-side RBAC permission matrix (`OWNER/ADMIN/MEMBER/VIEWER`)
 - Board-scoped permission checks on API routes
 - Sanitized text inputs for comments/user updates
-- Signed token validation and board-scope checks for uploads
-- Protected attachment downloads and scan-status gating
 
 ## Known Limitations
 - Realtime SSE transport is in-memory (single-instance friendly only)
-- Attachment virus scanning is stubbed (hook ready for real scanner)
 - In restricted environments, test deps may require manual installation
 
-## Additional Docs
-- Architecture: `docs/ARCHITECTURE.md`
-- Full implementation report: `docs/FEATURE_REPORT.md`
